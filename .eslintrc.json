@@ -1,0 +1,27 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+    	"plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
+        "standard"
+    ],
+    "ignorePatterns": ["dist", "webpack*"],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+    	"no-use-before-define": "off"
+    }
+}
