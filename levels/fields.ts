@@ -1,7 +1,7 @@
 export interface Field{
     id: number;
     image: string;
-    attributes: any;
+    attributes: {direction : string};
     isPositionOfDragon: boolean;
 
     setAsDragonPosition (): void;
@@ -19,7 +19,7 @@ export class Finish implements Field {
       this.id = id
     }
 
-    setAsDragonPosition () {
+    setAsDragonPosition (): void {
       this.isPositionOfDragon = true
     }
 }
@@ -36,7 +36,7 @@ export class Wall implements Field {
       this.id = id
     }
 
-    setAsDragonPosition () {
+    setAsDragonPosition (): void {
       this.isPositionOfDragon = true
     }
 }
@@ -53,7 +53,7 @@ export class Empty implements Field {
       this.id = id
     }
 
-    setAsDragonPosition () {
+    setAsDragonPosition (): void {
       this.isPositionOfDragon = true
     }
 }
@@ -71,7 +71,7 @@ export class Arrow implements Field {
       this.id = id
     }
 
-    setAsDragonPosition () {
+    setAsDragonPosition (): void {
       this.isPositionOfDragon = true
     }
 }

@@ -6,7 +6,7 @@ export class Level {
     levelParser: levelParser.LevelParser
 
     constructor (levelDescription: string) {
-      console.log("TWORZE")
+      console.log('TWORZE')
       this.levelParser = new levelParser.LevelParser(levelDescription)
       this.fields = this.levelParser.getParsedLevel()
     }
