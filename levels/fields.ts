@@ -53,7 +53,7 @@ export class Empty implements Field {
       this.id = id
     }
 
-    setAsDragonPosition (): void {
+    setAsDragonPosition () {
       this.isPositionOfDragon = true
     }
 }
@@ -71,7 +71,7 @@ export class Arrow implements Field {
       this.id = id
     }
 
-    setAsDragonPosition (): void {
+    setAsDragonPosition () {
       this.isPositionOfDragon = true
     }
 }
