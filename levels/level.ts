@@ -3,15 +3,19 @@ import * as levelParser from './levelParser'
 
 export class Level {
     fields: fields.Field[];
-    levelParser: levelParser.LevelParser
+    fieldsPerRow: number
 
     constructor (levelDescription: string) {
-      console.log('TWORZE')
-      this.levelParser = new levelParser.LevelParser(levelDescription)
-      this.fields = this.levelParser.getParsedLevel()
+      const parsedLevelInfo: levelParser.LevelInfo = levelParser.LevelParser.getParsedLevelInfo(levelDescription)
+      this.fields = parsedLevelInfo.fields
+      this.fieldsPerRow = parsedLevelInfo.fieldsPerRow
     }
 
     getFields (): fields.Field[] {
       return this.fields
+    }
+
+    getFieldsPerRow (): number {
+      return this.fieldsPerRow
     }
 }
