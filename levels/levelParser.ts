@@ -19,7 +19,7 @@ export class LevelParser {
     }
 
     private getTokensFromLevelDescription (): string[] {
-      const whitespaceRegex: RegExp = /\s+/g
+      const whitespaceRegex = /\s+/g
       return this.levelToParse.replace(whitespaceRegex, '').split(';')
     }
 
@@ -36,9 +36,9 @@ export class LevelParser {
         if (this.directions.indexOf(token[1]) !== -1) {
           return new fields.Arrow(false, token[1], token[1], index)
         }
-        throw 'Unknown token, parse error when parsing arrow token on index: ' + index.toString()
+        throw new Error('Unknown token, parse error when parsing arrow token on index: ' + index.toString())
       } else {
-        throw 'Unknown token, parse error on index: ' + index.toString()
+        throw new Error('Unknown token, parse error on index: ' + index.toString())
       }
     }
 

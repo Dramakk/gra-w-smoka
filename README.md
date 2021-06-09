@@ -11,8 +11,9 @@ Pliki tworzymy w odpowiadających im folderach, wszystkie pliki poza tymi do wid
 
 ### Jak uruchomić
 1. npm install
-2. npm run start
-3. Uruchomienie wybranego przez nas serwera w utworzonym katalogu dist
+2. npm run compile
+3. npm run start
+4. Uruchomienie wybranego przez nas serwera w utworzonym katalogu dist
 
 
 ### Język poziomów

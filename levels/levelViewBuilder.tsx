@@ -1,7 +1,6 @@
 import * as fields from './fields'
 import * as level from './level'
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { ReactElement } from 'react'
 
 class FieldView extends React.Component<{ id: number, image: string }, { isDragonPosition: boolean}> {
   render () {
@@ -16,9 +15,9 @@ class FieldView extends React.Component<{ id: number, image: string }, { isDrago
 export class LevelViewBuilder extends React.Component<{level: level.Level}> {
   levelFields: fields.Field[] = this.props.level.getFields()
   levelSize: number = this.levelFields.length
-  cellsPerRow: number = 4
+  cellsPerRow = 4
 
-  buildRow (fields: fields.Field[], rowNumber: number) {
+  buildRow (fields: fields.Field[], rowNumber: number): ReactElement {
     return (
       <div key={rowNumber} className='row'>
         {fields.map(field => <FieldView key={field.id} id={field.id} image={field.image} />)}
@@ -26,9 +25,9 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}> {
     )
   }
 
-  render () {
+  render () : ReactElement {
     const iterations: number[] = []
-    for (let i: number = 0; i < this.levelSize / this.cellsPerRow; i++) {
+    for (let i = 0; i < this.levelSize / this.cellsPerRow; i++) {
       iterations.push(i)
     }
 
