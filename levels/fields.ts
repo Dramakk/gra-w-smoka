@@ -4,86 +4,76 @@ export abstract class Field {
     id: number;
     image: string;
     attributes: {direction : Directions};
-    isPositionOfDragon: boolean;
-
-    abstract setAsDragonPosition (): void;
 
     public static parseJSONToField (jsonObject: Record<string, any>): Field {
       if (jsonObject.isPositionOfDragon === null || jsonObject.image === null || jsonObject.id === null) {
         throw new Error('Parse error, when parsing' + JSON.stringify(jsonObject))
       }
       switch (jsonObject.typeOfField) {
-        case 'Finish':
-          return new Finish(jsonObject.isPositionOfDragon, jsonObject.image, jsonObject.id)
-        case 'Wall':
-          return new Wall(false, jsonObject.image, jsonObject.id)
-        case 'Empty':
-          return new Empty(jsonObject.isPositionOfDragon, jsonObject.image, jsonObject.id)
-        case 'Arrow':
-          return new Arrow(jsonObject.isPositionOfDragon, jsonObject.attributes.direction, jsonObject.image, jsonObject.id)
+        case 'FINISH':
+          return new Finish(jsonObject.image, jsonObject.id)
+        case 'WALL':
+          return new Wall(jsonObject.image, jsonObject.id)
+        case 'EMPTY':
+          return new Empty(jsonObject.image, jsonObject.id)
+        case 'ARROW':
+          return new Arrow(jsonObject.attributes.direction, jsonObject.image, jsonObject.id)
+        case 'START':
+          return new Start(jsonObject.image, jsonObject.id)
       }
     }
+}
+
+export class Start extends Field {
+  attributes: null
+
+  constructor (image: string, id: number) {
+    super()
+    this.image = image
+    this.id = id
+    this.typeOfField = 'START'
+  }
 }
 
 export class Finish extends Field {
     attributes: null
 
-    constructor (isPositionOfDragon: boolean, image: string, id: number) {
+    constructor (image: string, id: number) {
       super()
       this.image = image
-      this.isPositionOfDragon = isPositionOfDragon
       this.id = id
-      this.typeOfField = 'Finish'
-    }
-
-    setAsDragonPosition (): void {
-      this.isPositionOfDragon = true
+      this.typeOfField = 'FINISH'
     }
 }
 
 export class Wall extends Field {
     attributes: null
 
-    constructor (isPositionOfDragon: boolean, image: string, id: number) {
+    constructor (image: string, id: number) {
       super()
       this.image = image
-      this.isPositionOfDragon = isPositionOfDragon
       this.id = id
-      this.typeOfField = 'Wall'
-    }
-
-    setAsDragonPosition (): void {
-      this.isPositionOfDragon = false
+      this.typeOfField = 'WALL'
     }
 }
 
 export class Empty extends Field {
     attributes: null
 
-    constructor (isPositionOfDragon: boolean, image: string, id: number) {
+    constructor (image: string, id: number) {
       super()
       this.image = image
-      this.isPositionOfDragon = isPositionOfDragon
       this.id = id
-      this.typeOfField = 'Empty'
-    }
-
-    setAsDragonPosition (): void {
-      this.isPositionOfDragon = true
+      this.typeOfField = 'EMPTY'
     }
 }
 
 export class Arrow extends Field {
-  constructor (isPositionOfDragon: boolean, direction: Directions, image: string, id: number) {
+  constructor (direction: Directions, image: string, id: number) {
     super()
     this.image = image
     this.attributes = { direction: direction }
-    this.isPositionOfDragon = isPositionOfDragon
     this.id = id
-    this.typeOfField = 'Arrow'
-  }
-
-  setAsDragonPosition (): void {
-    this.isPositionOfDragon = true
+    this.typeOfField = 'ARROW'
   }
 }

@@ -1,32 +1,40 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Level } from './levels/level'
-import * as levelViewBuilder from './levels/levelViewBuilder'
+import * as levelBuilder from './views/levelBuilder'
+import * as mainMenuBuilder from './views/mainMenuBuilder'
+import './views/css/main.css'
 
 const simpleLevel = `{
     "fieldsPerRow": 4,
+    "fieldsToPlace": [
+        {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
+        {"fieldType": "ARROWUP", "howManyAvailable": 1},
+        {"fieldType": "ARROWRIGHT", "howManyAvailable": 1}
+    ],
     "level": [
-        {"id": 1, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 2, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 3, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 4, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
+        {"id": 0, "image": "W", "typeOfField": "WALL"},
+        {"id": 1, "image": "W", "typeOfField": "WALL"},
+        {"id": 2, "image": "W", "typeOfField": "WALL"},
+        {"id": 3, "image": "W", "typeOfField": "WALL"},
 
-        {"id": 5, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 6, "image": "S", "isPositionOfDragon": true, "typeOfField": "Empty"},
-        {"id": 7, "image": "E", "isPositionOfDragon": false, "typeOfField": "Empty"},
-        {"id": 8, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
+        {"id": 4, "image": "W", "typeOfField": "WALL"},
+        {"id": 5, "image": "S", "typeOfField": "START"},
+        {"id": 6, "image": "E", "typeOfField": "EMPTY"},
+        {"id": 7, "image": "W", "typeOfField": "WALL"},
 
-        {"id": 9, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 10, "image": "E", "isPositionOfDragon": false, "typeOfField": "Empty"},
-        {"id": 11, "image": "E", "isPositionOfDragon": false, "typeOfField": "Empty"},
-        {"id": 12, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
+        {"id": 8, "image": "W", "typeOfField": "WALL"},
+        {"id": 9, "image": "E", "typeOfField": "EMPTY"},
+        {"id": 10, "image": "E", "typeOfField": "EMPTY"},
+        {"id": 11, "image": "W", "typeOfField": "WALL"},
 
-        {"id": 13, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 14, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 15, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"},
-        {"id": 16, "image": "W", "isPositionOfDragon": false, "typeOfField": "Wall"}
+        {"id": 12, "image": "W", "typeOfField": "WALL"},
+        {"id": 13, "image": "W", "typeOfField": "WALL"},
+        {"id": 14, "image": "W", "typeOfField": "WALL"},
+        {"id": 15, "image": "W", "typeOfField": "WALL"}
     ]
 }`
 const level = new Level(simpleLevel)
-const domContainer = document.querySelector('#board')
-ReactDOM.render(<levelViewBuilder.LevelViewBuilder level={level} />, domContainer)
+console.log(level)
+const domContainer = document.querySelector('#app-container')
+ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={() => { ReactDOM.render(<levelBuilder.LevelViewBuilder level={level} />, domContainer); return true }}/>, domContainer)
