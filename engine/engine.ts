@@ -1,6 +1,9 @@
 import * as level from '../levels/level'
 import * as fields from '../levels/fields'
 import * as dragon from './dragon'
+import ReactDOM from 'react-dom'
+import React from 'react'
+import { LevelViewBuilder } from '../views/levelBuilder'
 
 export class Engine {
   level: level.Level;
@@ -8,7 +11,7 @@ export class Engine {
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(5)
+    this.dragon = new dragon.Dragon(this.level.dragonPositionId)
   }
 
   gameLoop () : void {
@@ -22,25 +25,29 @@ export class Engine {
         clearInterval(loop)
         console.log('Wall!')
       }
+      // Forcing component to update
+      ReactDOM.render(
+        React.createElement(LevelViewBuilder, { level: this.level }),
+        document.getElementById('app-container')
+      )
     }, 1000)
   }
 
   move (): void {
-    this.level.fields[this.dragon.fieldId].isPositionOfDragon = false
     const newFieldId: number = this.calculateNewField()
-    if (this.level.fields[newFieldId] instanceof fields.Wall) {
+    if (this.level.getField(newFieldId) instanceof fields.Wall) {
       this.dragon.canMove = false
     } else {
       this.dragon.fieldId = newFieldId
+      this.level.dragonPositionId = newFieldId
     }
-    this.level.fields[this.dragon.fieldId].isPositionOfDragon = true
   }
 
   changeState (): void {
     // TODO:
     // na razie if-else w połączeniu z instanceof
     // można zmienić na switch w przyszłości, wymaga zmiany klasy pola (dodanie właściwości opisującej klasę pola)
-    const currenField: fields.Field = this.level.fields[this.dragon.fieldId]
+    const currenField: fields.Field = this.level.getField(this.level.dragonPositionId)
     if (currenField instanceof fields.Arrow) {
       this.dragon.direction = currenField.attributes.direction
     }

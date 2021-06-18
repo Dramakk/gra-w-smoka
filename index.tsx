@@ -11,7 +11,8 @@ const simpleLevel = `{
     "fieldsToPlace": [
         {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
         {"fieldType": "ARROWUP", "howManyAvailable": 1},
-        {"fieldType": "ARROWRIGHT", "howManyAvailable": 1}
+        {"fieldType": "ARROWRIGHT", "howManyAvailable": 1},
+        {"fieldType": "ARROWDOWN", "howManyAvailable": 1}
     ],
     "level": [
         {"id": 0, "image": "W", "typeOfField": "WALL"},
@@ -20,7 +21,7 @@ const simpleLevel = `{
         {"id": 3, "image": "W", "typeOfField": "WALL"},
 
         {"id": 4, "image": "W", "typeOfField": "WALL"},
-        {"id": 5, "image": "S", "typeOfField": "START"},
+        {"id": 5, "image": "E", "typeOfField": "START"},
         {"id": 6, "image": "E", "typeOfField": "EMPTY"},
         {"id": 7, "image": "W", "typeOfField": "WALL"},
 
@@ -35,8 +36,13 @@ const simpleLevel = `{
         {"id": 15, "image": "W", "typeOfField": "WALL"}
     ]
 }`
+const delay = (ms : number) => new Promise((resolve, reject) => setTimeout(resolve, ms))
+const startGame = async () => {
+  await delay(10000)
+  console.log('Waited 10s')
+  game.gameLoop()
+}
 const level = new Level(simpleLevel)
 const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
-ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={() => { ReactDOM.render(<levelBuilder.LevelViewBuilder level={level} />, domContainer); return true }}/>, domContainer)
-game.gameLoop()
+ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => { ReactDOM.render(<levelBuilder.LevelViewBuilder level={ level } />, domContainer); startGame() } }/>, domContainer)
