@@ -1,8 +1,9 @@
+type Directions = 'U' | 'L' | 'D' | 'R'
 export abstract class Field {
     typeOfField: string;
     id: number;
     image: string;
-    attributes: {direction : 'U' | 'L' | 'D' | 'R'};
+    attributes: {direction : Directions};
     isPositionOfDragon: boolean;
 
     abstract setAsDragonPosition (): void;
@@ -73,7 +74,7 @@ export class Empty extends Field {
 }
 
 export class Arrow extends Field {
-  constructor (isPositionOfDragon: boolean, direction: 'U' | 'L' | 'D' | 'R', image: string, id: number) {
+  constructor (isPositionOfDragon: boolean, direction: Directions, image: string, id: number) {
     super()
     this.image = image
     this.attributes = { direction: direction }
