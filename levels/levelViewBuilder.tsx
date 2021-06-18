@@ -15,7 +15,7 @@ class FieldView extends React.Component<{ id: number, image: string }, { isDrago
 export class LevelViewBuilder extends React.Component<{level: level.Level}> {
   levelFields: fields.Field[] = this.props.level.getFields()
   levelSize: number = this.levelFields.length
-  cellsPerRow = 4
+  cellsPerRow = this.props.level.getFieldsPerRow()
 
   buildRow (fields: fields.Field[], rowNumber: number): ReactElement {
     return (
