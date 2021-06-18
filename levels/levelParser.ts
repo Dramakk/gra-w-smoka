@@ -1,5 +1,6 @@
 import * as fields from './fields'
-export type LevelInfo = {fields: fields.Field[], fieldsPerRow: number}
+export type FieldToPlaceType = 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
+export type LevelInfo = {fields: fields.Field[], fieldsPerRow: number, fieldsToPlace: {fieldType: FieldToPlaceType, howManyAvailable: number}[]}
 export class LevelParser {
     static parsedLevelInfo: LevelInfo
 
@@ -18,6 +19,6 @@ export class LevelParser {
         parsedLevel.push(fields.Field.parseJSONToField(levelDescriptionJSON.level[fieldDescription]))
       }
 
-      return { fields: parsedLevel, fieldsPerRow: levelDescriptionJSON.fieldsPerRow }
+      return { fields: parsedLevel, fieldsPerRow: levelDescriptionJSON.fieldsPerRow, fieldsToPlace: levelDescriptionJSON.fieldsToPlace }
     }
 }

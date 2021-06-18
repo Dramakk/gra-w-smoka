@@ -1,0 +1,20 @@
+h1 {
+    text-align: center;
+}
+
+.menu {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: auto;
+    flex-direction: column;
+}
+
+.menu-item {
+    width: 100%;
+}
+
+.bottom-tooltip {
+    border: 1px solid black;
+}
