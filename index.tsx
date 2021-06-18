@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Engine } from './engine/engine'
 import { Level } from './levels/level'
 import * as levelBuilder from './views/levelBuilder'
 import * as mainMenuBuilder from './views/mainMenuBuilder'
@@ -35,6 +36,7 @@ const simpleLevel = `{
     ]
 }`
 const level = new Level(simpleLevel)
-console.log(level)
+const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
 ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={() => { ReactDOM.render(<levelBuilder.LevelViewBuilder level={level} />, domContainer); return true }}/>, domContainer)
+game.gameLoop()

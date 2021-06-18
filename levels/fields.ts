@@ -1,4 +1,4 @@
-type Directions = 'U' | 'L' | 'D' | 'R'
+export type Directions = 'U' | 'L' | 'D' | 'R'
 export abstract class Field {
     typeOfField: string;
     id: number;
