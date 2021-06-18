@@ -26,21 +26,20 @@ export class Engine {
   }
 
   move (): void {
-    this.level.fields[this.dragon.fieldId].isPositionOfDragon = false
     const newFieldId: number = this.calculateNewField()
-    if (this.level.fields[newFieldId] instanceof fields.Wall) {
+    if (this.level.getField(newFieldId) instanceof fields.Wall) {
       this.dragon.canMove = false
     } else {
       this.dragon.fieldId = newFieldId
+      this.level.dragonPositionId = newFieldId
     }
-    this.level.fields[this.dragon.fieldId].isPositionOfDragon = true
   }
 
   changeState (): void {
     // TODO:
     // na razie if-else w połączeniu z instanceof
     // można zmienić na switch w przyszłości, wymaga zmiany klasy pola (dodanie właściwości opisującej klasę pola)
-    const currenField: fields.Field = this.level.fields[this.dragon.fieldId]
+    const currenField: fields.Field = this.level.getField(this.level.dragonPositionId)
     if (currenField instanceof fields.Arrow) {
       this.dragon.direction = currenField.attributes.direction
     }
