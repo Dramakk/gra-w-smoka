@@ -25,6 +25,7 @@ export class Engine {
   }
 
   gameReset () : void {
+    // TODO: dodać resetowanie pól dododania?
     console.log('reset')
     this.gameStop()
     this.dragon = new dragon.Dragon(this.level.getStartId())
@@ -62,12 +63,10 @@ export class Engine {
   }
 
   changeState (): void {
-    // TODO:
-    // na razie if-else w połączeniu z instanceof
-    // można zmienić na switch w przyszłości, wymaga zmiany klasy pola (dodanie właściwości opisującej klasę pola)
-    const currenField: fields.Field = this.level.getField(this.level.dragonPositionId)
-    if (currenField instanceof fields.Arrow) {
-      this.dragon.direction = currenField.attributes.direction
+    const currentField: fields.Field = this.level.getField(this.level.dragonPositionId)
+    switch (currentField.typeOfField) {
+      case 'ARROW':
+        this.dragon.direction = currentField.attributes.direction
     }
   }
 
