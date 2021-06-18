@@ -1,6 +1,9 @@
 import * as level from '../levels/level'
 import * as fields from '../levels/fields'
 import * as dragon from './dragon'
+import ReactDOM from 'react-dom'
+import React from 'react'
+import { LevelViewBuilder } from '../views/levelBuilder'
 
 export class Engine {
   level: level.Level;
@@ -8,7 +11,7 @@ export class Engine {
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(5)
+    this.dragon = new dragon.Dragon(this.level.dragonPositionId)
   }
 
   gameLoop () : void {
@@ -22,6 +25,11 @@ export class Engine {
         clearInterval(loop)
         console.log('Wall!')
       }
+      // Forcing component to update
+      ReactDOM.render(
+        React.createElement(LevelViewBuilder, { level: this.level }),
+        document.getElementById('app-container')
+      )
     }, 1000)
   }
 

@@ -36,10 +36,18 @@ class BottomTooltip extends React.Component<
   }
 }
 
-export class LevelViewBuilder extends React.Component<{level: level.Level}, {fieldToAdd: levelParser.FieldToPlaceType}> {
+export class LevelViewBuilder extends React.Component<{level: level.Level}, {fieldToAdd: levelParser.FieldToPlaceType, level: level.Level }> {
   constructor (props : {level: level.Level}) {
     super(props)
-    this.state = { fieldToAdd: null }
+    this.state = { fieldToAdd: null, level: props.level }
+  }
+
+  getImage (field : fields.Field) : string {
+    if (field.id === this.props.level.dragonPositionId) {
+      return 'S'
+    } else {
+      return field.image
+    }
   }
 
   buildRow (from: number, to: number, rowNumber: number, updateFunction : (index : number) => void): ReactElement {
@@ -53,7 +61,7 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}, {fie
       <div key={rowNumber} className='row'>
         {iterations.map((fieldIndex : number) => {
           const field = this.props.level.getField(fieldIndex)
-          return <FieldView key={field.id} id={field.id} image={field.image} updateFunction={updateFunction}/>
+          return <FieldView key={field.id} id={field.id} image={this.getImage(field)} updateFunction={updateFunction}/>
         })}
       </div>
     )
@@ -68,8 +76,7 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}, {fie
       this.props.level.placeUserField(index, this.state.fieldToAdd)
       this.props.level.changeFieldToPlaceTypeQuantity(this.state.fieldToAdd)
     }
-    this.setState({ fieldToAdd: null })
-    this.forceUpdate()
+    this.setState({ fieldToAdd: null, level: this.state.level })
   }
 
   render () : ReactElement {
