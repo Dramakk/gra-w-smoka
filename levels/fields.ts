@@ -1,4 +1,4 @@
-type Directions = 'U' | 'L' | 'D' | 'R'
+export type Directions = 'U' | 'L' | 'D' | 'R'
 export abstract class Field {
     typeOfField: string;
     id: number;
@@ -7,7 +7,6 @@ export abstract class Field {
     isPositionOfDragon: boolean;
 
     abstract setAsDragonPosition (): void;
-
     public static parseJSONToField (jsonObject: Record<string, any>): Field {
       if (jsonObject.isPositionOfDragon === null || jsonObject.image === null || jsonObject.id === null) {
         throw new Error('Parse error, when parsing' + JSON.stringify(jsonObject))
