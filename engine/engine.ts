@@ -8,29 +8,47 @@ import { LevelViewBuilder } from '../views/levelBuilder'
 export class Engine {
   level: level.Level;
   dragon: dragon.Dragon;
+  loop: ReturnType<typeof setInterval>
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(this.level.dragonPositionId)
+    this.dragon = new dragon.Dragon(this.level.getStartId())
+  }
+
+  gameStart () : void {
+    console.log('start')
+    this.loop = setInterval(this.gameLoop.bind(this), 1000)
+  }
+
+  gameStop () : void {
+    clearInterval(this.loop)
+  }
+
+  gameReset () : void {
+    console.log('reset')
+    this.gameStop()
+    this.dragon = new dragon.Dragon(this.level.getStartId())
+    this.level.dragonPositionId = this.level.getStartId()
+    ReactDOM.render(
+      React.createElement(LevelViewBuilder, { engine: this }),
+      document.getElementById('app-container')
+    )
   }
 
   gameLoop () : void {
-    const loop = setInterval(() => {
-      // TODO: add return jak się wejdzie w ścianę
+    console.log('loop')
+    if (this.dragon.canMove) {
       console.log(this.dragon.fieldId)
-      if (this.dragon.canMove) {
-        this.move()
-        this.changeState()
-      } else {
-        clearInterval(loop)
-        console.log('Wall!')
-      }
-      // Forcing component to update
-      ReactDOM.render(
-        React.createElement(LevelViewBuilder, { level: this.level }),
-        document.getElementById('app-container')
-      )
-    }, 1000)
+      this.move()
+      this.changeState()
+    } else {
+      clearInterval(this.loop)
+    }
+    // Forcing component to update
+    ReactDOM.render(
+      React.createElement(LevelViewBuilder, { engine: this }),
+      document.getElementById('app-container')
+    )
   }
 
   move (): void {

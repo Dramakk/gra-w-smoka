@@ -36,13 +36,7 @@ const simpleLevel = `{
         {"id": 15, "image": "W", "typeOfField": "WALL"}
     ]
 }`
-const delay = (ms : number) => new Promise((resolve, reject) => setTimeout(resolve, ms))
-const startGame = async () => {
-  await delay(10000)
-  console.log('Waited 10s')
-  game.gameLoop()
-}
 const level = new Level(simpleLevel)
 const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
-ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => { ReactDOM.render(<levelBuilder.LevelViewBuilder level={ level } />, domContainer); startGame() } }/>, domContainer)
+ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => { ReactDOM.render(<levelBuilder.LevelViewBuilder engine={ game } />, domContainer) } }/>, domContainer)

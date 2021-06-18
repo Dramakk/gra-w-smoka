@@ -93,4 +93,8 @@ export class Level {
         return this.fields.filter((element : fields.Field) => { return element.id === index })[0]
       }
     }
+
+    getStartId () : number {
+      return this.fields.filter((element : fields.Field) => { return element.typeOfField === 'START' })[0].id
+    }
 }
