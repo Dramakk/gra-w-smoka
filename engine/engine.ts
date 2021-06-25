@@ -15,25 +15,19 @@ export class Engine {
     this.dragon = new dragon.Dragon(this.level.getStartId())
   }
 
+  // Starts simulation with 1s interval
   gameStart () : void {
-    /**
-     * Starts simulation
-     */
     this.loop = setInterval(this.gameLoop.bind(this), 1000)
   }
 
+  // Stops simulation
   gameStop () : void {
-    /**
-     * Stops simulation
-     */
     clearInterval(this.loop)
   }
 
+  // Stops simulation and resets dragon position.
+  // Level (and placed fields) ramains unchanged.
   gameReset () : void {
-    /**
-     * Stops simulation and resets dragon position.
-     * Level (and placed fields) ramains unchanged.
-     */
     this.gameStop()
     this.dragon = new dragon.Dragon(this.level.getStartId())
     ReactDOM.render(
@@ -43,9 +37,7 @@ export class Engine {
   }
 
   gameLoop () : void {
-    if (this.dragon.canMove) {
-      console.log(this.dragon.fieldId)
-      this.move()
+    if (this.move()) {
       this.changeState()
     } else {
       clearInterval(this.loop)
@@ -57,22 +49,19 @@ export class Engine {
     )
   }
 
-  move (): void {
-    /**
-     * Moves dragon to new field.
-     */
+  // Moves dragon to new field (returns false if dragon cant move)
+  move (): boolean {
     const newFieldId: number = this.calculateNewField()
     if (this.level.getField(newFieldId).typeOfField === 'WALL') {
-      this.dragon.canMove = false
+      return false
     } else {
       this.dragon.fieldId = newFieldId
+      return true
     }
   }
 
+  // Changes dragon state based on field dragon is on.
   changeState (): void {
-    /**
-     * Changes dragon state based on field dragon is on.
-     */
     const currentField: fields.Field = this.level.getField(this.dragon.fieldId)
     switch (currentField.typeOfField) {
       case 'ARROW':
@@ -80,10 +69,8 @@ export class Engine {
     }
   }
 
+  // Calculates new fieldId based on dragon direction.
   private calculateNewField (): number {
-    /**
-     * Calculates new fieldId based on dragon direction.
-     */
     let newFieldId: number = this.dragon.fieldId
     switch (this.dragon.direction) {
       case 'L':

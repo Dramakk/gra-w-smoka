@@ -37,18 +37,18 @@ class BottomTooltip extends React.Component<
   }
 }
 
-class SpeedControls extends React.Component< {onClickStart: () => void, onClickStop: () => void, onClickReset: () => void} > {
+class SpeedControls extends React.Component< {engine : Engine} > {
   render () : ReactElement {
     return (
       <div className='SpeedControls'>
         <span>
-          <button onClick={this.props.onClickStart}>START</button>
+          <button onClick={this.props.engine.gameStart.bind(this.props.engine)}>START</button>
         </span>
         <span>
-          <button onClick={this.props.onClickStop}>STOP</button>
+          <button onClick={this.props.engine.gameStop.bind(this.props.engine)}>STOP</button>
         </span>
         <span>
-          <button onClick={this.props.onClickReset}>RESET</button>
+          <button onClick={this.props.engine.gameReset.bind(this.props.engine)}>RESET</button>
         </span>
       </div>
     )
@@ -112,10 +112,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
           {iterations.map(rowNumber => this.buildRow(rowNumber * this.props.engine.level.getCellsPerRow(), (rowNumber + 1) * this.props.engine.level.getCellsPerRow(), rowNumber, this.placeElement.bind(this)))}
         </div>
         <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} onClick={this.changeFieldToAdd.bind(this)} />
-        <SpeedControls
-          onClickStart={this.props.engine.gameStart.bind(this.props.engine)}
-          onClickStop={this.props.engine.gameStop.bind(this.props.engine)}
-          onClickReset={this.props.engine.gameReset.bind(this.props.engine)}/>
+        <SpeedControls engine={this.props.engine}/>
       </div>
     )
   }
