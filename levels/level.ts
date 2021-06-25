@@ -7,7 +7,6 @@ export class Level {
     fieldsPerRow: number
     fieldsToPlace : FieldToPlaceObjectType[]
     userPlacedFields : fields.Field[]
-    dragonPositionId : number
 
     constructor (levelDescription: string) {
       const parsedLevelInfo: levelParser.LevelInfo = levelParser.LevelParser.getParsedLevelInfo(levelDescription)
@@ -15,7 +14,6 @@ export class Level {
       this.fieldsPerRow = parsedLevelInfo.fieldsPerRow
       this.fieldsToPlace = parsedLevelInfo.fieldsToPlace
       this.userPlacedFields = []
-      this.dragonPositionId = this.fields.find((element : fields.Field) => element instanceof fields.Start).id
     }
 
     getFields (): fields.Field[] {

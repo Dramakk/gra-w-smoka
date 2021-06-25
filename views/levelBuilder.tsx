@@ -62,7 +62,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
   }
 
   getImage (field : fields.Field) : string {
-    if (field.id === this.props.engine.level.dragonPositionId) {
+    if (field.id === this.props.engine.dragon.fieldId) {
       return 'S'
     } else {
       return field.image
