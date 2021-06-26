@@ -2,6 +2,7 @@ import * as fields from '../levels/fields'
 import * as level from '../levels/level'
 import * as levelParser from '../levels/levelParser'
 import React, { ReactElement } from 'react'
+import { Engine } from '../engine/engine'
 
 class FieldView extends React.Component<{ id: number, image: string, updateFunction : (index : number) => void}> {
   render () {
@@ -36,14 +37,32 @@ class BottomTooltip extends React.Component<
   }
 }
 
-export class LevelViewBuilder extends React.Component<{level: level.Level}, {fieldToAdd: levelParser.FieldToPlaceType, level: level.Level }> {
-  constructor (props : {level: level.Level}) {
+class SpeedControls extends React.Component< {engine : Engine} > {
+  render () : ReactElement {
+    return (
+      <div className='SpeedControls'>
+        <span>
+          <button onClick={this.props.engine.gameStart.bind(this.props.engine)}>START</button>
+        </span>
+        <span>
+          <button onClick={this.props.engine.gameStop.bind(this.props.engine)}>STOP</button>
+        </span>
+        <span>
+          <button onClick={this.props.engine.gameReset.bind(this.props.engine)}>RESET</button>
+        </span>
+      </div>
+    )
+  }
+}
+
+export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: levelParser.FieldToPlaceType, level: level.Level }> {
+  constructor (props : {engine: Engine}) {
     super(props)
-    this.state = { fieldToAdd: null, level: props.level }
+    this.state = { fieldToAdd: null, level: props.engine.level }
   }
 
   getImage (field : fields.Field) : string {
-    if (field.id === this.props.level.dragonPositionId) {
+    if (field.id === this.props.engine.dragon.fieldId) {
       return 'S'
     } else {
       return field.image
@@ -60,7 +79,7 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}, {fie
     return (
       <div key={rowNumber} className='row'>
         {iterations.map((fieldIndex : number) => {
-          const field = this.props.level.getField(fieldIndex)
+          const field = this.props.engine.level.getField(fieldIndex)
           return <FieldView key={field.id} id={field.id} image={this.getImage(field)} updateFunction={updateFunction}/>
         })}
       </div>
@@ -72,9 +91,9 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}, {fie
   }
 
   placeElement (index : number) : void {
-    if (this.state.fieldToAdd && this.props.level.getField(index) instanceof fields.Empty) {
-      this.props.level.placeUserField(index, this.state.fieldToAdd)
-      this.props.level.changeFieldToPlaceTypeQuantity(this.state.fieldToAdd)
+    if (this.state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
+      this.props.engine.level.placeUserField(index, this.state.fieldToAdd)
+      this.props.engine.level.changeFieldToPlaceTypeQuantity(this.state.fieldToAdd)
     }
     this.setState({ fieldToAdd: null, level: this.state.level })
   }
@@ -82,18 +101,19 @@ export class LevelViewBuilder extends React.Component<{level: level.Level}, {fie
   render () : ReactElement {
     const iterations: number[] = []
 
-    for (let i = 0; i < this.props.level.getLevelSize() / this.props.level.getCellsPerRow(); i++) {
+    for (let i = 0; i < this.props.engine.level.getLevelSize() / this.props.engine.level.getCellsPerRow(); i++) {
       iterations.push(i)
     }
 
     return (
-       <div className='container'>
-         <p>{this.state.fieldToAdd}</p>
-         <div className='board-container'>
-          {iterations.map(rowNumber => this.buildRow(rowNumber * this.props.level.getCellsPerRow(), (rowNumber + 1) * this.props.level.getCellsPerRow(), rowNumber, this.placeElement.bind(this)))}
-         </div>
-         <BottomTooltip fieldsToPlace={this.props.level.getFieldsToPlace()} onClick={this.changeFieldToAdd.bind(this)} />
-       </div>
+      <div className='container'>
+        <p>{this.state.fieldToAdd}</p>
+        <div className='board-container'>
+          {iterations.map(rowNumber => this.buildRow(rowNumber * this.props.engine.level.getCellsPerRow(), (rowNumber + 1) * this.props.engine.level.getCellsPerRow(), rowNumber, this.placeElement.bind(this)))}
+        </div>
+        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} onClick={this.changeFieldToAdd.bind(this)} />
+        <SpeedControls engine={this.props.engine}/>
+      </div>
     )
   }
 }

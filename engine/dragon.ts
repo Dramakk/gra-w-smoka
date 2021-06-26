@@ -7,6 +7,5 @@ export class Dragon {
   constructor (startId: number) {
     this.fieldId = startId
     this.direction = 'R'
-    this.canMove = true
   }
 }

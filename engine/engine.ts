@@ -8,51 +8,68 @@ import { LevelViewBuilder } from '../views/levelBuilder'
 export class Engine {
   level: level.Level;
   dragon: dragon.Dragon;
+  loop: ReturnType<typeof setInterval>
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(this.level.dragonPositionId)
+    this.dragon = new dragon.Dragon(this.level.getStartId())
+  }
+
+  // Starts simulation with 1s interval
+  gameStart () : void {
+    this.loop = setInterval(this.gameLoop.bind(this), 1000)
+  }
+
+  // Stops simulation
+  gameStop () : void {
+    clearInterval(this.loop)
+  }
+
+  // Stops simulation and resets dragon position.
+  // Level (and placed fields) ramains unchanged.
+  gameReset () : void {
+    this.gameStop()
+    this.dragon = new dragon.Dragon(this.level.getStartId())
+    ReactDOM.render(
+      React.createElement(LevelViewBuilder, { engine: this }),
+      document.getElementById('app-container')
+    )
   }
 
   gameLoop () : void {
-    const loop = setInterval(() => {
-      // TODO: add return jak się wejdzie w ścianę
-      console.log(this.dragon.fieldId)
-      if (this.dragon.canMove) {
-        this.move()
-        this.changeState()
-      } else {
-        clearInterval(loop)
-        console.log('Wall!')
-      }
-      // Forcing component to update
-      ReactDOM.render(
-        React.createElement(LevelViewBuilder, { level: this.level }),
-        document.getElementById('app-container')
-      )
-    }, 1000)
+    if (this.move()) {
+      this.changeState()
+    } else {
+      clearInterval(this.loop)
+    }
+    // Forcing component to update
+    ReactDOM.render(
+      React.createElement(LevelViewBuilder, { engine: this }),
+      document.getElementById('app-container')
+    )
   }
 
-  move (): void {
+  // Moves dragon to new field (returns false if dragon cant move)
+  move (): boolean {
     const newFieldId: number = this.calculateNewField()
-    if (this.level.getField(newFieldId) instanceof fields.Wall) {
-      this.dragon.canMove = false
+    if (this.level.getField(newFieldId).typeOfField === 'WALL') {
+      return false
     } else {
       this.dragon.fieldId = newFieldId
-      this.level.dragonPositionId = newFieldId
+      return true
     }
   }
 
+  // Changes dragon state based on field dragon is on.
   changeState (): void {
-    // TODO:
-    // na razie if-else w połączeniu z instanceof
-    // można zmienić na switch w przyszłości, wymaga zmiany klasy pola (dodanie właściwości opisującej klasę pola)
-    const currenField: fields.Field = this.level.getField(this.level.dragonPositionId)
-    if (currenField instanceof fields.Arrow) {
-      this.dragon.direction = currenField.attributes.direction
+    const currentField: fields.Field = this.level.getField(this.dragon.fieldId)
+    switch (currentField.typeOfField) {
+      case 'ARROW':
+        this.dragon.direction = currentField.attributes.direction
     }
   }
 
+  // Calculates new fieldId based on dragon direction.
   private calculateNewField (): number {
     let newFieldId: number = this.dragon.fieldId
     switch (this.dragon.direction) {
