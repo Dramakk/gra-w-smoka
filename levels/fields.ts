@@ -1,27 +1,10 @@
-export type Directions = 'U' | 'L' | 'D' | 'R'
+import * as levelParser from './levelParser'
+
 export abstract class Field {
     typeOfField: string;
     id: number;
     image: string;
-    attributes: {direction : Directions};
-
-    public static parseJSONToField (jsonObject: Record<string, any>): Field {
-      if (jsonObject.isPositionOfDragon === null || jsonObject.image === null || jsonObject.id === null) {
-        throw new Error('Parse error, when parsing' + JSON.stringify(jsonObject))
-      }
-      switch (jsonObject.typeOfField) {
-        case 'FINISH':
-          return new Finish(jsonObject.image, jsonObject.id)
-        case 'WALL':
-          return new Wall(jsonObject.image, jsonObject.id)
-        case 'EMPTY':
-          return new Empty(jsonObject.image, jsonObject.id)
-        case 'ARROW':
-          return new Arrow(jsonObject.attributes.direction, jsonObject.image, jsonObject.id)
-        case 'START':
-          return new Start(jsonObject.image, jsonObject.id)
-      }
-    }
+    attributes: {direction : levelParser.Directions};
 }
 
 export class Start extends Field {
@@ -69,7 +52,7 @@ export class Empty extends Field {
 }
 
 export class Arrow extends Field {
-  constructor (direction: Directions, image: string, id: number) {
+  constructor (direction: levelParser.Directions, image: string, id: number) {
     super()
     this.image = image
     this.attributes = { direction: direction }

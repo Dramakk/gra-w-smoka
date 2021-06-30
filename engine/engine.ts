@@ -12,7 +12,7 @@ export class Engine {
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(this.level.getStartId())
+    this.dragon = new dragon.Dragon(this.level.getStartId(), this.level.getStartDirection())
   }
 
   setLevelViewComponentRef (levelViewComponentRef : LevelViewBuilder) : void {
@@ -21,7 +21,10 @@ export class Engine {
 
   // Starts simulation with 1s interval
   gameStart () : void {
-    this.loop = setInterval(this.gameLoop.bind(this), 1000)
+    // Check if dragon position is set. Invalid dragon position is possible during level creation.
+    if (!(this.level.getStartId() === null || this.level.getStartDirection() === null)) {
+      this.loop = setInterval(this.gameLoop.bind(this), 1000)
+    }
   }
 
   // Stops simulation
@@ -33,7 +36,7 @@ export class Engine {
   // Level (and placed fields) ramains unchanged.
   gameReset () : void {
     this.gameStop()
-    this.dragon = new dragon.Dragon(this.level.getStartId())
+    this.dragon = new dragon.Dragon(this.level.getStartId(), this.level.getStartDirection())
     this.levelViewComponentRef.updateComponentStateAfterMove(this.level)
   }
 

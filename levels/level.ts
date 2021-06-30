@@ -1,21 +1,21 @@
 import * as fields from './fields'
 import * as levelParser from './levelParser'
 
+export type Start = {position: number, direction: levelParser.Directions}
 export type FieldToPlaceObjectType = {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}
 export class Level {
     fields: fields.Field[]
     fieldsPerRow: number
     fieldsToPlace : FieldToPlaceObjectType[]
     userPlacedFields : fields.Field[]
-    start: {id: number, direction: fields.Directions}
+    start: Start
 
-    constructor (levelDescription: string) {
-      const parsedLevelInfo: levelParser.LevelInfo = levelParser.LevelParser.getParsedLevelInfo(levelDescription)
-      this.fields = parsedLevelInfo.fields
-      this.fieldsPerRow = parsedLevelInfo.fieldsPerRow
-      this.fieldsToPlace = parsedLevelInfo.fieldsToPlace
+    constructor (fields : fields.Field[], fieldsPerRow : number, fieldsToPlace : FieldToPlaceObjectType[], start : Start) {
+      this.fields = fields
+      this.fieldsPerRow = fieldsPerRow
+      this.fieldsToPlace = fieldsToPlace
       this.userPlacedFields = []
-      this.start = parsedLevelInfo.start
+      this.start = start
     }
 
     getFields (): fields.Field[] {
@@ -43,23 +43,8 @@ export class Level {
     }
 
     placeUserField (index : number, fieldType : levelParser.FieldToPlaceType) : void {
-      let newUserPlacedField : fields.Field = null
+      const newUserPlacedField : fields.Field = levelParser.LevelParser.newFieldFromType(index, fieldType)
       const isIndexInPlacedFields : boolean = (this.userPlacedFields.filter((element : fields.Field) => { return element.id === index }).length !== 0)
-
-      switch (fieldType) {
-        case 'ARROWUP':
-          newUserPlacedField = new fields.Arrow('U', 'AU', index)
-          break
-        case 'ARROWDOWN':
-          newUserPlacedField = new fields.Arrow('D', 'AD', index)
-          break
-        case 'ARROWLEFT':
-          newUserPlacedField = new fields.Arrow('L', 'AL', index)
-          break
-        case 'ARROWRIGHT':
-          newUserPlacedField = new fields.Arrow('R', 'AR', index)
-          break
-      }
 
       if (isIndexInPlacedFields) {
         this.userPlacedFields = this.userPlacedFields.filter((element : fields.Field) => { return element.id !== index })
@@ -85,15 +70,14 @@ export class Level {
 
       if (currentQuantityArray.length !== 0) {
         const currentQuantity : FieldToPlaceObjectType = currentQuantityArray[0]
+        const indexOfCurrentElement: number = this.fieldsToPlace.indexOf(currentQuantity)
 
-        this.fieldsToPlace = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType !== fieldType })
         if (currentQuantity.howManyAvailable > 1) {
-          currentQuantity.howManyAvailable += changeInQuantity
-          this.fieldsToPlace.push(currentQuantity)
-        }
-      } else {
-        if (changeInQuantity > 0) {
-          this.fieldsToPlace.push({ fieldType: fieldType, howManyAvailable: changeInQuantity })
+          this.fieldsToPlace[indexOfCurrentElement].howManyAvailable += changeInQuantity
+        } else {
+          if (changeInQuantity > 0) {
+            this.fieldsToPlace[indexOfCurrentElement].howManyAvailable += changeInQuantity
+          }
         }
       }
     }
@@ -114,10 +98,10 @@ export class Level {
     }
 
     getStartId () : number {
-      return this.start.id
+      return this.start.position
     }
 
-    getStartDirection () : fields.Directions {
+    getStartDirection () : levelParser.Directions {
       return this.start.direction
     }
 }

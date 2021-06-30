@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import { Engine } from '../engine/engine'
 import { Level } from '../levels/level'
 
-type PlacementActions = 'DELETE' | 'PLACE'
+export type PlacementActions = 'DELETE' | 'PLACE'
 
 class FieldView extends React.Component<{ id: number, image: string, fieldUpdate : (index : number) => void}> {
   render () {
@@ -16,10 +16,10 @@ class FieldView extends React.Component<{ id: number, image: string, fieldUpdate
   }
 }
 
-class BottomTooltip extends React.Component<
+export class BottomTooltip extends React.Component<
     {fieldsToPlace : {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}[],
     chooseFieldToPlace : (fieldType: levelParser.FieldToPlaceType) => void,
-    changePlacementMode : (placementMode : PlacementActions) => void }
+    changePlacementMode : (placementMode : PlacementActions) => void}
     > {
   buildTooltipItem (fieldToPlaceInfo: {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}) : ReactElement {
     return (
@@ -41,7 +41,7 @@ class BottomTooltip extends React.Component<
   }
 }
 
-class SpeedControls extends React.Component< {engine : Engine} > {
+export class SpeedControls extends React.Component< {engine : Engine} > {
   render () : ReactElement {
     return (
       <div className='SpeedControls'>
@@ -74,8 +74,8 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
     }
   }
 
-  public updateComponentStateAfterMove (newLevelState : Level) {
-    this.setState({fieldToAdd : this.state.fieldToAdd, level : newLevelState, placementAction: this.state.placementAction});
+  public updateComponentStateAfterMove (newLevelState : Level) : void {
+    this.setState({ fieldToAdd: this.state.fieldToAdd, level: newLevelState, placementAction: this.state.placementAction })
   }
 
   buildRow (rowNumber: number, fieldUpdate : (index : number) => void): ReactElement {
@@ -84,23 +84,25 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
     return (
       <div key={rowNumber} className='row'>
         {[...Array(this.props.engine.level.getCellsPerRow()).keys()].map((fieldIndex : number) => {
-          const field = this.props.engine.level.getField(offset+fieldIndex)
+          const field = this.props.engine.level.getField(offset + fieldIndex)
           return <FieldView key={field.id} id={field.id} image={this.getImage(field)} fieldUpdate={fieldUpdate}/>
         })}
       </div>
     )
   }
 
+  // Updates state to match currently selected field to place on board.
   changeFieldToAdd (fieldType: levelParser.FieldToPlaceType) : void {
     this.setState({ fieldToAdd: fieldType, level: this.state.level, placementAction: 'PLACE' })
   }
 
-  changePlacementAction (actionMode : PlacementActions) {
+  // Updates state to match currently selected action (place or delete)
+  changePlacementAction (actionMode : PlacementActions) : void {
     this.setState({ fieldToAdd: null, level: this.state.level, placementAction: actionMode })
   }
 
   /**
-   * State holds information about current placement mode. 
+   * State holds information about current placement mode.
    * Clicking element on bottom tooltip, changes mode to 'PLACE' and allows placement of element on the board.
    * Clicking DELETE PLACED FIELD button, changes mode to 'DELETE' and allows deletion of element placed by user.
    */
@@ -112,6 +114,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
     }
   }
 
+  // Deletes element from board and updates view.
   deleteElement (index : number) : void {
     if (this.state.level.isPlacedByUser(index)) {
       this.state.level.deleteUserField(index)
@@ -119,6 +122,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
     this.setState({ fieldToAdd: null, level: this.state.level, placementAction: null })
   }
 
+  // Places element on board and updates view.
   placeElement (index : number) : void {
     if (this.state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
       this.props.engine.level.placeUserField(index, this.state.fieldToAdd)

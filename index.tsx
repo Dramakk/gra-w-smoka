@@ -1,21 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Engine } from './engine/engine'
-import { Level } from './levels/level'
-import * as levelBuilder from './views/levelBuilder'
-import * as mainMenuBuilder from './views/mainMenuBuilder'
+import { LevelViewBuilder } from './views/levelBuilder'
+import { MainMenuView } from './views/mainMenuBuilder'
 import './views/css/main.css'
+import { LevelParser } from './levels/levelParser'
+import { EditorViewBuilder } from './views/editorBuilder'
 
-const simpleLevel = `{
+const simpleLevel = JSON.parse(`{
     "fieldsPerRow": 4,
-    "start": {position: 5, direction: 'L'}
+    "start": {"position": 5, "direction": "R"},
     "fieldsToPlace": [
         {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
         {"fieldType": "ARROWUP", "howManyAvailable": 1},
         {"fieldType": "ARROWRIGHT", "howManyAvailable": 1},
         {"fieldType": "ARROWDOWN", "howManyAvailable": 1}
     ],
-    "level": [
+    "fields": [
         {"id": 0, "image": "W", "typeOfField": "WALL"},
         {"id": 1, "image": "W", "typeOfField": "WALL"},
         {"id": 2, "image": "W", "typeOfField": "WALL"},
@@ -36,12 +37,22 @@ const simpleLevel = `{
         {"id": 14, "image": "W", "typeOfField": "WALL"},
         {"id": 15, "image": "W", "typeOfField": "WALL"}
     ]
-}`
-const level = new Level(simpleLevel)
+}`)
+
+const level = LevelParser.getParsedLevel(simpleLevel)
 const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
-ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => {
-  ReactDOM.render(<levelBuilder.LevelViewBuilder engine={ game } ref= {
-    (element) => { game.setLevelViewComponentRef(element) }
-  } />, domContainer)
-} }/>, domContainer)
+ReactDOM.render(<MainMenuView
+  createGameView={ () => {
+    ReactDOM.render(<LevelViewBuilder engine={ game }
+    ref= {
+      (element) => { game.setLevelViewComponentRef(element) }
+    } />, domContainer)
+  } }
+  createEditorView={ () => {
+    const game = new Engine(LevelParser.createLevelForEditor(5, 4))
+    ReactDOM.render(<EditorViewBuilder engine= { game }
+      ref= {
+        (element) => { game.setLevelViewComponentRef(element) }
+      } />, domContainer)
+  }}/>, domContainer)
