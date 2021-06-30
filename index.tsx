@@ -8,6 +8,7 @@ import './views/css/main.css'
 
 const simpleLevel = `{
     "fieldsPerRow": 4,
+    "start": {position: 5, direction: 'L'}
     "fieldsToPlace": [
         {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
         {"fieldType": "ARROWUP", "howManyAvailable": 1},
@@ -39,4 +40,8 @@ const simpleLevel = `{
 const level = new Level(simpleLevel)
 const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
-ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => { ReactDOM.render(<levelBuilder.LevelViewBuilder engine={ game } />, domContainer) } }/>, domContainer)
+ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => {
+  ReactDOM.render(<levelBuilder.LevelViewBuilder engine={ game } ref= {
+    (element) => { game.setLevelViewComponentRef(element) }
+  } />, domContainer)
+} }/>, domContainer)

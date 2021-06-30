@@ -7,6 +7,7 @@ export class Level {
     fieldsPerRow: number
     fieldsToPlace : FieldToPlaceObjectType[]
     userPlacedFields : fields.Field[]
+    start: {id: number, direction: fields.Directions}
 
     constructor (levelDescription: string) {
       const parsedLevelInfo: levelParser.LevelInfo = levelParser.LevelParser.getParsedLevelInfo(levelDescription)
@@ -14,6 +15,7 @@ export class Level {
       this.fieldsPerRow = parsedLevelInfo.fieldsPerRow
       this.fieldsToPlace = parsedLevelInfo.fieldsToPlace
       this.userPlacedFields = []
+      this.start = parsedLevelInfo.start
     }
 
     getFields (): fields.Field[] {
@@ -34,6 +36,10 @@ export class Level {
 
     getLevelSize (): number {
       return this.fields.length
+    }
+
+    getRowCount () : number {
+      return this.fields.length / this.fieldsPerRow
     }
 
     placeUserField (index : number, fieldType : levelParser.FieldToPlaceType) : void {
@@ -61,9 +67,20 @@ export class Level {
       if (newUserPlacedField !== null) {
         this.userPlacedFields.push(newUserPlacedField)
       }
+      this.changeQuantityPlacedFields(fieldType, -1)
     }
 
-    changeFieldToPlaceTypeQuantity (fieldType : levelParser.FieldToPlaceType) : void {
+    deleteUserField (index : number) : void {
+      const userPlacedField = this.getField(index)
+      this.changeQuantityPlacedFields(levelParser.LevelParser.mapFromFieldTypeToFieldToPlaceType(userPlacedField), 1)
+      this.userPlacedFields = this.userPlacedFields.filter((element : fields.Field) => { return element.id !== index })
+    }
+
+    isPlacedByUser (index : number) : boolean {
+      return (this.userPlacedFields.filter((element : fields.Field) => { return element.id === index }).length !== 0)
+    }
+
+    changeQuantityPlacedFields (fieldType : levelParser.FieldToPlaceType, changeInQuantity : number) : void {
       const currentQuantityArray : FieldToPlaceObjectType[] = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType === fieldType })
 
       if (currentQuantityArray.length !== 0) {
@@ -71,8 +88,12 @@ export class Level {
 
         this.fieldsToPlace = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType !== fieldType })
         if (currentQuantity.howManyAvailable > 1) {
-          currentQuantity.howManyAvailable -= 1
+          currentQuantity.howManyAvailable += changeInQuantity
           this.fieldsToPlace.push(currentQuantity)
+        }
+      } else {
+        if (changeInQuantity > 0) {
+          this.fieldsToPlace.push({ fieldType: fieldType, howManyAvailable: changeInQuantity })
         }
       }
     }
@@ -93,6 +114,10 @@ export class Level {
     }
 
     getStartId () : number {
-      return this.fields.filter((element : fields.Field) => { return element.typeOfField === 'START' })[0].id
+      return this.start.id
+    }
+
+    getStartDirection () : fields.Directions {
+      return this.start.direction
     }
 }

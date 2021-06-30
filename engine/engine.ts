@@ -1,11 +1,11 @@
 import * as level from '../levels/level'
 import * as fields from '../levels/fields'
 import * as dragon from './dragon'
-import ReactDOM from 'react-dom'
-import React from 'react'
 import { LevelViewBuilder } from '../views/levelBuilder'
 
 export class Engine {
+  // This holds a reference to rendered component in order to update view every tick.
+  levelViewComponentRef : LevelViewBuilder
   level: level.Level;
   dragon: dragon.Dragon;
   loop: ReturnType<typeof setInterval>
@@ -13,6 +13,10 @@ export class Engine {
   constructor (level : level.Level) {
     this.level = level
     this.dragon = new dragon.Dragon(this.level.getStartId())
+  }
+
+  setLevelViewComponentRef (levelViewComponentRef : LevelViewBuilder) : void {
+    this.levelViewComponentRef = levelViewComponentRef
   }
 
   // Starts simulation with 1s interval
@@ -30,10 +34,7 @@ export class Engine {
   gameReset () : void {
     this.gameStop()
     this.dragon = new dragon.Dragon(this.level.getStartId())
-    ReactDOM.render(
-      React.createElement(LevelViewBuilder, { engine: this }),
-      document.getElementById('app-container')
-    )
+    this.levelViewComponentRef.updateComponentStateAfterMove(this.level)
   }
 
   gameLoop () : void {
@@ -43,10 +44,7 @@ export class Engine {
       clearInterval(this.loop)
     }
     // Forcing component to update
-    ReactDOM.render(
-      React.createElement(LevelViewBuilder, { engine: this }),
-      document.getElementById('app-container')
-    )
+    this.levelViewComponentRef.updateComponentStateAfterMove(this.level)
   }
 
   // Moves dragon to new field (returns false if dragon cant move)

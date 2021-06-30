@@ -1,13 +1,15 @@
 import * as fields from '../levels/fields'
-import * as level from '../levels/level'
 import * as levelParser from '../levels/levelParser'
 import React, { ReactElement } from 'react'
 import { Engine } from '../engine/engine'
+import { Level } from '../levels/level'
 
-class FieldView extends React.Component<{ id: number, image: string, updateFunction : (index : number) => void}> {
+type PlacementActions = 'DELETE' | 'PLACE'
+
+class FieldView extends React.Component<{ id: number, image: string, fieldUpdate : (index : number) => void}> {
   render () {
     return (
-      <div onClick={() => this.props.updateFunction(this.props.id)} className='col-lg'>
+      <div onClick={() => this.props.fieldUpdate(this.props.id)} className='col-lg'>
         {this.props.image}
       </div>
     )
@@ -16,12 +18,13 @@ class FieldView extends React.Component<{ id: number, image: string, updateFunct
 
 class BottomTooltip extends React.Component<
     {fieldsToPlace : {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}[],
-    onClick : (fieldType: levelParser.FieldToPlaceType) => void}
+    chooseFieldToPlace : (fieldType: levelParser.FieldToPlaceType) => void,
+    changePlacementMode : (placementMode : PlacementActions) => void }
     > {
   buildTooltipItem (fieldToPlaceInfo: {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}) : ReactElement {
     return (
       <span>
-        <button onClick={() => this.props.onClick(fieldToPlaceInfo.fieldType)}>{fieldToPlaceInfo.fieldType} {fieldToPlaceInfo.howManyAvailable}</button>
+        <button onClick={() => this.props.chooseFieldToPlace(fieldToPlaceInfo.fieldType)}>{fieldToPlaceInfo.fieldType} {fieldToPlaceInfo.howManyAvailable}</button>
       </span>
     )
   }
@@ -32,6 +35,7 @@ class BottomTooltip extends React.Component<
          {this.props.fieldsToPlace.map(
            fieldToPlaceInfo => this.buildTooltipItem(fieldToPlaceInfo))
          }
+         <button onClick={() => this.props.changePlacementMode('DELETE')}>DELETE PLACED FIELD</button>
       </div>
     )
   }
@@ -55,10 +59,11 @@ class SpeedControls extends React.Component< {engine : Engine} > {
   }
 }
 
-export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: levelParser.FieldToPlaceType, level: level.Level }> {
+// This class serves as the builder for basic game/editor view.
+export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: levelParser.FieldToPlaceType, level: Level, placementAction : PlacementActions }> {
   constructor (props : {engine: Engine}) {
     super(props)
-    this.state = { fieldToAdd: null, level: props.engine.level }
+    this.state = { fieldToAdd: null, level: props.engine.level, placementAction: null }
   }
 
   getImage (field : fields.Field) : string {
@@ -69,49 +74,66 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
     }
   }
 
-  buildRow (from: number, to: number, rowNumber: number, updateFunction : (index : number) => void): ReactElement {
-    const iterations: number[] = []
+  public updateComponentStateAfterMove (newLevelState : Level) {
+    this.setState({fieldToAdd : this.state.fieldToAdd, level : newLevelState, placementAction: this.state.placementAction});
+  }
 
-    for (let i = from; i < to; i++) {
-      iterations.push(i)
-    }
+  buildRow (rowNumber: number, fieldUpdate : (index : number) => void): ReactElement {
+    const offset = rowNumber * this.props.engine.level.getCellsPerRow()
 
     return (
       <div key={rowNumber} className='row'>
-        {iterations.map((fieldIndex : number) => {
-          const field = this.props.engine.level.getField(fieldIndex)
-          return <FieldView key={field.id} id={field.id} image={this.getImage(field)} updateFunction={updateFunction}/>
+        {[...Array(this.props.engine.level.getCellsPerRow()).keys()].map((fieldIndex : number) => {
+          const field = this.props.engine.level.getField(offset+fieldIndex)
+          return <FieldView key={field.id} id={field.id} image={this.getImage(field)} fieldUpdate={fieldUpdate}/>
         })}
       </div>
     )
   }
 
   changeFieldToAdd (fieldType: levelParser.FieldToPlaceType) : void {
-    this.setState({ fieldToAdd: fieldType })
+    this.setState({ fieldToAdd: fieldType, level: this.state.level, placementAction: 'PLACE' })
+  }
+
+  changePlacementAction (actionMode : PlacementActions) {
+    this.setState({ fieldToAdd: null, level: this.state.level, placementAction: actionMode })
+  }
+
+  /**
+   * State holds information about current placement mode. 
+   * Clicking element on bottom tooltip, changes mode to 'PLACE' and allows placement of element on the board.
+   * Clicking DELETE PLACED FIELD button, changes mode to 'DELETE' and allows deletion of element placed by user.
+   */
+  fieldPlacementController (index : number) : void {
+    if (this.state.placementAction === 'DELETE') {
+      this.deleteElement(index)
+    } else if (this.state.placementAction === 'PLACE') {
+      this.placeElement(index)
+    }
+  }
+
+  deleteElement (index : number) : void {
+    if (this.state.level.isPlacedByUser(index)) {
+      this.state.level.deleteUserField(index)
+    }
+    this.setState({ fieldToAdd: null, level: this.state.level, placementAction: null })
   }
 
   placeElement (index : number) : void {
     if (this.state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
       this.props.engine.level.placeUserField(index, this.state.fieldToAdd)
-      this.props.engine.level.changeFieldToPlaceTypeQuantity(this.state.fieldToAdd)
     }
-    this.setState({ fieldToAdd: null, level: this.state.level })
+    this.setState({ fieldToAdd: null, level: this.state.level, placementAction: null })
   }
 
   render () : ReactElement {
-    const iterations: number[] = []
-
-    for (let i = 0; i < this.props.engine.level.getLevelSize() / this.props.engine.level.getCellsPerRow(); i++) {
-      iterations.push(i)
-    }
-
     return (
       <div className='container'>
         <p>{this.state.fieldToAdd}</p>
         <div className='board-container'>
-          {iterations.map(rowNumber => this.buildRow(rowNumber * this.props.engine.level.getCellsPerRow(), (rowNumber + 1) * this.props.engine.level.getCellsPerRow(), rowNumber, this.placeElement.bind(this)))}
+          {[...Array(this.props.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
         </div>
-        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} onClick={this.changeFieldToAdd.bind(this)} />
+        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToAdd.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.props.engine}/>
       </div>
     )
