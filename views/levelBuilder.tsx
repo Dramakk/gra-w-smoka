@@ -2,68 +2,17 @@ import * as fields from '../levels/fields'
 import * as levelParser from '../levels/levelParser'
 import React, { ReactElement } from 'react'
 import { Engine } from '../engine/engine'
-import { Level } from '../levels/level'
-
+import { FieldOptionType, Level } from '../levels/level'
+import { BottomTooltip } from './bottomTooltipBuilder'
+import { SpeedControls } from './speedControlBuilder'
+import { FieldView } from './fieldViewBuilder'
 export type PlacementActions = 'DELETE' | 'PLACE'
 
-class FieldView extends React.Component<{ id: number, image: string, fieldUpdate : (index : number) => void}> {
-  render () {
-    return (
-      <div onClick={() => this.props.fieldUpdate(this.props.id)} className='col-lg'>
-        {this.props.image}
-      </div>
-    )
-  }
-}
-
-export class BottomTooltip extends React.Component<
-    {fieldsToPlace : {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}[],
-    chooseFieldToPlace : (fieldType: levelParser.FieldToPlaceType) => void,
-    changePlacementMode : (placementMode : PlacementActions) => void}
-    > {
-  buildTooltipItem (fieldToPlaceInfo: {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}) : ReactElement {
-    return (
-      <span>
-        <button onClick={() => this.props.chooseFieldToPlace(fieldToPlaceInfo.fieldType)}>{fieldToPlaceInfo.fieldType} {fieldToPlaceInfo.howManyAvailable}</button>
-      </span>
-    )
-  }
-
-  render () : ReactElement {
-    return (
-      <div className='bottom-tooltip'>
-         {this.props.fieldsToPlace.map(
-           fieldToPlaceInfo => this.buildTooltipItem(fieldToPlaceInfo))
-         }
-         <button onClick={() => this.props.changePlacementMode('DELETE')}>DELETE PLACED FIELD</button>
-      </div>
-    )
-  }
-}
-
-export class SpeedControls extends React.Component< {engine : Engine} > {
-  render () : ReactElement {
-    return (
-      <div className='SpeedControls'>
-        <span>
-          <button onClick={this.props.engine.gameStart.bind(this.props.engine)}>START</button>
-        </span>
-        <span>
-          <button onClick={this.props.engine.gameStop.bind(this.props.engine)}>STOP</button>
-        </span>
-        <span>
-          <button onClick={this.props.engine.gameReset.bind(this.props.engine)}>RESET</button>
-        </span>
-      </div>
-    )
-  }
-}
-
 // This class serves as the builder for basic game/editor view.
-export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: levelParser.FieldToPlaceType, level: Level, placementAction : PlacementActions }> {
+export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: levelParser.FieldToPlaceType, level: Level, placementAction : PlacementActions, choosenOption : FieldOptionType }> {
   constructor (props : {engine: Engine}) {
     super(props)
-    this.state = { fieldToAdd: null, level: props.engine.level, placementAction: null }
+    this.state = { fieldToAdd: null, level: props.engine.level, placementAction: null, choosenOption: null }
   }
 
   getImage (field : fields.Field) : string {
@@ -92,8 +41,8 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
   }
 
   // Updates state to match currently selected field to place on board.
-  changeFieldToAdd (fieldType: levelParser.FieldToPlaceType) : void {
-    this.setState({ fieldToAdd: fieldType, level: this.state.level, placementAction: 'PLACE' })
+  changeFieldToPlace (fieldType: levelParser.FieldToPlaceType, choosenOption? : FieldOptionType) : void {
+    this.setState({ fieldToAdd: fieldType, level: this.state.level, placementAction: 'PLACE', choosenOption: choosenOption })
   }
 
   // Updates state to match currently selected action (place or delete)
@@ -137,7 +86,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
         <div className='board-container'>
           {[...Array(this.props.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
         </div>
-        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToAdd.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
+        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.props.engine}/>
       </div>
     )

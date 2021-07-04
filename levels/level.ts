@@ -1,8 +1,10 @@
 import * as fields from './fields'
 import * as levelParser from './levelParser'
-
+// Type for dropdown options of fields to place by user.
+export type FieldOptionType = {direction : levelParser.Directions}
 export type Start = {position: number, direction: levelParser.Directions}
 export type FieldToPlaceObjectType = {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}
+
 export class Level {
     fields: fields.Field[]
     fieldsPerRow: number
@@ -72,7 +74,7 @@ export class Level {
         const currentQuantity : FieldToPlaceObjectType = currentQuantityArray[0]
         const indexOfCurrentElement: number = this.fieldsToPlace.indexOf(currentQuantity)
 
-        if (currentQuantity.howManyAvailable > 1) {
+        if (currentQuantity.howManyAvailable >= 1) {
           this.fieldsToPlace[indexOfCurrentElement].howManyAvailable += changeInQuantity
         } else {
           if (changeInQuantity > 0) {
@@ -80,6 +82,17 @@ export class Level {
           }
         }
       }
+    }
+
+    canPlaceField (fieldType: levelParser.FieldToPlaceType) : boolean {
+      const currentQuantityArray : FieldToPlaceObjectType[] = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType === fieldType })
+      if (currentQuantityArray.length !== 0) {
+        if (currentQuantityArray[0].howManyAvailable > 0) {
+          return true
+        }
+      }
+
+      return false
     }
 
     getField (index: number) : fields.Field {
