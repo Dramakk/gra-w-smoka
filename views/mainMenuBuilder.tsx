@@ -5,7 +5,7 @@ import { LevelImportView } from './levelImportView'
 export class MainMenuView extends React.Component<{createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}, {howManyRows: number, howManyPerRow: number, editorFormClassDisplay: string}> {
   constructor (props: { createGameView: (importedLevelString: string) => void, createEditorView: () => void }) {
     super(props)
-    this.state = { howManyRows: 5, howManyPerRow: 5, editorFormClassDisplay: 'none'}
+    this.state = { howManyRows: 5, howManyPerRow: 5, editorFormClassDisplay: 'none' }
   }
 
   renderImportView () : void {
@@ -26,7 +26,7 @@ export class MainMenuView extends React.Component<{createGameView: (importedLeve
             <div className='menu'>
                 <div className='menu-item' onClick={() => this.renderImportView() }>Graj!</div>
                 <div className='menu-item' onClick={() => this.setState({ editorFormClassDisplay: 'block' })}>Twórz poziom</div>
-                <div style={{display: this.state.editorFormClassDisplay }}>
+                <div style={{ display: this.state.editorFormClassDisplay }}>
                   <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
                   <input name='howManyRows' type='number' value={this.state.howManyRows} onChange={this.changeHowManyRows.bind(this)}></input>
                   <label htmlFor='howManyRows'>Ile pól ma posiadać jeden rząd?</label>

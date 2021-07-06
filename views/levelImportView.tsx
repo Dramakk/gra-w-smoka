@@ -45,7 +45,7 @@ export class LevelImportView extends React.Component<{createGameView : (imported
     this.props.createGameView(this.state.importedLevel)
   }
 
-  updateImportedLevel (event : React.ChangeEvent<HTMLTextAreaElement>) {
+  updateImportedLevel (event : React.ChangeEvent<HTMLTextAreaElement>): void {
     this.setState({ importedLevel: event.target.value })
   }
 
