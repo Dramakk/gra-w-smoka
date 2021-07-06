@@ -4,7 +4,7 @@ import * as fields from './fields'
 import { FieldToPlaceObjectType, Level, Start } from './level'
 
 export type FieldToPlaceType = 'START' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
-export const FieldToPlaceTypeArray = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
+export const FieldToPlaceTypeArray: FieldToPlaceType[] = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
 export type Directions = 'U' | 'L' | 'D' | 'R'
 
 export class LevelParser {

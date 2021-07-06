@@ -17,8 +17,8 @@ ReactDOM.render(<MainMenuView
       (element) => { game.setLevelViewComponentRef(element) }
     } />, domContainer)
   } }
-  createEditorView={ () => {
-    const game = new Engine(LevelParser.createLevelForEditor(5, 4))
+  createEditorView={ (howManyRows: number, howManyPerRow: number) => {
+    const game = new Engine(LevelParser.createLevelForEditor(howManyRows, howManyPerRow))
     ReactDOM.render(<EditorViewBuilder engine= { game }
       ref= {
         (element) => { game.setLevelViewComponentRef(element) }

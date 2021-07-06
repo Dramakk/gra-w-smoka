@@ -6,6 +6,7 @@ import React, { ReactElement } from 'react'
 import { BottomTooltip } from './bottomTooltipBuilder'
 import { SpeedControls } from './speedControlBuilder'
 import ReactDOM from 'react-dom'
+import { FieldsToPlaceSelectionView } from './fieldsToPlaceSelectionView'
 
 // This class serves as the builder for basic game/editor view.
 export class EditorViewBuilder extends LevelViewBuilder {
@@ -17,8 +18,6 @@ export class EditorViewBuilder extends LevelViewBuilder {
   }
 
   // TODO: Dodanie wybierania pól dostępnych użytkownikowi
-  // TODO: Napisanie wypluwacza do poziomów, tak żebyśmy mogli je sobie sparsować
-  // TODO: Dodanie formularza przyjmującego poziom do sparsowania
   // Override of parent function to match editor behaviour.
   deleteElement (index : number) : void {
     if (!(this.state.level.getField(index) instanceof fields.Wall)) {
@@ -48,6 +47,7 @@ export class EditorViewBuilder extends LevelViewBuilder {
         </div>
         <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.props.engine}/>
+        <FieldsToPlaceSelectionView editor={this.editor} initialFieldsToPlaceByUser={this.editor.fieldsToPlaceByUser}/>
         <button onClick={() => this.exportLevel()}>EXPORT LEVEL</button>
       </div>
     )

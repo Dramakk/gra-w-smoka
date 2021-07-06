@@ -1,69 +1,23 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
+import { LevelImportView } from './levelImportView'
 
-class LevelImportView extends React.Component<{createGameView : (importedLevelString: string) => void}, {importedLevel : string}> {
-  constructor (props : {createGameView : (importedLevelString: string) => void}) {
+export class MainMenuView extends React.Component<{createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}, {howManyRows: number, howManyPerRow: number, editorFormClassDisplay: string}> {
+  constructor (props: { createGameView: (importedLevelString: string) => void, createEditorView: () => void }) {
     super(props)
-    // For now we keep basic level
-    this.state = {
-      importedLevel: `{
-      "fieldsPerRow": 4,
-      "start": {"position": 5, "direction": "R"},
-      "fieldsToPlace": [
-          {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
-          {"fieldType": "ARROWUP", "howManyAvailable": 1},
-          {"fieldType": "ARROWRIGHT", "howManyAvailable": 1},
-          {"fieldType": "ARROWDOWN", "howManyAvailable": 1}
-      ],
-      "fields": [
-          {"id": 0, "image": "W", "typeOfField": "WALL"},
-          {"id": 1, "image": "W", "typeOfField": "WALL"},
-          {"id": 2, "image": "W", "typeOfField": "WALL"},
-          {"id": 3, "image": "W", "typeOfField": "WALL"},
-  
-          {"id": 4, "image": "W", "typeOfField": "WALL"},
-          {"id": 5, "image": "E", "typeOfField": "START"},
-          {"id": 6, "image": "E", "typeOfField": "EMPTY"},
-          {"id": 7, "image": "W", "typeOfField": "WALL"},
-  
-          {"id": 8, "image": "W", "typeOfField": "WALL"},
-          {"id": 9, "image": "E", "typeOfField": "EMPTY"},
-          {"id": 10, "image": "E", "typeOfField": "EMPTY"},
-          {"id": 11, "image": "W", "typeOfField": "WALL"},
-  
-          {"id": 12, "image": "W", "typeOfField": "WALL"},
-          {"id": 13, "image": "W", "typeOfField": "WALL"},
-          {"id": 14, "image": "W", "typeOfField": "WALL"},
-          {"id": 15, "image": "W", "typeOfField": "WALL"}
-      ]
-  }`
-    }
+    this.state = { howManyRows: 5, howManyPerRow: 5, editorFormClassDisplay: 'none'}
   }
 
-  onSubmit (event : React.FormEvent<HTMLFormElement>) : void {
-    event.preventDefault()
-    this.props.createGameView(this.state.importedLevel)
-  }
-
-  updateImportedLevel (event : React.ChangeEvent<HTMLTextAreaElement>) {
-    this.setState({ importedLevel: event.target.value })
-  }
-
-  render () : ReactElement {
-    return (
-      <form onSubmit={this.onSubmit.bind(this)}>
-        <label>Wpisz poziom</label>
-        <textarea name='level' onChange={this.updateImportedLevel.bind(this)} rows={50} cols={50} value={this.state.importedLevel}>
-        </textarea>
-        <input type="submit" value="Graj"/>
-      </form>
-    )
-  }
-}
-
-export class MainMenuView extends React.Component<{createGameView: (importedLevelString: string) => void, createEditorView: () => void}> {
   renderImportView () : void {
     ReactDOM.render(<LevelImportView createGameView={this.props.createGameView}/>, document.querySelector('#app-container'))
+  }
+
+  changeHowManyPerRow (event: React.ChangeEvent<HTMLInputElement>): void {
+    this.setState({ howManyPerRow: Number(event.target.value), howManyRows: this.state.howManyRows })
+  }
+
+  changeHowManyRows (event: React.ChangeEvent<HTMLInputElement>): void {
+    this.setState({ howManyRows: Number(event.target.value), howManyPerRow: this.state.howManyPerRow })
   }
 
   render () : ReactElement {
@@ -71,7 +25,14 @@ export class MainMenuView extends React.Component<{createGameView: (importedLeve
         <>
             <div className='menu'>
                 <div className='menu-item' onClick={() => this.renderImportView() }>Graj!</div>
-                <div className='menu-item' onClick={() => this.props.createEditorView()}>Twórz poziom</div>
+                <div className='menu-item' onClick={() => this.setState({ editorFormClassDisplay: 'block' })}>Twórz poziom</div>
+                <div style={{display: this.state.editorFormClassDisplay }}>
+                  <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
+                  <input name='howManyRows' type='number' value={this.state.howManyRows} onChange={this.changeHowManyRows.bind(this)}></input>
+                  <label htmlFor='howManyRows'>Ile pól ma posiadać jeden rząd?</label>
+                  <input name='howManyPerRow' type='number' value={this.state.howManyPerRow} onChange={this.changeHowManyPerRow.bind(this)}></input>
+                  <button onClick={() => this.props.createEditorView(this.state.howManyRows, this.state.howManyPerRow)}>Rozpocznij edycję</button>
+                </div>
             </div>
         </>
     )

@@ -1,7 +1,7 @@
 import { Engine } from '../engine/engine'
 import { Empty, Start } from '../levels/fields'
 import { FieldOptionType, FieldToPlaceObjectType, Level } from '../levels/level'
-import { FieldToPlaceType, LevelParser } from '../levels/levelParser'
+import { FieldToPlaceType, FieldToPlaceTypeArray, LevelParser } from '../levels/levelParser'
 
 export class Editor {
   engine : Engine
@@ -9,6 +9,17 @@ export class Editor {
 
   constructor (engine: Engine) {
     this.engine = engine
+    this.fieldsToPlaceByUser = FieldToPlaceTypeArray.filter(
+      (fieldType) => fieldType !== 'START').map(
+      (fieldType) => { return { fieldType: fieldType, howManyAvailable: 0 } })
+  }
+
+  // Changes the quantity of given fieldToPlaceByUser. Using index, because this array, shouldn't lose any members.
+  changeQtyOfFieldsToPlaceByUser (index: number, changeInQty: number): void {
+    if (changeInQty < 0 && this.fieldsToPlaceByUser[index].howManyAvailable === 0) {
+      return
+    }
+    this.fieldsToPlaceByUser[index].howManyAvailable += changeInQty
   }
 
   deleteUserField (index: number) : void {
@@ -39,9 +50,10 @@ export class Editor {
   // Function used to export built level to JSON.
   exportLevel () : string {
     const levelToExport: Level = this.engine.level
-    // Default behaviour just to test things
-    levelToExport.fieldsToPlace = levelToExport.fieldsToPlace.map((elem) => { elem.howManyAvailable = 10; return elem })
+    levelToExport.fieldsToPlace = this.fieldsToPlaceByUser.filter((elem) => elem.howManyAvailable !== 0)
     levelToExport.fieldsToPlace = levelToExport.fieldsToPlace.filter((elem) => { return elem.fieldType !== 'START' })
+    // We don't use this field in parsing
+    delete levelToExport.userPlacedFields
     return JSON.stringify(levelToExport)
   }
 }
