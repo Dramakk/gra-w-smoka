@@ -13,14 +13,10 @@ ReactDOM.render(<MainMenuView
     const level = LevelParser.getParsedLevel(JSON.parse(importedLevel))
     const game = new Engine(level)
     ReactDOM.render(<LevelViewBuilder engine={ game }
-    ref= {
-      (element) => { game.setLevelViewComponentRef(element) }
-    } />, domContainer)
+    />, domContainer)
   } }
   createEditorView={ (howManyRows: number, howManyPerRow: number) => {
     const game = new Engine(LevelParser.createLevelForEditor(howManyRows, howManyPerRow))
     ReactDOM.render(<EditorViewBuilder engine= { game }
-      ref= {
-        (element) => { game.setLevelViewComponentRef(element) }
-      } />, domContainer)
+    />, domContainer)
   }}/>, domContainer)

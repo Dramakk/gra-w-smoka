@@ -1,10 +1,14 @@
 import { Engine } from '../engine/engine'
 import { Empty, Start } from '../levels/fields'
-import { FieldOptionType, FieldToPlaceObjectType, Level } from '../levels/level'
-import { FieldToPlaceType, FieldToPlaceTypeArray, LevelParser } from '../levels/levelParser'
+import { Directions, FieldToPlaceObjectType, FieldToPlaceType, FieldToPlaceTypeArray, Level } from '../levels/level'
+import { LevelParser } from '../levels/levelParser'
+
+// Type for dropdown options of fields to place by user.
+export type FieldOptionType = {direction : Directions}
 
 export class Editor {
   engine : Engine
+  // Array of fields which are going to be available to player, when level is imported.
   fieldsToPlaceByUser: FieldToPlaceObjectType[]
 
   constructor (engine: Engine) {
@@ -16,15 +20,19 @@ export class Editor {
 
   // Changes the quantity of given fieldToPlaceByUser. Using index, because this array, shouldn't lose any members.
   changeQtyOfFieldsToPlaceByUser (index: number, changeInQty: number): void {
-    if (changeInQty < 0 && this.fieldsToPlaceByUser[index].howManyAvailable === 0) {
+    const howManyAvailableAfterChange = this.fieldsToPlaceByUser[index].howManyAvailable + changeInQty
+
+    if (howManyAvailableAfterChange < 0) {
       return
     }
-    this.fieldsToPlaceByUser[index].howManyAvailable += changeInQty
+    this.fieldsToPlaceByUser[index].howManyAvailable += howManyAvailableAfterChange
   }
 
-  deleteUserField (index: number) : void {
+  // Invoked when user deletes object from the board.
+  clearSquare (index: number) : void {
     const currentlyPlacedField = this.engine.level.fields[index]
     if (currentlyPlacedField instanceof Start) {
+      // We can set postition and direction to null. If either is null, game won't start (see gameStart from engine.ts).
       this.engine.level.start = { position: null, direction: null }
       this.engine.level.changeQuantityPlacedFields('START', 1)
       this.engine.gameReset()
@@ -32,14 +40,14 @@ export class Editor {
     this.engine.level.fields[index] = new Empty('E', index)
   }
 
-  placeUserField (index: number, fieldToPlaceType : FieldToPlaceType, choosenOptions: FieldOptionType) : void {
+  // Invoked when user places object on the board.
+  fillSquare (index: number, fieldToPlaceType : FieldToPlaceType, choosenOptions: FieldOptionType) : void {
     if (!this.engine.level.canPlaceField(fieldToPlaceType)) {
       return
     }
     if (fieldToPlaceType === 'START') {
       this.engine.level.start = { position: index, direction: choosenOptions.direction }
       this.engine.level.changeQuantityPlacedFields('START', -1)
-      console.log(this.engine.level.fieldsToPlace)
       // Update dragon start position in engine
       this.engine.gameReset()
     }

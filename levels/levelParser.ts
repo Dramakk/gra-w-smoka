@@ -1,11 +1,7 @@
 import * as spicery from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { FieldToPlaceObjectType, Level, Start } from './level'
-
-export type FieldToPlaceType = 'START' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
-export const FieldToPlaceTypeArray: FieldToPlaceType[] = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
-export type Directions = 'U' | 'L' | 'D' | 'R'
+import { Directions, FieldToPlaceObjectType, FieldToPlaceType, FieldToPlaceTypeArray, Level, Start } from './level'
 
 export class LevelParser {
     static parsedLevel: Level

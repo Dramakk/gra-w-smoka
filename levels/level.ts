@@ -1,9 +1,11 @@
 import * as fields from './fields'
 import * as levelParser from './levelParser'
-// Type for dropdown options of fields to place by user.
-export type FieldOptionType = {direction : levelParser.Directions}
-export type Start = {position: number, direction: levelParser.Directions}
-export type FieldToPlaceObjectType = {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}
+// Array matching type defined below. Used to generate form where user can choose how many and which fields player could use in game.
+export const FieldToPlaceTypeArray: FieldToPlaceType[] = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
+export type FieldToPlaceType = 'START' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
+export type Directions = 'U' | 'L' | 'D' | 'R'
+export type Start = {position: number, direction: Directions}
+export type FieldToPlaceObjectType = {fieldType: FieldToPlaceType, howManyAvailable: number}
 
 export class Level {
     fields: fields.Field[]
@@ -44,7 +46,7 @@ export class Level {
       return this.fields.length / this.fieldsPerRow
     }
 
-    placeUserField (index : number, fieldType : levelParser.FieldToPlaceType) : void {
+    fillSquare (index : number, fieldType : FieldToPlaceType) : void {
       const newUserPlacedField : fields.Field = levelParser.LevelParser.newFieldFromType(index, fieldType)
       const isIndexInPlacedFields : boolean = (this.userPlacedFields.filter((element : fields.Field) => { return element.id === index }).length !== 0)
 
@@ -57,7 +59,7 @@ export class Level {
       this.changeQuantityPlacedFields(fieldType, -1)
     }
 
-    deleteUserField (index : number) : void {
+    clearSquare (index : number) : void {
       const userPlacedField = this.getField(index)
       this.changeQuantityPlacedFields(levelParser.LevelParser.mapFromFieldTypeToFieldToPlaceType(userPlacedField), 1)
       this.userPlacedFields = this.userPlacedFields.filter((element : fields.Field) => { return element.id !== index })
@@ -67,7 +69,9 @@ export class Level {
       return (this.userPlacedFields.filter((element : fields.Field) => { return element.id === index }).length !== 0)
     }
 
-    changeQuantityPlacedFields (fieldType : levelParser.FieldToPlaceType, changeInQuantity : number) : void {
+    // Update how many times user can place a field of given type (eg. left arrow, up arrrow, etc.).
+    // Invoked when user clears square or places object on the board.
+    changeQuantityPlacedFields (fieldType : FieldToPlaceType, changeInQuantity : number) : void {
       const currentQuantityArray : FieldToPlaceObjectType[] = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType === fieldType })
 
       if (currentQuantityArray.length !== 0) {
@@ -84,7 +88,7 @@ export class Level {
       }
     }
 
-    canPlaceField (fieldType: levelParser.FieldToPlaceType) : boolean {
+    canPlaceField (fieldType: FieldToPlaceType) : boolean {
       const currentQuantityArray : FieldToPlaceObjectType[] = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType === fieldType })
       if (currentQuantityArray.length !== 0) {
         if (currentQuantityArray[0].howManyAvailable > 0) {
@@ -114,7 +118,7 @@ export class Level {
       return this.start.position
     }
 
-    getStartDirection () : levelParser.Directions {
+    getStartDirection () : Directions {
       return this.start.direction
     }
 }

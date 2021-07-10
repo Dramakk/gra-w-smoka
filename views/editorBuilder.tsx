@@ -21,7 +21,7 @@ export class EditorViewBuilder extends LevelViewBuilder {
   // Override of parent function to match editor behaviour.
   deleteElement (index : number) : void {
     if (!(this.state.level.getField(index) instanceof fields.Wall)) {
-      this.editor.deleteUserField(index)
+      this.editor.clearSquare(index)
     }
     this.setState({ fieldToAdd: null, level: this.editor.engine.level, placementAction: null })
   }
@@ -29,7 +29,7 @@ export class EditorViewBuilder extends LevelViewBuilder {
   // Override of parent function to match editor behaviour.
   placeElement (index : number) : void {
     if (this.state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
-      this.editor.placeUserField(index, this.state.fieldToAdd, this.state.choosenOption)
+      this.editor.fillSquare(index, this.state.fieldToAdd, this.state.choosenOption)
     }
     this.setState({ fieldToAdd: null, level: this.editor.engine.level, placementAction: null })
   }

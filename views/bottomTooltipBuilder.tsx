@@ -1,12 +1,12 @@
-import * as levelParser from '../levels/levelParser'
 import React, { ReactElement } from 'react'
-import { FieldOptionType } from '../levels/level'
+import { FieldOptionType } from '../editor/editor'
+import { FieldToPlaceType } from '../levels/level'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import { PlacementActions } from './levelBuilder'
 
 // Component for single item from bottom tooltip
-export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number},
-    chooseFieldToPlace : (fieldType: levelParser.FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldType: FieldToPlaceType, howManyAvailable: number},
+    chooseFieldToPlace : (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
     changePlacementMode : (placementMode : PlacementActions) => void},
     {firstSelectedOption : string, secondSelectedOption: string}
     > {
@@ -17,8 +17,8 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
   howManyOptions = 0
 
   constructor (props: {
-    fieldToPlace: { fieldType: levelParser.FieldToPlaceType, howManyAvailable: number },
-    chooseFieldToPlace: (fieldType: levelParser.FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+    fieldToPlace: { fieldType: FieldToPlaceType, howManyAvailable: number },
+    chooseFieldToPlace: (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
     changePlacementMode: (placementMode: PlacementActions) => void
   }) {
     super(props)
@@ -97,11 +97,11 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
 }
 
 export class BottomTooltip extends React.Component<
-    {fieldsToPlace : {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}[],
-    chooseFieldToPlace : (fieldType: levelParser.FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+    {fieldsToPlace : {fieldType: FieldToPlaceType, howManyAvailable: number}[],
+    chooseFieldToPlace : (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
     changePlacementMode : (placementMode : PlacementActions) => void}
     > {
-  buildTooltipItem (fieldToPlaceInfo: {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}) : ReactElement {
+  buildTooltipItem (fieldToPlaceInfo: {fieldType: FieldToPlaceType, howManyAvailable: number}) : ReactElement {
     return <BottomTooltipItem fieldToPlace={fieldToPlaceInfo} chooseFieldToPlace={this.props.chooseFieldToPlace} changePlacementMode={this.props.changePlacementMode} />
   }
 

@@ -1,4 +1,5 @@
-import type { Directions } from '../levels/levelParser'
+import { Directions } from '../levels/level'
+
 export class Dragon {
   fieldId: number;
   direction: Directions;

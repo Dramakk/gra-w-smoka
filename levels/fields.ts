@@ -1,10 +1,15 @@
-import * as levelParser from './levelParser'
+import { Directions } from './level'
 
 export abstract class Field {
     typeOfField: string;
     id: number;
     image: string;
-    attributes: {direction : levelParser.Directions};
+    isDragon: boolean
+    attributes: {direction : Directions};
+
+    hasDragon (): boolean {
+      return this.isDragon
+    }
 }
 
 export class Start extends Field {
@@ -52,7 +57,7 @@ export class Empty extends Field {
 }
 
 export class Arrow extends Field {
-  constructor (direction: levelParser.Directions, image: string, id: number) {
+  constructor (direction: Directions, image: string, id: number) {
     super()
     this.image = image
     this.attributes = { direction: direction }
