@@ -4,12 +4,7 @@ export abstract class Field {
     typeOfField: string;
     id: number;
     image: string;
-    isDragon: boolean
     attributes: {direction : Directions};
-
-    hasDragon (): boolean {
-      return this.isDragon
-    }
 }
 
 export class Start extends Field {
