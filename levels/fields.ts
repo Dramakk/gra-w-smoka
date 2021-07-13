@@ -1,7 +1,9 @@
-import { Directions } from './level'
+import { Directions, GadgetType } from './level'
+
+type FieldType = GadgetType | 'EMPTY'
 
 export abstract class Field {
-    typeOfField: string;
+    typeOfField: FieldType;
     id: number;
     image: string;
     attributes: {direction : Directions};
@@ -57,6 +59,19 @@ export class Arrow extends Field {
     this.image = image
     this.attributes = { direction: direction }
     this.id = id
-    this.typeOfField = 'ARROW'
+    switch (direction) {
+      case 'U':
+        this.typeOfField = 'ARROWUP'
+        break
+      case 'D':
+        this.typeOfField = 'ARROWDOWN'
+        break
+      case 'L':
+        this.typeOfField = 'ARROWLEFT'
+        break
+      case 'R':
+        this.typeOfField = 'ARROWLEFT'
+        break
+    }
   }
 }

@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
-import { FieldOptionType } from '../editor/editor'
-import { FieldToPlaceType } from '../levels/level'
+import { GadgetOptionType } from '../editor/editor'
+import { GadgetInfo, GadgetType } from '../levels/level'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import { PlacementActions } from './levelBuilder'
 
 // Component for single item from bottom tooltip
-export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldType: FieldToPlaceType, howManyAvailable: number},
-    chooseFieldToPlace : (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+export class BottomTooltipItem extends React.Component<{gadgetToPlace : GadgetInfo,
+    chooseGadgetToPlace : (fieldType: GadgetType, choosenOption? : GadgetOptionType) => void,
     changePlacementMode : (placementMode : PlacementActions) => void},
     {firstSelectedOption : string, secondSelectedOption: string}
     > {
@@ -17,8 +17,8 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
   howManyOptions = 0
 
   constructor (props: {
-    fieldToPlace: { fieldType: FieldToPlaceType, howManyAvailable: number },
-    chooseFieldToPlace: (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+    gadgetToPlace: GadgetInfo,
+    chooseGadgetToPlace: (fieldType: GadgetType, choosenOption? : GadgetOptionType) => void,
     changePlacementMode: (placementMode: PlacementActions) => void
   }) {
     super(props)
@@ -27,7 +27,7 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
       secondSelectedOption: null
     }
     // Check if element has options and assign them
-    switch (props.fieldToPlace.fieldType) {
+    switch (props.gadgetToPlace[0]) {
       case 'START':
         this.hasOptions = true
         this.firstOptionsArray = ['D', 'U', 'L', 'R']
@@ -37,8 +37,8 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
     }
   }
 
-  parseDropdownInput () : FieldOptionType {
-    const fieldOptionParser: ParseFn<FieldOptionType> = (x : any) => {
+  parseDropdownInput () : GadgetOptionType {
+    const fieldOptionParser: ParseFn<GadgetOptionType> = (x : any) => {
       // Parse only one option field
       // TODO: Update after adding more fields
       if (this.howManyOptions === 1) {
@@ -52,7 +52,6 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
   // Update state to currently selected options.
   updateSelectedOption (whichOption: number): (event: React.ChangeEvent<HTMLSelectElement>) => void {
     return (event: React.ChangeEvent<HTMLSelectElement>) => {
-      console.log(event.target)
       if (whichOption === 1) {
         this.setState({ firstSelectedOption: event.target.value, secondSelectedOption: this.state.secondSelectedOption })
       } else {
@@ -89,7 +88,7 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
     // If element has options add dropdown.
     return (
       <span>
-        <button onClick={() => this.props.chooseFieldToPlace(this.props.fieldToPlace.fieldType, this.parseDropdownInput())}>{this.props.fieldToPlace.fieldType} {this.props.fieldToPlace.howManyAvailable}</button>
+        <button onClick={() => this.props.chooseGadgetToPlace(this.props.gadgetToPlace[0], this.parseDropdownInput())}>{this.props.gadgetToPlace[0]} {this.props.gadgetToPlace[1]}</button>
         {dropdown}
       </span>
     )
@@ -97,19 +96,19 @@ export class BottomTooltipItem extends React.Component<{fieldToPlace : {fieldTyp
 }
 
 export class BottomTooltip extends React.Component<
-    {fieldsToPlace : {fieldType: FieldToPlaceType, howManyAvailable: number}[],
-    chooseFieldToPlace : (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) => void,
+    {fieldsToPlace : GadgetInfo[],
+    chooseGadgetToPlace : (fieldType: GadgetType, choosenOption? : GadgetOptionType) => void,
     changePlacementMode : (placementMode : PlacementActions) => void}
     > {
-  buildTooltipItem (fieldToPlaceInfo: {fieldType: FieldToPlaceType, howManyAvailable: number}) : ReactElement {
-    return <BottomTooltipItem fieldToPlace={fieldToPlaceInfo} chooseFieldToPlace={this.props.chooseFieldToPlace} changePlacementMode={this.props.changePlacementMode} />
+  buildTooltipItem (gadgetToPlaceInfo: GadgetInfo) : ReactElement {
+    return <BottomTooltipItem gadgetToPlace={gadgetToPlaceInfo} chooseGadgetToPlace={this.props.chooseGadgetToPlace} changePlacementMode={this.props.changePlacementMode} />
   }
 
   render () : ReactElement {
     return (
       <div className='bottom-tooltip'>
          {this.props.fieldsToPlace.map(
-           fieldToPlaceInfo => this.buildTooltipItem(fieldToPlaceInfo))
+           gadgetToPlaceInfo => this.buildTooltipItem(gadgetToPlaceInfo))
          }
          <button onClick={() => this.props.changePlacementMode('DELETE')}>DELETE PLACED FIELD</button>
       </div>

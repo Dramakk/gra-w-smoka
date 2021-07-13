@@ -1,35 +1,34 @@
 import * as fields from '../levels/fields'
 import { Editor } from '../editor/editor'
-import { LevelViewBuilder } from './levelBuilder'
 import { Engine } from '../engine/engine'
 import React, { ReactElement } from 'react'
-import { BottomTooltip } from './bottomTooltipBuilder'
-import { SpeedControls } from './speedControlBuilder'
 import ReactDOM from 'react-dom'
 import { FieldsToPlaceSelectionView } from './fieldsToPlaceSelectionView'
+import { LevelViewBuilder, LevelViewBuilderState } from './levelBuilder'
 
 // This class serves as the builder for basic game/editor view.
-export class EditorViewBuilder extends LevelViewBuilder {
+export class EditorViewBuilder extends React.Component<{engine: Engine}> {
   editor : Editor
+
   constructor (props : {engine: Engine}) {
     super(props)
     const editor = new Editor(props.engine)
     this.editor = editor
   }
 
-  // TODO: Dodanie wybierania pól dostępnych użytkownikowi
   // Override of parent function to match editor behaviour.
-  deleteElement (index : number) : void {
-    if (!(this.state.level.getField(index) instanceof fields.Wall)) {
+  // TODO: Przepisanie tak, aby użytkownik mógł stawiać sobie ściany na planszy
+  deleteElement (index : number, state: LevelViewBuilderState) : void {
+    if (!(state.level.getField(index) instanceof fields.Wall)) {
       this.editor.clearSquare(index)
     }
     this.setState({ fieldToAdd: null, level: this.editor.engine.level, placementAction: null })
   }
 
   // Override of parent function to match editor behaviour.
-  placeElement (index : number) : void {
-    if (this.state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
-      this.editor.fillSquare(index, this.state.fieldToAdd, this.state.choosenOption)
+  placeElement (index : number, state: LevelViewBuilderState) : void {
+    if (state.fieldToAdd && this.props.engine.level.getField(index) instanceof fields.Empty) {
+      this.editor.fillSquare(index, state.fieldToAdd, state.choosenOption)
     }
     this.setState({ fieldToAdd: null, level: this.editor.engine.level, placementAction: null })
   }
@@ -40,16 +39,11 @@ export class EditorViewBuilder extends LevelViewBuilder {
 
   render () : ReactElement {
     return (
-      <div className='container'>
-        <p>{this.state.fieldToAdd}</p>
-        <div className='board-container'>
-          {[...Array(this.props.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
-        </div>
-        <BottomTooltip fieldsToPlace={this.props.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
-        <SpeedControls engine={this.props.engine}/>
-        <FieldsToPlaceSelectionView editor={this.editor} initialFieldsToPlaceByUser={this.editor.fieldsToPlaceByUser}/>
+      <>
+        <LevelViewBuilder engine={this.editor.engine} deleteElement={this.deleteElement.bind(this)} placeElement={this.placeElement.bind(this)} />
+        <FieldsToPlaceSelectionView editor={this.editor} initialGadgets={this.editor.gadgetsToPlaceByPlayer}/>
         <button onClick={() => this.exportLevel()}>EXPORT LEVEL</button>
-      </div>
+      </>
     )
   }
 }

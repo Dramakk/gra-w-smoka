@@ -1,22 +1,43 @@
 import * as fields from '../levels/fields'
 import React, { ReactElement } from 'react'
 import { Engine } from '../engine/engine'
-import { FieldToPlaceType, Level } from '../levels/level'
+import { GadgetType, Level } from '../levels/level'
 import { BottomTooltip } from './bottomTooltipBuilder'
 import { SpeedControls } from './speedControlBuilder'
 import { FieldView } from './fieldViewBuilder'
-import { FieldOptionType } from '../editor/editor'
+import { GadgetOptionType } from '../editor/editor'
 
 // Determine which action user tries to perform
 export type PlacementActions = 'DELETE' | 'PLACE'
-
+export type LevelViewBuilderState = { fieldToAdd: GadgetType, level: Level, placementAction: PlacementActions, choosenOption: GadgetOptionType }
+type LevelViewBuilderProps = { engine: Engine, deleteElement: (index: number, state: LevelViewBuilderState) => void, placeElement: (index: number, state: LevelViewBuilderState) => void }
 // This class serves as the builder for basic game/editor view.
-export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldToAdd: FieldToPlaceType, level: Level, placementAction : PlacementActions, choosenOption : FieldOptionType }> {
+export class LevelViewBuilder extends React.Component<LevelViewBuilderProps, LevelViewBuilderState> {
   engine: Engine
+  // Used to overload standard level behaviour in editor.
+  deleteElementFunction: (index: number) => void
+  placeElementFunction: (index: number) => void
 
-  constructor (props : {engine: Engine}) {
+  constructor (props : LevelViewBuilderProps) {
     super(props)
     this.engine = props.engine
+    // Check whether we recieved overloaded functions. If not, use ours.
+    if (props.deleteElement === undefined) {
+      this.deleteElementFunction = this.deleteElement.bind(this)
+    } else {
+      this.deleteElementFunction = (index: number) => {
+        props.deleteElement(index, this.state)
+      }
+    }
+
+    if (props.placeElement === undefined) {
+      this.placeElementFunction = this.placeElement.bind(this)
+    } else {
+      this.placeElementFunction = (index: number) => {
+        props.placeElement(index, this.state)
+      }
+    }
+
     this.state = { fieldToAdd: null, level: this.engine.level, placementAction: null, choosenOption: null }
   }
 
@@ -29,11 +50,11 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
   }
 
   buildRow (rowNumber: number, fieldUpdate : (index : number) => void): ReactElement {
-    const offset = rowNumber * this.engine.level.getCellsPerRow()
+    const offset = rowNumber * this.engine.level.getFieldsPerRow()
 
     return (
       <div key={rowNumber} className='row'>
-        {[...Array(this.engine.level.getCellsPerRow()).keys()].map((fieldIndex : number) => {
+        {[...Array(this.engine.level.getFieldsPerRow()).keys()].map((fieldIndex : number) => {
           const field = this.engine.level.getField(offset + fieldIndex)
           return <FieldView key={field.id} id={field.id} image={this.getImage(field)} fieldUpdate={fieldUpdate}/>
         })}
@@ -42,13 +63,12 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
   }
 
   // Updates state to match currently selected field to place on board.
-  changeFieldToPlace (fieldType: FieldToPlaceType, choosenOption? : FieldOptionType) : void {
+  changeFieldToPlace (fieldType: GadgetType, choosenOption? : GadgetOptionType) : void {
     this.setState({ fieldToAdd: fieldType, level: this.engine.level, placementAction: 'PLACE', choosenOption: choosenOption })
   }
 
   // Updates state to match currently selected action (place or delete)
   changePlacementAction (actionMode : PlacementActions) : void {
-    console.log(this.engine.level)
     this.setState({ fieldToAdd: null, level: this.engine.level, placementAction: actionMode })
   }
 
@@ -59,9 +79,9 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
    */
   fieldPlacementController (index : number) : void {
     if (this.state.placementAction === 'DELETE') {
-      this.deleteElement(index)
+      this.deleteElementFunction(index)
     } else if (this.state.placementAction === 'PLACE') {
-      this.placeElement(index)
+      this.placeElementFunction(index)
     }
   }
 
@@ -88,7 +108,7 @@ export class LevelViewBuilder extends React.Component<{engine: Engine}, {fieldTo
         <div className='board-container'>
           {[...Array(this.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
         </div>
-        <BottomTooltip fieldsToPlace={this.engine.level.getFieldsToPlace()} chooseFieldToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
+        <BottomTooltip fieldsToPlace={this.engine.level.gadgets.toArray()} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.engine}/>
       </div>
     )

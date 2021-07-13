@@ -9,11 +9,11 @@ export class LevelImportView extends React.Component<{createGameView : (imported
       importedLevel: `{
       "fieldsPerRow": 4,
       "start": {"position": 5, "direction": "R"},
-      "fieldsToPlace": [
-          {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
-          {"fieldType": "ARROWUP", "howManyAvailable": 1},
-          {"fieldType": "ARROWRIGHT", "howManyAvailable": 1},
-          {"fieldType": "ARROWDOWN", "howManyAvailable": 1}
+      "gadgets": [
+          ["ARROWLEFT", 1],
+          ["ARROWUP", 1],
+          ["ARROWRIGHT", 1],
+          ["ARROWDOWN", 1]
       ],
       "fields": [
           {"id": 0, "image": "W", "typeOfField": "WALL"},
