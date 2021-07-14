@@ -108,7 +108,7 @@ export class LevelViewBuilder extends React.Component<LevelViewBuilderProps, Lev
         <div className='board-container'>
           {[...Array(this.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
         </div>
-        <BottomTooltip fieldsToPlace={this.engine.level.gadgets.toArray()} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
+        <BottomTooltip fieldsToPlace={[...this.engine.level.gadgets.items().entries()]} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.engine}/>
       </div>
     )

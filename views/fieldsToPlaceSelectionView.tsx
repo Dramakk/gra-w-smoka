@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
 import { Editor } from '../editor/editor'
-import { Multiset } from '../helpers/multiset'
+import { Counter } from '../helpers/counter'
 import { GadgetInfo, GadgetType } from '../levels/level'
 
 // This class serves as builder for control panel, which allows to change the number of fields given to player
-export class FieldsToPlaceSelectionView extends React.Component<{editor: Editor, initialGadgets: Multiset<GadgetType>}, {gadgetsToPlaceByPlayer: Multiset<GadgetType>}> {
+export class FieldsToPlaceSelectionView extends React.Component<{editor: Editor, initialGadgets: Counter<GadgetType>}, {gadgetsToPlaceByPlayer: Counter<GadgetType>}> {
   editorReference: Editor
-  constructor (props: { editor: Editor, initialGadgets: Multiset<GadgetType> }) {
+  constructor (props: { editor: Editor, initialGadgets: Counter<GadgetType> }) {
     super(props)
     this.editorReference = this.props.editor
     this.state = { gadgetsToPlaceByPlayer: props.initialGadgets }
@@ -15,12 +15,12 @@ export class FieldsToPlaceSelectionView extends React.Component<{editor: Editor,
   // Change quantity of field to be placed
   changeQty (gadgetType: GadgetType, changeInQty: number): void {
     if (changeInQty > 0) {
-      this.editorReference.gadgetsToPlaceByPlayer.add(gadgetType)
+      this.editorReference.gadgetsPlayer.add(gadgetType)
     }
     if (changeInQty < 0) {
-      this.editorReference.gadgetsToPlaceByPlayer.delete(gadgetType)
+      this.editorReference.gadgetsPlayer.delete(gadgetType)
     }
-    this.setState({ gadgetsToPlaceByPlayer: this.editorReference.gadgetsToPlaceByPlayer })
+    this.setState({ gadgetsToPlaceByPlayer: this.editorReference.gadgetsPlayer })
   }
 
   // Build selection component for one type of field.
@@ -39,7 +39,7 @@ export class FieldsToPlaceSelectionView extends React.Component<{editor: Editor,
       <div>
         Choose how many of given field you want to give to player.
         <ul>
-          {this.state.gadgetsToPlaceByPlayer.toArray().map((gadgetInfo) => this.buildForField(gadgetInfo))}
+          {[...this.state.gadgetsToPlaceByPlayer.items().entries()].map((gadgetInfo) => this.buildForField(gadgetInfo))}
         </ul>
       </div>
     )

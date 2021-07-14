@@ -15,7 +15,7 @@ export class Engine {
   // Starts simulation with 1s interval
   gameStart () : void {
     // Check if dragon position is set. Invalid dragon position is possible during level creation.
-    if (this.level.start.position === null || this.level.start.direction === null) {
+    if (!this.level.start) {
       // Just don't start the game
       return
     }

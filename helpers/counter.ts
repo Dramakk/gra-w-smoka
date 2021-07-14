@@ -1,4 +1,4 @@
-export class Multiset<T> {
+export class Counter<T> {
   _backing = new Map();
 
   setInfinity (value: T): void {
@@ -9,8 +9,8 @@ export class Multiset<T> {
     this._backing.set(value, 0)
   }
 
-  toArray (): [T, number][] {
-    return [...this._backing.entries()]
+  items (): Map<T, number> {
+    return this._backing
   }
 
   add (value: T): void {
@@ -28,10 +28,10 @@ export class Multiset<T> {
   }
 
   get (value: T): number {
-    if (this._backing.get(value) > 0) {
-      return this._backing.get(value)
-    } else {
+    if (!this._backing.has(value)) {
       return -1
     }
+
+    return this._backing.get(value)
   }
 }

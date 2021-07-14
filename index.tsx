@@ -4,8 +4,9 @@ import { Engine } from './engine/engine'
 import { LevelViewBuilder } from './views/levelBuilder'
 import { MainMenuView } from './views/mainMenuBuilder'
 import './views/css/main.css'
-import { parseLevel, createLevelForEditor } from './levels/levelParser'
+import { parseLevel } from './levels/levelParser'
 import { EditorViewBuilder } from './views/editorBuilder'
+import { Editor } from './editor/editor'
 
 const domContainer = document.querySelector('#app-container')
 ReactDOM.render(<MainMenuView
@@ -16,7 +17,7 @@ ReactDOM.render(<MainMenuView
     />, domContainer)
   } }
   createEditorView={ (howManyRows: number, howManyPerRow: number) => {
-    const game = new Engine(createLevelForEditor(howManyRows, howManyPerRow))
-    ReactDOM.render(<EditorViewBuilder engine= { game }
+    const editor = new Editor(howManyRows, howManyPerRow)
+    ReactDOM.render(<EditorViewBuilder editor= { editor }
     />, domContainer)
   }}/>, domContainer)

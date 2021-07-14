@@ -1,4 +1,4 @@
-import { Multiset } from '../helpers/multiset'
+import { Counter } from '../helpers/counter'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
@@ -9,7 +9,7 @@ export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
 export type Directions = 'U' | 'L' | 'D' | 'R'
-export type Start = {position: number, direction: Directions}
+export type StartType = {position: number, direction: Directions}
 
 // Used to represent Index => Field map
 type FieldMap = {
@@ -19,12 +19,20 @@ type FieldMap = {
 export class Level {
     fields: fields.Field[]
     fieldsPerRow: number
-    gadgets : Multiset<GadgetType>
+    gadgets : Counter<GadgetType>
     playerPlacedGadgets : FieldMap
-    start: Start
+    start: StartType
 
-    constructor (fields : fields.Field[], fieldsPerRow : number, gadgets : Multiset<GadgetType>, start : Start) {
-      // TODO: Dodanie sprawdzania czy każde pole ma unikalne id od 0 do fields.length - 1.
+    constructor (fields : fields.Field[], fieldsPerRow : number, gadgets : Counter<GadgetType>, start : StartType) {
+      // Flag determining if all ids from 0 to fields.length are assigned to fields.
+      fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
+      // Iterate over array and chceck if every element is at it's place
+      fields.map((field, index) => {
+        if (field.id !== index) {
+          throw Error('Wrong level format, ids missing')
+        }
+        return true
+      })
       this.fields = fields
       this.fieldsPerRow = fieldsPerRow
       this.gadgets = gadgets
@@ -103,7 +111,7 @@ export class Level {
       if (placedByPlayer) {
         return placedByPlayer
       } else {
-        return this.fields.find((element : fields.Field) => { return element.id === index })
+        return this.fields[index]
       }
     }
 }

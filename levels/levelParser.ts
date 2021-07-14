@@ -1,38 +1,16 @@
-import { Multiset } from '../helpers/multiset'
+import { Counter } from '../helpers/counter'
 import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { Directions, GadgetType, GadgetTypeArray, Level, Start } from './level'
+import { Directions, GadgetType, Level, StartType } from './level'
 
-// Creates empty board, surrounded by walls.
-export function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level {
-  const levelFields: fields.Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
-    // Insert walls at boundaries of board
-    if (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow)) {
-      return new fields.Wall('W', index)
-    }
-
-    return new fields.Empty('E', index)
-  })
-  const start: Start = { position: null, direction: null }
-  const gadgets: Multiset<GadgetType> = new Multiset<GadgetType>()
-
-  GadgetTypeArray.map((gadgetType: GadgetType) => {
-    if (gadgetType === 'START') {
-      return gadgets.add(gadgetType)
-    }
-    return gadgets.setInfinity(gadgetType)
-  })
-
-  return new Level(levelFields, fieldsPerRow, gadgets, start)
-}
 // Level parser using Spicery package from NPM.
 export function parseLevel (levelToParse: string): Level {
   const directionsParser: ParseFn<Directions> = (x: Directions) => {
     return x
   }
-  const startParser: ParseFn<Start> = (x: any) => ({
+  const startParser: ParseFn<StartType> = (x: any) => ({
     position: spicery.fromMap(x, 'position', spicery.aNumber),
     direction: spicery.fromMap(x, 'direction', directionsParser)
   })
@@ -41,13 +19,13 @@ export function parseLevel (levelToParse: string): Level {
     return x
   }
 
-  const gadgetsParser: (multiset: Multiset<GadgetType>) => ParseFn<void> = (multiset: Multiset<GadgetType>) => {
+  const gadgetsParser: (counter: Counter<GadgetType>) => ParseFn<void> = (counter: Counter<GadgetType>) => {
     return (x: any) => {
       const gadgetToAdd = gadgetTypeParser(x[0])
       const howManyAvailable = aNumber(x[1])
 
       for (let i = 0; i < howManyAvailable; i++) {
-        multiset.add(gadgetToAdd)
+        counter.add(gadgetToAdd)
       }
     }
   }
@@ -78,7 +56,7 @@ export function parseLevel (levelToParse: string): Level {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
     const start = spicery.fromMap(x, 'start', startParser)
-    const gadgets = new Multiset<GadgetType>()
+    const gadgets = new Counter<GadgetType>()
     spicery.fromMap(x, 'gadgets', spicery.anArrayContaining(gadgetsParser(gadgets)))
 
     return new Level(fields, fieldsPerRow, gadgets, start)
