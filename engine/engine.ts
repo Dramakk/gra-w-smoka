@@ -1,9 +1,6 @@
 import * as level from '../levels/level'
 import * as fields from '../levels/fields'
 import * as dragon from './dragon'
-import ReactDOM from 'react-dom'
-import React from 'react'
-import { LevelViewBuilder } from '../views/levelBuilder'
 
 export class Engine {
   level: level.Level;
@@ -12,11 +9,17 @@ export class Engine {
 
   constructor (level : level.Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(this.level.getStartId())
+    this.dragon = new dragon.Dragon(this.level.start.position, this.level.start.direction)
   }
 
   // Starts simulation with 1s interval
   gameStart () : void {
+    // Check if dragon position is set. Invalid dragon position is possible during level creation.
+    if (!this.level.start) {
+      // Just don't start the game
+      return
+    }
+
     this.loop = setInterval(this.gameLoop.bind(this), 1000)
   }
 
@@ -29,11 +32,7 @@ export class Engine {
   // Level (and placed fields) ramains unchanged.
   gameReset () : void {
     this.gameStop()
-    this.dragon = new dragon.Dragon(this.level.getStartId())
-    ReactDOM.render(
-      React.createElement(LevelViewBuilder, { engine: this }),
-      document.getElementById('app-container')
-    )
+    this.dragon = new dragon.Dragon(this.level.start.position, this.level.start.direction)
   }
 
   gameLoop () : void {
@@ -42,11 +41,6 @@ export class Engine {
     } else {
       clearInterval(this.loop)
     }
-    // Forcing component to update
-    ReactDOM.render(
-      React.createElement(LevelViewBuilder, { engine: this }),
-      document.getElementById('app-container')
-    )
   }
 
   // Moves dragon to new field (returns false if dragon cant move)
@@ -64,8 +58,19 @@ export class Engine {
   changeState (): void {
     const currentField: fields.Field = this.level.getField(this.dragon.fieldId)
     switch (currentField.typeOfField) {
-      case 'ARROW':
-        this.dragon.direction = currentField.attributes.direction
+      // Again we have to handle all arrows separetly because of typeOfField definition.
+      case 'ARROWUP':
+        this.dragon.direction = 'U'
+        break
+      case 'ARROWDOWN':
+        this.dragon.direction = 'D'
+        break
+      case 'ARROWLEFT':
+        this.dragon.direction = 'L'
+        break
+      case 'ARROWRIGHT':
+        this.dragon.direction = 'R'
+        break
     }
   }
 

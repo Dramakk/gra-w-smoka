@@ -1,34 +1,46 @@
+import { Counter } from '../helpers/counter'
 import * as fields from './fields'
-import * as levelParser from './levelParser'
 
-export type FieldToPlaceObjectType = {fieldType: levelParser.FieldToPlaceType, howManyAvailable: number}
+// Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
+export const GadgetTypeArray: GadgetType[] = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
+// Gadget is the type for fields that users are allowed to put on board.
+// TODO: Dodaj obsługę ścian oraz pola kończącego przy edytowaniu poziomu
+export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
+// Used to handle gadgets in views
+export type GadgetInfo = [GadgetType, number]
+export type Directions = 'U' | 'L' | 'D' | 'R'
+export type StartType = {position: number, direction: Directions}
+
+// Used to represent Index => Field map
+type FieldMap = {
+  [key: number]: fields.Field
+}
+
 export class Level {
     fields: fields.Field[]
     fieldsPerRow: number
-    fieldsToPlace : FieldToPlaceObjectType[]
-    userPlacedFields : fields.Field[]
+    gadgets : Counter<GadgetType>
+    playerPlacedGadgets : FieldMap
+    start: StartType
 
-    constructor (levelDescription: string) {
-      const parsedLevelInfo: levelParser.LevelInfo = levelParser.LevelParser.getParsedLevelInfo(levelDescription)
-      this.fields = parsedLevelInfo.fields
-      this.fieldsPerRow = parsedLevelInfo.fieldsPerRow
-      this.fieldsToPlace = parsedLevelInfo.fieldsToPlace
-      this.userPlacedFields = []
+    constructor (fields : fields.Field[], fieldsPerRow : number, gadgets : Counter<GadgetType>, start : StartType) {
+      // Flag determining if all ids from 0 to fields.length are assigned to fields.
+      fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
+      // Iterate over array and chceck if every element is at it's place
+      fields.map((field, index) => {
+        if (field.id !== index) {
+          throw Error('Wrong level format, ids missing')
+        }
+        return true
+      })
+      this.fields = fields
+      this.fieldsPerRow = fieldsPerRow
+      this.gadgets = gadgets
+      this.playerPlacedGadgets = []
+      this.start = start
     }
 
-    getFields (): fields.Field[] {
-      return this.fields
-    }
-
-    getFieldsPerRow (): number {
-      return this.fieldsPerRow
-    }
-
-    getFieldsToPlace (): FieldToPlaceObjectType[] {
-      return this.fieldsToPlace
-    }
-
-    getCellsPerRow () : number {
+    getFieldsPerRow () : number {
       return this.fieldsPerRow
     }
 
@@ -36,45 +48,57 @@ export class Level {
       return this.fields.length
     }
 
-    placeUserField (index : number, fieldType : levelParser.FieldToPlaceType) : void {
-      let newUserPlacedField : fields.Field = null
-      const isIndexInPlacedFields : boolean = (this.userPlacedFields.filter((element : fields.Field) => { return element.id === index }).length !== 0)
+    getRowCount () : number {
+      return this.fields.length / this.fieldsPerRow
+    }
 
+    // Used as factory for fields to place on board.
+    newFieldFromType (index: number, fieldType: GadgetType) : fields.Field {
       switch (fieldType) {
         case 'ARROWUP':
-          newUserPlacedField = new fields.Arrow('U', 'AU', index)
-          break
+          return new fields.Arrow('U', 'AU', index)
         case 'ARROWDOWN':
-          newUserPlacedField = new fields.Arrow('D', 'AD', index)
-          break
+          return new fields.Arrow('D', 'AD', index)
         case 'ARROWLEFT':
-          newUserPlacedField = new fields.Arrow('L', 'AL', index)
-          break
+          return new fields.Arrow('L', 'AL', index)
         case 'ARROWRIGHT':
-          newUserPlacedField = new fields.Arrow('R', 'AR', index)
-          break
-      }
-
-      if (isIndexInPlacedFields) {
-        this.userPlacedFields = this.userPlacedFields.filter((element : fields.Field) => { return element.id !== index })
-      }
-      if (newUserPlacedField !== null) {
-        this.userPlacedFields.push(newUserPlacedField)
+          return new fields.Arrow('R', 'AR', index)
+        case 'START':
+          return new fields.Start('E', index)
       }
     }
 
-    changeFieldToPlaceTypeQuantity (fieldType : levelParser.FieldToPlaceType) : void {
-      const currentQuantityArray : FieldToPlaceObjectType[] = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType === fieldType })
+    fillSquare (index : number, fieldType : GadgetType) : void {
+      const newUserPlacedField : fields.Field = this.newFieldFromType(index, fieldType)
+      const foundField : fields.Field = this.playerPlacedGadgets[index]
 
-      if (currentQuantityArray.length !== 0) {
-        const currentQuantity : FieldToPlaceObjectType = currentQuantityArray[0]
-
-        this.fieldsToPlace = this.fieldsToPlace.filter((element : FieldToPlaceObjectType) => { return element.fieldType !== fieldType })
-        if (currentQuantity.howManyAvailable > 1) {
-          currentQuantity.howManyAvailable -= 1
-          this.fieldsToPlace.push(currentQuantity)
-        }
+      if (foundField) {
+        delete this.playerPlacedGadgets[index]
       }
+      if (newUserPlacedField !== null) {
+        this.playerPlacedGadgets[index] = newUserPlacedField
+      }
+      this.gadgets.delete(fieldType)
+    }
+
+    clearSquare (index : number) : void {
+      const userPlacedField = this.getField(index).typeOfField
+
+      // userPlacedField === 'EMPTY' cannot happen, but we have to tell it to TS. Because of typeOfField type
+      if (userPlacedField !== 'EMPTY') {
+        this.gadgets.add(userPlacedField)
+        delete this.playerPlacedGadgets[index]
+      }
+    }
+
+    isPlacedByUser (index : number) : boolean {
+      return (this.playerPlacedGadgets[index] !== undefined)
+    }
+
+    canPlaceField (fieldType: GadgetType) : boolean {
+      const currentAvailable = this.gadgets.get(fieldType)
+
+      return currentAvailable > 0
     }
 
     getField (index: number) : fields.Field {
@@ -82,17 +106,12 @@ export class Level {
         return null
       }
 
-      const placedByUser = this.userPlacedFields.filter((element : fields.Field) => { return element.id === index })
-      const isPlacedByUser = placedByUser.length
+      const placedByPlayer = this.playerPlacedGadgets[index]
 
-      if (isPlacedByUser) {
-        return placedByUser[0]
+      if (placedByPlayer) {
+        return placedByPlayer
       } else {
-        return this.fields.filter((element : fields.Field) => { return element.id === index })[0]
+        return this.fields[index]
       }
-    }
-
-    getStartId () : number {
-      return this.fields.filter((element : fields.Field) => { return element.typeOfField === 'START' })[0].id
     }
 }

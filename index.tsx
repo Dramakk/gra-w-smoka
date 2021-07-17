@@ -1,42 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Engine } from './engine/engine'
-import { Level } from './levels/level'
-import * as levelBuilder from './views/levelBuilder'
-import * as mainMenuBuilder from './views/mainMenuBuilder'
+import { LevelViewBuilder } from './views/levelBuilder'
+import { MainMenuView } from './views/mainMenuBuilder'
 import './views/css/main.css'
+import { parseLevel } from './levels/levelParser'
+import { EditorViewBuilder } from './views/editorBuilder'
+import { Editor } from './editor/editor'
 
-const simpleLevel = `{
-    "fieldsPerRow": 4,
-    "fieldsToPlace": [
-        {"fieldType": "ARROWLEFT", "howManyAvailable": 1},
-        {"fieldType": "ARROWUP", "howManyAvailable": 1},
-        {"fieldType": "ARROWRIGHT", "howManyAvailable": 1},
-        {"fieldType": "ARROWDOWN", "howManyAvailable": 1}
-    ],
-    "level": [
-        {"id": 0, "image": "W", "typeOfField": "WALL"},
-        {"id": 1, "image": "W", "typeOfField": "WALL"},
-        {"id": 2, "image": "W", "typeOfField": "WALL"},
-        {"id": 3, "image": "W", "typeOfField": "WALL"},
-
-        {"id": 4, "image": "W", "typeOfField": "WALL"},
-        {"id": 5, "image": "E", "typeOfField": "START"},
-        {"id": 6, "image": "E", "typeOfField": "EMPTY"},
-        {"id": 7, "image": "W", "typeOfField": "WALL"},
-
-        {"id": 8, "image": "W", "typeOfField": "WALL"},
-        {"id": 9, "image": "E", "typeOfField": "EMPTY"},
-        {"id": 10, "image": "E", "typeOfField": "EMPTY"},
-        {"id": 11, "image": "W", "typeOfField": "WALL"},
-
-        {"id": 12, "image": "W", "typeOfField": "WALL"},
-        {"id": 13, "image": "W", "typeOfField": "WALL"},
-        {"id": 14, "image": "W", "typeOfField": "WALL"},
-        {"id": 15, "image": "W", "typeOfField": "WALL"}
-    ]
-}`
-const level = new Level(simpleLevel)
-const game = new Engine(level)
 const domContainer = document.querySelector('#app-container')
-ReactDOM.render(<mainMenuBuilder.MainMenuView onClick={ () => { ReactDOM.render(<levelBuilder.LevelViewBuilder engine={ game } />, domContainer) } }/>, domContainer)
+ReactDOM.render(<MainMenuView
+  createGameView={ (importedLevel : string) => {
+    const level = parseLevel(JSON.parse(importedLevel))
+    const game = new Engine(level)
+    ReactDOM.render(<LevelViewBuilder engine={ game } placeElement={undefined} deleteElement={undefined}
+    />, domContainer)
+  } }
+  createEditorView={ (howManyRows: number, howManyPerRow: number) => {
+    const editor = new Editor(howManyRows, howManyPerRow)
+    ReactDOM.render(<EditorViewBuilder editor= { editor }
+    />, domContainer)
+  }}/>, domContainer)

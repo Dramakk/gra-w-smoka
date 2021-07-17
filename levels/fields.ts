@@ -1,27 +1,12 @@
-export type Directions = 'U' | 'L' | 'D' | 'R'
+import { Directions, GadgetType } from './level'
+
+type FieldType = GadgetType | 'EMPTY'
+
 export abstract class Field {
-    typeOfField: string;
+    typeOfField: FieldType;
     id: number;
     image: string;
     attributes: {direction : Directions};
-
-    public static parseJSONToField (jsonObject: Record<string, any>): Field {
-      if (jsonObject.isPositionOfDragon === null || jsonObject.image === null || jsonObject.id === null) {
-        throw new Error('Parse error, when parsing' + JSON.stringify(jsonObject))
-      }
-      switch (jsonObject.typeOfField) {
-        case 'FINISH':
-          return new Finish(jsonObject.image, jsonObject.id)
-        case 'WALL':
-          return new Wall(jsonObject.image, jsonObject.id)
-        case 'EMPTY':
-          return new Empty(jsonObject.image, jsonObject.id)
-        case 'ARROW':
-          return new Arrow(jsonObject.attributes.direction, jsonObject.image, jsonObject.id)
-        case 'START':
-          return new Start(jsonObject.image, jsonObject.id)
-      }
-    }
 }
 
 export class Start extends Field {
@@ -74,6 +59,19 @@ export class Arrow extends Field {
     this.image = image
     this.attributes = { direction: direction }
     this.id = id
-    this.typeOfField = 'ARROW'
+    switch (direction) {
+      case 'U':
+        this.typeOfField = 'ARROWUP'
+        break
+      case 'D':
+        this.typeOfField = 'ARROWDOWN'
+        break
+      case 'L':
+        this.typeOfField = 'ARROWLEFT'
+        break
+      case 'R':
+        this.typeOfField = 'ARROWRIGHT'
+        break
+    }
   }
 }

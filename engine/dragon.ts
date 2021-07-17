@@ -1,11 +1,12 @@
-import type { Directions } from '../levels/fields'
+import { Directions } from '../levels/level'
+
 export class Dragon {
   fieldId: number;
   direction: Directions;
   canMove: boolean;
 
-  constructor (startId: number) {
+  constructor (startId: number, direction : Directions) {
     this.fieldId = startId
-    this.direction = 'R'
+    this.direction = direction
   }
 }
