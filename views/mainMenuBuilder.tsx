@@ -29,7 +29,7 @@ export class MainMenuView extends React.Component<{createGameView: (importedLeve
                 <div style={{ display: this.state.editorFormClassDisplay }}>
                   <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
                   <input name='howManyRows' type='number' value={this.state.howManyRows} onChange={this.changeHowManyRows.bind(this)}></input>
-                  <label htmlFor='howManyRows'>Ile pól ma posiadać jeden rząd?</label>
+                  <label htmlFor='howManyPerRow'>Ile pól ma posiadać jeden rząd?</label>
                   <input name='howManyPerRow' type='number' value={this.state.howManyPerRow} onChange={this.changeHowManyPerRow.bind(this)}></input>
                   <button onClick={() => this.props.createEditorView(this.state.howManyRows, this.state.howManyPerRow)}>Rozpocznij edycję</button>
                 </div>

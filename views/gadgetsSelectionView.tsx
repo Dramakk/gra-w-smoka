@@ -4,7 +4,7 @@ import { Counter } from '../helpers/counter'
 import { GadgetInfo, GadgetType } from '../levels/level'
 
 // This class serves as builder for control panel, which allows to change the number of fields given to player
-export class FieldsToPlaceSelectionView extends React.Component<{editor: Editor, initialGadgets: Counter<GadgetType>}, {gadgetsToPlaceByPlayer: Counter<GadgetType>}> {
+export class GadgetsSelectionView extends React.Component<{editor: Editor, initialGadgets: Counter<GadgetType>}, {gadgetsToPlaceByPlayer: Counter<GadgetType>}> {
   editorReference: Editor
   constructor (props: { editor: Editor, initialGadgets: Counter<GadgetType> }) {
     super(props)

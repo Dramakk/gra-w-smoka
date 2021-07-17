@@ -12,7 +12,7 @@ export class Editor {
   gadgetsPlayer: Counter<GadgetType>
 
   constructor (howManyRows: number, howManyPerRow: number) {
-    this.engine = new Engine(this.createLevelForEditor(howManyPerRow, howManyPerRow))
+    this.engine = new Engine(this.createLevelForEditor(howManyRows, howManyPerRow))
     this.gadgetsPlayer = new Counter<GadgetType>()
     GadgetTypeArray.filter((fieldType) => fieldType !== 'START').map((fieldType) => { return this.gadgetsPlayer.setZero(fieldType) })
   }

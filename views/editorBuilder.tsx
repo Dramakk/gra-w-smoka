@@ -2,7 +2,7 @@ import * as fields from '../levels/fields'
 import { Editor } from '../editor/editor'
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { FieldsToPlaceSelectionView } from './fieldsToPlaceSelectionView'
+import { GadgetsSelectionView } from './gadgetsSelectionView'
 import { LevelViewBuilder, LevelViewBuilderState } from './levelBuilder'
 
 // This class serves as the builder for basic game/editor view.
@@ -33,7 +33,7 @@ export class EditorViewBuilder extends React.Component<{editor: Editor}> {
     return (
       <>
         <LevelViewBuilder engine={this.props.editor.engine} deleteElement={this.deleteElement.bind(this)} placeElement={this.placeElement.bind(this)} />
-        <FieldsToPlaceSelectionView editor={this.props.editor} initialGadgets={this.props.editor.gadgetsPlayer}/>
+        <GadgetsSelectionView editor={this.props.editor} initialGadgets={this.props.editor.gadgetsPlayer}/>
         <button onClick={() => this.exportLevel()}>EXPORT LEVEL</button>
       </>
     )

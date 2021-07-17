@@ -70,7 +70,7 @@ export class Arrow extends Field {
         this.typeOfField = 'ARROWLEFT'
         break
       case 'R':
-        this.typeOfField = 'ARROWLEFT'
+        this.typeOfField = 'ARROWRIGHT'
         break
     }
   }
