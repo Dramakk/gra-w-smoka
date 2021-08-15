@@ -7,7 +7,6 @@ export type GadgetOptionType = {direction : Directions}
 
 export class Editor {
   level : Level
-  startPosition: { startId: number, direction: Directions }
   // Array of fields which are going to be available to player, when level is imported.
   gadgetsPlayer: Counter<GadgetType>
 
