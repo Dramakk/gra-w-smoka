@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 
 // Creates form to import level from JSON string.
-export class LevelImportView extends React.Component<{createGameView : (importedLevelString: string) => void}, {importedLevel : string}> {
+export class LevelImportComponent extends React.Component<{createGameView : (importedLevelString: string) => void}, {importedLevel : string}> {
   constructor (props : {createGameView : (importedLevelString: string) => void}) {
     super(props)
     // For now we keep basic level

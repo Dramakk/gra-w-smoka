@@ -1,4 +1,3 @@
-import { Engine } from '../engine/engine'
 import { Counter } from '../helpers/counter'
 import { Wall, Field, Empty, Start } from '../levels/fields'
 import { Directions, GadgetType, GadgetTypeArray, Level, StartType } from '../levels/level'
@@ -7,21 +6,30 @@ import { Directions, GadgetType, GadgetTypeArray, Level, StartType } from '../le
 export type GadgetOptionType = {direction : Directions}
 
 export class Editor {
-  engine : Engine
+  level : Level
+  startPosition: { startId: number, direction: Directions }
   // Array of fields which are going to be available to player, when level is imported.
   gadgetsPlayer: Counter<GadgetType>
 
   constructor (howManyRows: number, howManyPerRow: number) {
-    this.engine = new Engine(this.createLevelForEditor(howManyRows, howManyPerRow))
+    this.level = this.createLevelForEditor(howManyRows, howManyPerRow)
     this.gadgetsPlayer = new Counter<GadgetType>()
     GadgetTypeArray.filter((fieldType) => fieldType !== 'START').map((fieldType) => { return this.gadgetsPlayer.setZero(fieldType) })
+  }
+
+  isBorder (index: number, fieldsPerRow: number, howManyRows: number): boolean {
+    if (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow)) {
+      return true
+    }
+
+    return false
   }
 
   // Creates empty board, surrounded by walls.
   createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level {
     const levelFields: Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
       // Insert walls at boundaries of board
-      if (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow)) {
+      if (this.isBorder(index, fieldsPerRow, howManyRows)) {
         return new Wall('W', index)
       }
 
@@ -42,35 +50,37 @@ export class Editor {
 
   // Invoked when user deletes object from the board.
   clearSquare (index: number) : void {
-    const currentlyPlacedField = this.engine.level.fields[index]
-    if (currentlyPlacedField instanceof Start) {
-      // We can set position and direction to null. When either is null, game won't start. (see gameStart from engine.ts).
-      // Using nulls instead of undefined because of engine implementation.
-      this.engine.level.start = { position: null, direction: null }
-      this.engine.level.gadgets.add('START')
-      this.engine.gameReset()
+    // Prevent deleting of border walls
+    if (this.isBorder(index, this.level.fieldsPerRow, this.level.getRowCount())) {
+      return
     }
-    this.engine.level.fields[index] = new Empty('E', index)
+
+    const currentlyPlacedField = this.level.fields[index]
+    if (currentlyPlacedField instanceof Start) {
+      // We can set position and direction to null. When either is null, game won't start. (see gameStart from ts).
+      // Using nulls instead of undefined because of engine implementation.
+      this.level.start = { position: null, direction: null }
+      this.level.gadgets.add('START')
+    }
+    this.level.fields[index] = new Empty('E', index)
   }
 
   // Invoked when user places object on the board.
   fillSquare (index: number, gadgetType : GadgetType, options: GadgetOptionType) : void {
-    if (!this.engine.level.canPlaceField(gadgetType)) {
+    if (!this.level.canPlaceField(gadgetType)) {
       return
     }
     if (gadgetType === 'START') {
-      this.engine.level.start = { position: index, direction: options.direction }
-      this.engine.level.gadgets.delete('START')
-      // Update dragon start position in engine
-      this.engine.gameReset()
+      this.level.start = { position: index, direction: options.direction }
+      this.level.gadgets.delete('START')
     }
-    const newGadget = this.engine.level.newFieldFromType(index, gadgetType)
-    this.engine.level.fields[index] = newGadget
+    const newGadget = this.level.newFieldFromType(index, gadgetType)
+    this.level.fields[index] = newGadget
   }
 
   // Function used to export built level to JSON.
   exportLevel () : string {
-    const levelToExport: any = this.engine.level
+    const levelToExport: any = this.level
     const gadgetsToExport = new Counter<GadgetType>()
     for (const [gadgetType, howManyAvailable] of this.gadgetsPlayer.items()) {
       if (gadgetType === 'START') {
