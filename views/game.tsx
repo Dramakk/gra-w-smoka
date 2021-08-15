@@ -27,6 +27,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
       this.editor = props.editor
     }
 
+    // When in editor mode, we want to override standard behaviour of filling and clearing the square.
     if (props.editorMode) {
       this.placeElement = (index: number) => {
         this.editor.fillSquare(index, this.state.fieldToAdd, this.state.option)
@@ -84,6 +85,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     this.setState({ fieldToAdd: null, level: this.engine.level, placementAction: null })
   }
 
+  // TODO: Dodać różne wartości do wybrania jako międzyczas.
   // Starts simulation with 1s interval
   gameStart () : void {
     // Check if dragon position is set. Invalid dragon position is possible during level creation.
@@ -116,6 +118,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     this.setState({ level: this.engine.level })
   }
 
+  // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
+  // Renders exported level in JSON format.
   exportLevel () : void {
     ReactDOM.render((<div>{this.editor.exportLevel()}</div>), document.querySelector('#app-container'))
   }

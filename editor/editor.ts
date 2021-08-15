@@ -56,7 +56,7 @@ export class Editor {
 
     const currentlyPlacedField = this.level.fields[index]
     if (currentlyPlacedField instanceof Start) {
-      // We can set position and direction to null. When either is null, game won't start. (see gameStart from ts).
+      // We can set position and direction to null. When either is null, game won't start.
       // Using nulls instead of undefined because of engine implementation.
       this.level.start = { position: null, direction: null }
       this.level.gadgets.add('START')
