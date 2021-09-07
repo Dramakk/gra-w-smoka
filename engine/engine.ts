@@ -5,7 +5,6 @@ import { Dragon } from './dragon'
 export class Engine {
   level: Level;
   dragon: Dragon;
-  loop: ReturnType<typeof setInterval>;
 
   constructor (level: Level) {
     this.level = level
@@ -16,7 +15,7 @@ export class Engine {
     this.dragon = new Dragon(this.level.start.position, this.level.start.direction)
   }
 
-  gameLoop (): boolean {
+  step (): boolean {
     if (!this.move()) {
       return false
     }

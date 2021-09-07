@@ -95,7 +95,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
     this.loop = setInterval(() => {
-      const moved = this.engine.gameLoop()
+      const moved = this.engine.step()
 
       if (!moved) {
         this.gameStop()

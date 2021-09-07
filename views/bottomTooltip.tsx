@@ -21,7 +21,7 @@ export class BottomTooltipItemComponent extends React.Component<{
   constructor (props: {
     gadgetToPlace: GadgetInfo,
     chooseGadgetToPlace: (fieldType: GadgetType, choosenOption?: GadgetOptionType) => void,
-    changePlacementMode: (placementMode: PlacementActions) => void;
+    changePlacementMode: (placementMode: PlacementActions) => void
   }) {
     super(props)
     this.state = {

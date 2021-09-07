@@ -17,11 +17,7 @@ export class Editor {
   }
 
   isBorder (index: number, fieldsPerRow: number, howManyRows: number): boolean {
-    if (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow)) {
-      return true
-    }
-
-    return false
+    return (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow))
   }
 
   // Creates empty board, surrounded by walls.
