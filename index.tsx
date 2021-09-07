@@ -8,6 +8,8 @@ import { parseLevel } from './levels/levelParser'
 import { EditorViewBuilder } from './views/editorBuilder'
 import { Editor } from './editor/editor'
 
+import './style.css';
+
 const domContainer = document.querySelector('#app-container')
 ReactDOM.render(<MainMenuView
   createGameView={ (importedLevel : string) => {

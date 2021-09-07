@@ -1,0 +1,35 @@
+/* Board and fields */
+.board-container {
+    display: grid;
+    /* grid-template: ; */
+    gap: 5px;
+    place-items: stretch;
+    place-content: center;
+    grid-auto-rows: 100px;
+}
+
+.board-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px #eeeeee dotted;
+    background-color: #eeeeee;
+}
+
+.board-cell-number {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: xx-small;
+    color: grey;
+}
+
+.board-cell:hover {
+    background-color: #dddddd;
+}
+
+.board-cell.has-dragon {
+    background-color: green;
+}
+

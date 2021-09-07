@@ -4,7 +4,6 @@ import { Engine } from '../engine/engine'
 import { GadgetType, Level } from '../levels/level'
 import { BottomTooltip } from './bottomTooltipBuilder'
 import { SpeedControls } from './speedControlBuilder'
-import { FieldView } from './fieldViewBuilder'
 import { GadgetOptionType } from '../editor/editor'
 
 // Determine which action user tries to perform
@@ -49,19 +48,6 @@ export class LevelViewBuilder extends React.Component<LevelViewBuilderProps, Lev
     }
   }
 
-  buildRow (rowNumber: number, fieldUpdate : (index : number) => void): ReactElement {
-    const offset = rowNumber * this.engine.level.getFieldsPerRow()
-
-    return (
-      <div key={rowNumber} className='row'>
-        {[...Array(this.engine.level.getFieldsPerRow()).keys()].map((fieldIndex : number) => {
-          const field = this.engine.level.getField(offset + fieldIndex)
-          return <FieldView key={field.id} id={field.id} image={this.getImage(field)} fieldUpdate={fieldUpdate}/>
-        })}
-      </div>
-    )
-  }
-
   // Updates state to match currently selected field to place on board.
   changeFieldToPlace (fieldType: GadgetType, choosenOption? : GadgetOptionType) : void {
     this.setState({ fieldToAdd: fieldType, level: this.engine.level, placementAction: 'PLACE', choosenOption: choosenOption })
@@ -77,7 +63,7 @@ export class LevelViewBuilder extends React.Component<LevelViewBuilderProps, Lev
    * Clicking element on bottom tooltip, changes mode to 'PLACE' and allows placement of element on the board.
    * Clicking DELETE PLACED FIELD button, changes mode to 'DELETE' and allows deletion of element placed by user.
    */
-  fieldPlacementController (index : number) : void {
+  fieldUpdate (index : number) : void {
     if (this.state.placementAction === 'DELETE') {
       this.deleteElementFunction(index)
     } else if (this.state.placementAction === 'PLACE') {
@@ -101,12 +87,25 @@ export class LevelViewBuilder extends React.Component<LevelViewBuilderProps, Lev
     this.setState({ fieldToAdd: null, level: this.engine.level, placementAction: null })
   }
 
+  renderField (f: fields.Field) : ReactElement {
+    let className = 'board-cell';
+    if (this.props.engine.dragon.fieldId === f.id) {
+      className += ' has-dragon';
+    }
+    return (
+      <div key={'field-'+f.id} onClick={() => this.fieldUpdate(f.id)} className={className}>
+        <span className='board-cell-number'>{f.id}</span>
+        {f.image}
+      </div>
+    )
+  }
+
   render () : ReactElement {
     return (
       <div className='container'>
         <p>{this.state.fieldToAdd}</p>
-        <div className='board-container'>
-          {[...Array(this.engine.level.getRowCount()).keys()].map(rowNumber => this.buildRow(rowNumber, this.fieldPlacementController.bind(this)))}
+        <div className='board-container' style={{gridTemplateColumns: 'repeat(' + this.engine.level.fieldsPerRow + ', 100px)'}}>
+          {this.engine.level.fields.map(f => this.renderField(f))}
         </div>
         <BottomTooltip fieldsToPlace={[...this.engine.level.gadgets.items().entries()]} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControls engine={this.engine}/>
