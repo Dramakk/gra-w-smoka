@@ -1,46 +1,28 @@
-import * as level from '../levels/level'
-import * as fields from '../levels/fields'
-import * as dragon from './dragon'
+import { Field } from '../levels/fields'
+import { Level } from '../levels/level'
+import { Dragon } from './dragon'
 
 export class Engine {
-  level: level.Level;
-  dragon: dragon.Dragon;
-  loop: ReturnType<typeof setInterval>
+  level: Level;
+  dragon: Dragon;
 
-  constructor (level : level.Level) {
+  constructor (level: Level) {
     this.level = level
-    this.dragon = new dragon.Dragon(this.level.start.position, this.level.start.direction)
+    this.dragon = new Dragon(this.level.start.position, this.level.start.direction)
   }
 
-  // Starts simulation with 1s interval
-  gameStart () : void {
-    // Check if dragon position is set. Invalid dragon position is possible during level creation.
-    if (!this.level.start) {
-      // Just don't start the game
-      return
+  resetDragon (): void {
+    this.dragon = new Dragon(this.level.start.position, this.level.start.direction)
+  }
+
+  step (): boolean {
+    if (!this.move()) {
+      return false
     }
 
-    this.loop = setInterval(this.gameLoop.bind(this), 1000)
-  }
+    this.changeState()
 
-  // Stops simulation
-  gameStop () : void {
-    clearInterval(this.loop)
-  }
-
-  // Stops simulation and resets dragon position.
-  // Level (and placed fields) ramains unchanged.
-  gameReset () : void {
-    this.gameStop()
-    this.dragon = new dragon.Dragon(this.level.start.position, this.level.start.direction)
-  }
-
-  gameLoop () : void {
-    if (this.move()) {
-      this.changeState()
-    } else {
-      clearInterval(this.loop)
-    }
+    return true
   }
 
   // Moves dragon to new field (returns false if dragon cant move)
@@ -56,7 +38,7 @@ export class Engine {
 
   // Changes dragon state based on field dragon is on.
   changeState (): void {
-    const currentField: fields.Field = this.level.getField(this.dragon.fieldId)
+    const currentField: Field = this.level.getField(this.dragon.fieldId)
     switch (currentField.typeOfField) {
       // Again we have to handle all arrows separetly because of typeOfField definition.
       case 'ARROWUP':

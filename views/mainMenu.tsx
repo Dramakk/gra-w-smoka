@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { LevelImportView } from './levelImportView'
+import { LevelImportComponent } from './levelImport'
 
-export class MainMenuView extends React.Component<{createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}, {howManyRows: number, howManyPerRow: number, editorFormClassDisplay: string}> {
+export class MainMenuComponent extends React.Component<{createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}, {howManyRows: number, howManyPerRow: number, editorFormClassDisplay: string}> {
   constructor (props: { createGameView: (importedLevelString: string) => void, createEditorView: () => void }) {
     super(props)
     this.state = { howManyRows: 5, howManyPerRow: 5, editorFormClassDisplay: 'none' }
   }
 
   renderImportView () : void {
-    ReactDOM.render(<LevelImportView createGameView={this.props.createGameView}/>, document.querySelector('#app-container'))
+    ReactDOM.render(<LevelImportComponent createGameView={this.props.createGameView}/>, document.querySelector('#app-container'))
   }
 
   changeHowManyPerRow (event: React.ChangeEvent<HTMLInputElement>): void {

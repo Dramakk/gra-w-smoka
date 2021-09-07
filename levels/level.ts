@@ -2,9 +2,9 @@ import { Counter } from '../helpers/counter'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
+export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
 // Gadget is the type for fields that users are allowed to put on board.
-// TODO: Dodaj obsługę ścian oraz pola kończącego przy edytowaniu poziomu
+// TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
 export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
@@ -63,6 +63,8 @@ export class Level {
           return new fields.Arrow('L', 'AL', index)
         case 'ARROWRIGHT':
           return new fields.Arrow('R', 'AR', index)
+        case 'WALL':
+          return new fields.Wall('W', index)
         case 'START':
           return new fields.Start('E', index)
       }

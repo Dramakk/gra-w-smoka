@@ -4,7 +4,7 @@ import { Counter } from '../helpers/counter'
 import { GadgetInfo, GadgetType } from '../levels/level'
 
 // This class serves as builder for control panel, which allows to change the number of fields given to player
-export class GadgetsSelectionView extends React.Component<{editor: Editor, initialGadgets: Counter<GadgetType>}, {gadgetsToPlaceByPlayer: Counter<GadgetType>}> {
+export class GadgetsSelectionComponent extends React.Component<{editor: Editor, initialGadgets: Counter<GadgetType>}, {gadgetsToPlaceByPlayer: Counter<GadgetType>}> {
   editorReference: Editor
   constructor (props: { editor: Editor, initialGadgets: Counter<GadgetType> }) {
     super(props)
@@ -24,9 +24,9 @@ export class GadgetsSelectionView extends React.Component<{editor: Editor, initi
   }
 
   // Build selection component for one type of field.
-  buildForField (gadgetInfo: GadgetInfo): ReactElement {
+  buildForField (gadgetInfo: GadgetInfo, index: number): ReactElement {
     return (
-      <li>
+      <li key={index}>
         <p>{gadgetInfo[0]} {gadgetInfo[1]}</p>
         <button onClick={() => this.changeQty(gadgetInfo[0], 1)}>+</button>
         <button onClick={() => this.changeQty(gadgetInfo[0], -1)}>-</button>
@@ -39,7 +39,7 @@ export class GadgetsSelectionView extends React.Component<{editor: Editor, initi
       <div>
         Choose how many of given field you want to give to player.
         <ul>
-          {[...this.state.gadgetsToPlaceByPlayer.items().entries()].map((gadgetInfo) => this.buildForField(gadgetInfo))}
+          {[...this.state.gadgetsToPlaceByPlayer.items().entries()].map((gadgetInfo, index) => this.buildForField(gadgetInfo, index))}
         </ul>
       </div>
     )
