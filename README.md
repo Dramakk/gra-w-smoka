@@ -15,6 +15,8 @@ Pliki tworzymy w odpowiadających im folderach, wszystkie pliki poza tymi do wid
 3. npm run start
 4. Uruchomienie wybranego przez nas serwera w utworzonym katalogu dist
 
+Można też zastąpić kroki 2-4 komendą `npm run dev`, która uruchomi liveserver — automatycznie kompilujący kod po każdej zmianie.
+
 
 ### Język poziomów
 Poziomy są definiowane za pomocą ciągu tokenów oddzielonych znakiem ";". Na razie rozpatrujemy pola typu:
