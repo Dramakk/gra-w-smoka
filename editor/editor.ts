@@ -25,29 +25,6 @@ export function isBorder (index: number, fieldsPerRow: number, howManyRows: numb
   return (index < fieldsPerRow || index % fieldsPerRow === 0 || (index + 1) % fieldsPerRow === 0 || ((howManyRows * fieldsPerRow - index) < fieldsPerRow))
 }
 
-// Creates empty board, surrounded by walls.
-function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level {
-  const fields: Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
-    // Insert walls at boundaries of board
-    if (isBorder(index, fieldsPerRow, howManyRows)) {
-      return createField<Wall>('WALL', 'W', index)
-    }
-
-    return createField<Empty>('EMPTY', 'E', index)
-  })
-  const start: StartType = { position: null, direction: null }
-  let gadgets: Counter<GadgetType> = createCounter<GadgetType>()
-
-  GadgetTypeArray.forEach((gadgetType: GadgetType) => {
-    if (gadgetType === 'START') {
-      gadgets = add(gadgets, gadgetType)
-    }
-    gadgets = setInfinity(gadgets, gadgetType)
-  })
-
-  return { fields, fieldsPerRow, gadgets, start, playerPlacedGadgets: [] }
-}
-
 // Invoked when user deletes object from the board.
 export function clearSquare (level: Level, index: number) : Level {
   let newLevel = { ...level }
@@ -60,9 +37,8 @@ export function clearSquare (level: Level, index: number) : Level {
   if (currentlyPlacedField.typeOfField === 'START') {
     newLevel = removeStart(newLevel)
   }
-  newLevel.fields[index] = createField<Empty>('EMPTY', 'E', index)
 
-  return newLevel
+  return { ...newLevel, fields: newLevel.fields.map((item, itemIndex) => itemIndex === index ? createField<Empty>('EMPTY', 'E', index) : item) }
 }
 
 // Invoked when user places object on the board.
@@ -77,9 +53,8 @@ export function fillSquare (level: Level, index: number, gadgetType : GadgetType
   }
 
   const newGadget = newFieldFromType(index, gadgetType)
-  newLevel.fields[index] = newGadget
 
-  return newLevel
+  return { ...newLevel, fields: newLevel.fields.map((item, itemIndex) => itemIndex === index ? newGadget : item) }
 }
 
 // Function used to export built level to JSON.
@@ -104,4 +79,27 @@ export function exportLevel (editor: Editor) : string {
   // We don't use this field in parsing
   delete levelToExport.playerPlacedGadgets
   return JSON.stringify(levelToExport)
+}
+
+// Creates empty board, surrounded by walls.
+function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level {
+  const fields: Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
+    // Insert walls at boundaries of board
+    if (isBorder(index, fieldsPerRow, howManyRows)) {
+      return createField<Wall>('WALL', 'W', index)
+    }
+
+    return createField<Empty>('EMPTY', 'E', index)
+  })
+  const start: StartType = { position: null, direction: null }
+  let gadgets: Counter<GadgetType> = createCounter<GadgetType>()
+
+  GadgetTypeArray.forEach((gadgetType: GadgetType) => {
+    if (gadgetType === 'START') {
+      gadgets = add(gadgets, gadgetType)
+    }
+    gadgets = setInfinity(gadgets, gadgetType)
+  })
+
+  return { fields, fieldsPerRow, gadgets, start, playerPlacedGadgets: [] }
 }

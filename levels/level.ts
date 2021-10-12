@@ -81,14 +81,16 @@ export function newFieldFromType (index: number, fieldType: GadgetType) : fields
 export function fillSquare (level: Level, index : number, fieldType : GadgetType) : Level {
   const newUserPlacedField : fields.Field = newFieldFromType(index, fieldType)
   const foundField : fields.Field = level.playerPlacedGadgets[index]
-  const playerPlacedGadgets: FieldMap = { ...level.playerPlacedGadgets }
+  let playerPlacedGadgets: FieldMap = { ...level.playerPlacedGadgets }
 
   if (foundField) {
-    delete playerPlacedGadgets[index]
+    // Retrive element at index, and return rest of the object in immutable way
+    const { [index]: _, ...rest } = playerPlacedGadgets
+    playerPlacedGadgets = rest
   }
 
   if (newUserPlacedField !== null) {
-    playerPlacedGadgets[index] = newUserPlacedField
+    playerPlacedGadgets = { ...playerPlacedGadgets, [index]: newUserPlacedField }
   }
 
   return { ...level, gadgets: counterDelete(level.gadgets, fieldType), playerPlacedGadgets }
@@ -96,12 +98,11 @@ export function fillSquare (level: Level, index : number, fieldType : GadgetType
 
 export function clearSquare (level: Level, index : number) : Level {
   const userPlacedField = getField(level, index)
-  const playerPlacedGadgets = { ...level.playerPlacedGadgets }
 
   // userPlacedField === 'EMPTY' cannot happen, but we have to tell it to TS. Because of typeOfField type
   if (userPlacedField && userPlacedField.typeOfField !== 'EMPTY') {
-    delete playerPlacedGadgets[index]
-    return { ...level, playerPlacedGadgets, gadgets: add(level.gadgets, userPlacedField.typeOfField) }
+    const { [index]: _, ...rest } = level.playerPlacedGadgets
+    return { ...level, playerPlacedGadgets: rest, gadgets: add(level.gadgets, userPlacedField.typeOfField) }
   }
 
   return { ...level }

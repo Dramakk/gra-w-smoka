@@ -19,15 +19,19 @@ export function parseLevel (levelToParse: string): Level {
     return x
   }
 
-  const gadgetsParser: (counter: Counter<GadgetType>) => ParseFn<void> = (counter: Counter<GadgetType>) => {
-    return (x: any) => {
-      const gadgetToAdd = gadgetTypeParser(x[0])
-      const howManyAvailable = aNumber(x[1])
-      // FIXME: Nie wiem co się tutaj wydarzy
+  const gadgetsParser: ParseFn<Counter<GadgetType>> = (x: [string, number][]) => {
+    let counterToReturn = createCounter<GadgetType>()
+
+    x.forEach(gadgetDescription => {
+      const gadgetToAdd = gadgetTypeParser(gadgetDescription[0])
+      const howManyAvailable = aNumber(gadgetDescription[1])
+
       for (let i = 0; i < howManyAvailable; i++) {
-        add(counter, gadgetToAdd)
+        counterToReturn = add(counterToReturn, gadgetToAdd)
       }
-    }
+    })
+
+    return counterToReturn
   }
 
   const fieldsParser: ParseFn<fields.Field> = (x: any) => {
@@ -56,8 +60,7 @@ export function parseLevel (levelToParse: string): Level {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
     const start = spicery.fromMap(x, 'start', startParser)
-    const gadgets: Counter<GadgetType> = createCounter()
-    spicery.fromMap(x, 'gadgets', spicery.anArrayContaining(gadgetsParser(gadgets)))
+    const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
 
     return { fieldsPerRow, start, fields, gadgets, playerPlacedGadgets: [] }
   }
