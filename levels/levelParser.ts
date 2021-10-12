@@ -1,4 +1,4 @@
-import { Counter, add } from '../helpers/counter'
+import { Counter, add, createCounter } from '../helpers/counter'
 import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
@@ -23,7 +23,7 @@ export function parseLevel (levelToParse: string): Level {
     return (x: any) => {
       const gadgetToAdd = gadgetTypeParser(x[0])
       const howManyAvailable = aNumber(x[1])
-
+      // FIXME: Nie wiem co się tutaj wydarzy
       for (let i = 0; i < howManyAvailable; i++) {
         add(counter, gadgetToAdd)
       }
@@ -56,7 +56,7 @@ export function parseLevel (levelToParse: string): Level {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
     const start = spicery.fromMap(x, 'start', startParser)
-    const gadgets: Counter<GadgetType> = { _backing: new Map() }
+    const gadgets: Counter<GadgetType> = createCounter()
     spicery.fromMap(x, 'gadgets', spicery.anArrayContaining(gadgetsParser(gadgets)))
 
     return { fieldsPerRow, start, fields, gadgets, playerPlacedGadgets: [] }

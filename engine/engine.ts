@@ -2,36 +2,38 @@ import { Field } from '../levels/fields'
 import { getField, Level } from '../levels/level'
 import { Dragon, changeDragonDirection, moveDragon } from './dragon'
 
-export type GameState = {
+export type EngineState = {
   level: Level,
   dragon: Dragon
 }
 
-export function resetDragon (currentState: GameState): GameState {
+export function resetDragon (currentState: EngineState): EngineState {
   return {
     ...currentState,
     dragon: { fieldId: currentState.level.start.position, direction: currentState.level.start.direction, canMove: true }
   }
 }
 
-export function step (currentState: GameState): GameState {
-  return changeState(move(currentState))
+export function step (currentState: EngineState): [EngineState, boolean] {
+  const [nextState, hasMoved] = move(currentState)
+
+  return hasMoved ? [changeState(nextState), hasMoved] : [nextState, hasMoved]
 }
 
 // Private function definitions
 // Moves dragon to new field (returns false if dragon cant move)
-function move (currentState: GameState): GameState {
+function move (currentState: EngineState): [EngineState, boolean] {
   const newFieldId: number = calculateNewField(currentState)
 
   if (getField(currentState.level, newFieldId).typeOfField === 'WALL') {
-    return { ...currentState }
+    return [{ ...currentState }, false]
   } else {
-    return { ...currentState, dragon: moveDragon(currentState.dragon, newFieldId) }
+    return [{ ...currentState, dragon: moveDragon(currentState.dragon, newFieldId) }, true]
   }
 }
 
 // Changes dragon state based on field dragon is on.
-function changeState (currentState: GameState): GameState {
+function changeState (currentState: EngineState): EngineState {
   const currentField: Field = getField(currentState.level, currentState.dragon.fieldId)
   switch (currentField.typeOfField) {
     // Again we have to handle all arrows separetly because of typeOfField definition.
@@ -43,11 +45,13 @@ function changeState (currentState: GameState): GameState {
       return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'L') }
     case 'ARROWRIGHT':
       return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'R') }
+    default:
+      return { ...currentState }
   }
 }
 
 // Calculates new fieldId based on dragon direction.
-function calculateNewField (currentState: GameState): number {
+function calculateNewField (currentState: EngineState): number {
   let newFieldId: number = currentState.dragon.fieldId
   switch (currentState.dragon.direction) {
     case 'L':

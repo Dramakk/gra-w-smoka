@@ -2,6 +2,14 @@ export interface Counter<T> {
   _backing: Map<T, number>
 }
 
+export function createCounter<T> (): Counter<T> {
+  return { _backing: new Map() }
+}
+
+export function items<T> (counter: Counter<T>): Map<T, number> {
+  return counter._backing
+}
+
 export function setInfinity<T> (counter: Counter<T>, value: T): Counter<T> {
   counter._backing.set(value, Infinity)
   return { ...counter }

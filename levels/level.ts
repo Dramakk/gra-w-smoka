@@ -50,6 +50,16 @@ export function getRowCount (level: Level) : number {
   return level.fields.length / level.fieldsPerRow
 }
 
+export function removeStart (level: Level) : Level {
+  // We can set position and direction to null. When either is null, game won't start.
+  // Using nulls instead of undefined because of engine implementation.
+  return { ...level, gadgets: add(level.gadgets, 'START'), start: { position: null, direction: null } }
+}
+
+export function setStart (level: Level, index: number, direction: Directions) : Level {
+  return { ...level, start: { position: index, direction: direction }, gadgets: counterDelete(level.gadgets, 'START') }
+}
+
 // Used as factory for fields to place on board.
 export function newFieldFromType (index: number, fieldType: GadgetType) : fields.Field {
   switch (fieldType) {
