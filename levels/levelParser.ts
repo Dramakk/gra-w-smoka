@@ -34,21 +34,21 @@ export function parseLevel (levelToParse: string): Level {
     // We have to consider all arrows separetly, because of possible typeOfField values.
     switch (x.typeOfField) {
       case 'FINISH':
-        return fields.createFinish(x.image, x.id)
+        return fields.createField<fields.Finish>('FINISH', x.image, x.id)
       case 'WALL':
-        return fields.createWall(x.image, x.id)
+        return fields.createField<fields.Wall>('WALL', x.image, x.id)
       case 'EMPTY':
-        return fields.createEmpty(x.image, x.id)
+        return fields.createField<fields.Empty>('EMPTY', x.image, x.id)
       case 'ARROWUP':
-        return fields.createArrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWUP', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWDOWN':
-        return fields.createArrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWDOWN', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWLEFT':
-        return fields.createArrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWLEFT', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWRIGHT':
-        return fields.createArrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWRIGHT', x.image, x.id, { direction: x.attributes.direction })
       case 'START':
-        return fields.createStart(x.image, x.id)
+        return fields.createField<fields.Start>('START', x.image, x.id)
     }
   }
 

@@ -1,5 +1,5 @@
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
-import { Field, createEmpty, createWall } from '../levels/fields'
+import { Field, createField, Wall, Empty } from '../levels/fields'
 import { canPlaceField, Directions, GadgetType, GadgetTypeArray, getRowCount, Level, newFieldFromType, removeStart, setStart, StartType } from '../levels/level'
 
 // Type for dropdown options of fields to place by user.
@@ -30,10 +30,10 @@ function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level
   const fields: Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
     // Insert walls at boundaries of board
     if (isBorder(index, fieldsPerRow, howManyRows)) {
-      return createWall('W', index)
+      return createField<Wall>('WALL', 'W', index)
     }
 
-    return createEmpty('E', index)
+    return createField<Empty>('EMPTY', 'E', index)
   })
   const start: StartType = { position: null, direction: null }
   let gadgets: Counter<GadgetType> = createCounter<GadgetType>()
@@ -60,7 +60,7 @@ export function clearSquare (level: Level, index: number) : Level {
   if (currentlyPlacedField.typeOfField === 'START') {
     newLevel = removeStart(newLevel)
   }
-  newLevel.fields[index] = createEmpty('E', index)
+  newLevel.fields[index] = createField<Empty>('EMPTY', 'E', index)
 
   return newLevel
 }

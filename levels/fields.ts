@@ -2,11 +2,15 @@ import { Directions, GadgetType } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
+interface FieldAttributes {
+  direction?: Directions
+}
+
 export interface Field {
-    typeOfField: FieldType;
-    id: number;
-    image: string;
-    attributes?: {direction? : Directions};
+    typeOfField: FieldType
+    id: number
+    image: string
+    attributes?: FieldAttributes
 }
 
 export interface Start extends Field {
@@ -28,43 +32,6 @@ export interface Arrow extends Field {
   attributes: { direction: Directions }
 }
 
-export function createStart (image: string, id: number): Start {
-  return { image: image, id: id, typeOfField: 'START' }
-}
-
-export function createFinish (image: string, id: number): Finish {
-  return { image: image, id: id, typeOfField: 'FINISH' }
-}
-
-export function createWall (image: string, id: number): Wall {
-  return { image: image, id: id, typeOfField: 'WALL' }
-}
-
-export function createEmpty (image: string, id: number): Empty {
-  return { image: image, id: id, typeOfField: 'EMPTY' }
-}
-
-export function createArrow (direction: Directions, image: string, id: number): Arrow {
-  let typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT' = 'ARROWUP'
-  switch (direction) {
-    case 'U':
-      typeOfField = 'ARROWUP'
-      break
-    case 'D':
-      typeOfField = 'ARROWDOWN'
-      break
-    case 'L':
-      typeOfField = 'ARROWLEFT'
-      break
-    case 'R':
-      typeOfField = 'ARROWRIGHT'
-      break
-  }
-
-  return {
-    id,
-    typeOfField,
-    image,
-    attributes: { direction: direction }
-  }
+export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
+  return { typeOfField, image, id, attributes } as T
 }

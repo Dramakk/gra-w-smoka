@@ -64,17 +64,17 @@ export function setStart (level: Level, index: number, direction: Directions) : 
 export function newFieldFromType (index: number, fieldType: GadgetType) : fields.Field {
   switch (fieldType) {
     case 'ARROWUP':
-      return fields.createArrow('U', 'AU', index)
+      return fields.createField<fields.Arrow>('ARROWUP', 'AU', index, { direction: 'U' })
     case 'ARROWDOWN':
-      return fields.createArrow('D', 'AD', index)
+      return fields.createField<fields.Arrow>('ARROWDOWN', 'AD', index, { direction: 'D' })
     case 'ARROWLEFT':
-      return fields.createArrow('L', 'AL', index)
+      return fields.createField<fields.Arrow>('ARROWLEFT', 'AL', index, { direction: 'L' })
     case 'ARROWRIGHT':
-      return fields.createArrow('R', 'AR', index)
+      return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
     case 'WALL':
-      return fields.createWall('W', index)
+      return fields.createField<fields.Wall>('WALL', 'W', index)
     case 'START':
-      return fields.createStart('E', index)
+      return fields.createField<fields.Empty>('EMPTY', 'E', index)
   }
 }
 
