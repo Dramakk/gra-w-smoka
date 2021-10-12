@@ -2,76 +2,69 @@ import { Directions, GadgetType } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
-export abstract class Field {
+export interface Field {
     typeOfField: FieldType;
     id: number;
     image: string;
-    attributes: {direction : Directions};
+    attributes?: {direction? : Directions};
 }
 
-export class Start extends Field {
-  attributes: null
+export interface Start extends Field {
+  typeOfField: 'START',
+}
 
-  constructor (image: string, id: number) {
-    super()
-    this.image = image
-    this.id = id
-    this.typeOfField = 'START'
+export interface Finish extends Field {
+  typeOfField: 'FINISH',
+}
+
+export interface Wall extends Field {
+  typeOfField: 'WALL',
+}
+export interface Empty extends Field {
+  typeOfField: 'EMPTY',
+}
+export interface Arrow extends Field {
+  typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT',
+  attributes: { direction: Directions }
+}
+
+export function createStart (image: string, id: number): Start {
+  return { image: image, id: id, typeOfField: 'START' }
+}
+
+export function createFinish (image: string, id: number): Finish {
+  return { image: image, id: id, typeOfField: 'FINISH' }
+}
+
+export function createWall (image: string, id: number): Wall {
+  return { image: image, id: id, typeOfField: 'WALL' }
+}
+
+export function createEmpty (image: string, id: number): Empty {
+  return { image: image, id: id, typeOfField: 'EMPTY' }
+}
+
+export function createArrow (direction: Directions, image: string, id: number): Arrow {
+  let typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT' = 'ARROWUP'
+  switch (direction) {
+    case 'U':
+      typeOfField = 'ARROWUP'
+      break
+    case 'D':
+      typeOfField = 'ARROWDOWN'
+      break
+    case 'L':
+      typeOfField = 'ARROWLEFT'
+      break
+    case 'R':
+      typeOfField = 'ARROWRIGHT'
+      break
   }
-}
 
-export class Finish extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'FINISH'
-    }
-}
-
-export class Wall extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'WALL'
-    }
-}
-
-export class Empty extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'EMPTY'
-    }
-}
-
-export class Arrow extends Field {
-  constructor (direction: Directions, image: string, id: number) {
-    super()
-    this.image = image
-    this.attributes = { direction: direction }
-    this.id = id
-    switch (direction) {
-      case 'U':
-        this.typeOfField = 'ARROWUP'
-        break
-      case 'D':
-        this.typeOfField = 'ARROWDOWN'
-        break
-      case 'L':
-        this.typeOfField = 'ARROWLEFT'
-        break
-      case 'R':
-        this.typeOfField = 'ARROWRIGHT'
-        break
-    }
+  return {
+    id,
+    typeOfField,
+    image,
+    attributes: { direction: direction }
   }
 }
