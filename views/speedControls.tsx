@@ -1,25 +1,18 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
+import { DispatchProps } from '../state_manager/reducer'
 
-interface SpeedControlsProps {
-  gameStart: () => void,
-  gameStop: () => void,
-  gameReset: () => void,
-}
-
-export class SpeedControlsComponent extends React.Component< SpeedControlsProps > {
-  render () : ReactElement {
-    return (
-      <div className='SpeedControls'>
-        <span>
-          <button onClick={this.props.gameStart}>START</button>
-        </span>
-        <span>
-          <button onClick={this.props.gameStop}>STOP</button>
-        </span>
-        <span>
-          <button onClick={this.props.gameReset}>RESET</button>
-        </span>
-      </div>
-    )
-  }
+export function SpeedControls (props: DispatchProps): React.ReactElement {
+  return (
+    <div className='SpeedControls'>
+      <span>
+        <button onClick={() => props.dispatch({ type: 'START', payload: { timeout: 1000, dispatch: props.dispatch } })}>START</button>
+      </span>
+      <span>
+        <button onClick={() => props.dispatch({ type: 'STOP', payload: { timeout: 1000, dispatch: props.dispatch } })}>STOP</button>
+      </span>
+      <span>
+        <button onClick={() => props.dispatch({ type: 'RESET', payload: { timeout: 1000, dispatch: props.dispatch } })}>RESET</button>
+      </span>
+    </div>
+  )
 }

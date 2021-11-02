@@ -1,121 +1,92 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { GadgetOptionType } from '../editor/editor'
-import { GadgetInfo, GadgetType } from '../levels/level'
+import { GadgetInfo } from '../levels/level'
 import { ParseFn, parse } from 'spicery/build/parsers'
-import { PlacementActions } from './game'
+import { DispatchProps } from '../state_manager/reducer'
 
-// Component for single item from bottom tooltip
-export class BottomTooltipItemComponent extends React.Component<{
-  gadgetToPlace: GadgetInfo,
-  chooseGadgetToPlace: (fieldType: GadgetType, choosenOption?: GadgetOptionType) => void,
-  changePlacementMode: (placementMode: PlacementActions) => void;
-},
-  { firstSelectedOption: string, secondSelectedOption: string; }
-> {
-  // We can choose at most two options for given field
-  firstOptionsArray: string[] = [];
-  secondOptionsArray: string[] = [];
-  hasOptions = false;
-  howManyOptions = 0;
-
-  constructor (props: {
-    gadgetToPlace: GadgetInfo,
-    chooseGadgetToPlace: (fieldType: GadgetType, choosenOption?: GadgetOptionType) => void,
-    changePlacementMode: (placementMode: PlacementActions) => void
-  }) {
-    super(props)
-    this.state = {
-      firstSelectedOption: null,
-      secondSelectedOption: null
-    }
-    // Check if element has options and assign them
-    switch (props.gadgetToPlace[0]) {
-      case 'START':
-        this.hasOptions = true
-        this.firstOptionsArray = ['D', 'U', 'L', 'R']
-        this.howManyOptions = 1
-        this.state = { firstSelectedOption: this.firstOptionsArray[0], secondSelectedOption: null }
-        break
-    }
+function generateItemDescription (gadgetToPlace: GadgetInfo): [string[], string[], boolean, number] {
+  switch (gadgetToPlace[0]) {
+    case 'START':
+      return [['D', 'U', 'L', 'R'], [], true, 1]
+    default:
+      return [[], [], false, 0]
   }
+}
 
-  parseDropdownInput (): GadgetOptionType {
+export function BottomTooltipItem (props: DispatchProps & { gadgetToPlace: GadgetInfo}): ReactElement {
+  const [firstSelectedOption, changeFirstOption] = useState('')
+  const [secondSelectedOption, changeSecondOption] = useState('')
+
+  // We can choose at most two options for given field
+  const [firstOptionsArray, secondOptionsArray, hasOptions, howManyOptions] = generateItemDescription(props.gadgetToPlace)
+
+  function parseDropdownInput (): GadgetOptionType {
     const fieldOptionParser: ParseFn<GadgetOptionType> = (x: any) => {
       // Parse only one option field
       // TODO: Update after adding more fields
-      if (this.howManyOptions === 1) {
+      if (howManyOptions === 1) {
         return { direction: x.firstSelectedOption }
       }
     }
 
-    return parse(fieldOptionParser)(this.state)
+    return parse(fieldOptionParser)({ firstSelectedOption, secondSelectedOption })
   }
 
   // Update state to currently selected options.
-  updateSelectedOption (whichOption: number): (event: React.ChangeEvent<HTMLSelectElement>) => void {
+  function updateSelectedOption (whichOption: number): (event: React.ChangeEvent<HTMLSelectElement>) => void {
     return (event: React.ChangeEvent<HTMLSelectElement>) => {
       if (whichOption === 1) {
-        this.setState({ firstSelectedOption: event.target.value, secondSelectedOption: this.state.secondSelectedOption })
+        changeFirstOption(event.target.value)
       } else {
-        this.setState({ firstSelectedOption: this.state.firstSelectedOption, secondSelectedOption: event.target.value })
+        changeSecondOption(event.target.value)
       }
     }
   }
 
-  render (): ReactElement {
-    let dropdown = null
+  let dropdown = null
 
-    if (this.hasOptions) {
-      // Determine how many dropdowns we need
-      if (this.howManyOptions === 1) {
-        dropdown = (
-          <select onChange={this.updateSelectedOption(1).bind(this)} value={this.state.firstSelectedOption}>
-            {this.firstOptionsArray.map((value, index) => {
+  if (hasOptions) {
+    // Determine how many dropdowns we need
+    if (howManyOptions === 1) {
+      dropdown = (
+          <select onChange={updateSelectedOption(1).bind(this)} value={firstSelectedOption}>
+            {firstOptionsArray.map((value, index) => {
               return <option key={index} value={value}>{value}</option>
             })}
           </select>)
-      }
-      if (this.howManyOptions === 2) {
-        dropdown = (
+    }
+    if (howManyOptions === 2) {
+      dropdown = (
           <>
             {dropdown}
-            <select onChange={this.updateSelectedOption(2).bind(this)} value={this.state.firstSelectedOption}>
-              {this.secondOptionsArray.map((value, index) => {
+            <select onChange={updateSelectedOption(2).bind(this)} value={secondSelectedOption}>
+              {secondOptionsArray.map((value, index) => {
                 return <option key={index} value={value}>{value}</option>
               })}
             </select>
           </>)
-      }
     }
-    // If element has options add dropdown.
-    return (
+  }
+  // If element has options add dropdown.
+  return (
       <span>
-        <button onClick={() => this.props.chooseGadgetToPlace(this.props.gadgetToPlace[0], this.parseDropdownInput())}>{this.props.gadgetToPlace[0]} {this.props.gadgetToPlace[1]}</button>
+        <button onClick={() => props.dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.gadgetToPlace[0], option: parseDropdownInput() } })}>{props.gadgetToPlace[0]} {props.gadgetToPlace[1]}</button>
         {dropdown}
       </span>
-    )
-  }
+  )
 }
 
-export class BottomTooltipComponent extends React.Component<
-  {
-    fieldsToPlace: GadgetInfo[],
-    chooseGadgetToPlace: (fieldType: GadgetType, choosenOption?: GadgetOptionType) => void,
-    changePlacementMode: (placementMode: PlacementActions) => void;
-  }
-> {
-  buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {
-    return <BottomTooltipItemComponent key={gadgetToPlaceInfo[0]} gadgetToPlace={gadgetToPlaceInfo} chooseGadgetToPlace={this.props.chooseGadgetToPlace} changePlacementMode={this.props.changePlacementMode} />
+export function BottomTooltip (props: DispatchProps & {fieldsToPlace: GadgetInfo[] }): ReactElement {
+  function buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {
+    return <BottomTooltipItem key={gadgetToPlaceInfo[0]} gadgetToPlace={gadgetToPlaceInfo} dispatch={props.dispatch} />
   }
 
-  render (): ReactElement {
-    return (
-      <div className='bottom-tooltip'>
-        {this.props.fieldsToPlace.map(
-          gadgetToPlaceInfo => this.buildTooltipItem(gadgetToPlaceInfo))
-        }
-        <button onClick={() => this.props.changePlacementMode('DELETE')}>DELETE PLACED FIELD</button>
-      </div>
-    )
-  }
+  return (
+    <div className='bottom-tooltip'>
+      {props.fieldsToPlace.map(
+        gadgetToPlaceInfo => buildTooltipItem(gadgetToPlaceInfo))
+      }
+      {/* <button onClick={() => props.dispatch({ type: 'DELETE' })}>DELETE PLACED FIELD</button> */}
+    </div>
+  )
 }
