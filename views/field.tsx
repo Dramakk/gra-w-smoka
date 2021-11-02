@@ -1,11 +1,12 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
+import { DispatchProps } from '../state_manager/reducer'
 
-export class FieldComponent extends React.Component<{ id: number, image: string, fieldUpdate : (index : number) => void}> {
-  render () : ReactElement {
-    return (
-      <div onClick={() => this.props.fieldUpdate(this.props.id)} className='col-lg'>
-        {this.props.image}
-      </div>
-    )
-  }
+interface FieldProps extends DispatchProps { id: number, image: string}
+
+export function FieldComponent (props: FieldProps): React.ReactElement {
+  return (
+    <div onClick={() => props.dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='col-lg'>
+      {props.image}
+    </div>
+  )
 }

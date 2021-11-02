@@ -14,11 +14,10 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): [string[], string[
 }
 
 export function BottomTooltipItem (props: DispatchProps & { gadgetToPlace: GadgetInfo}): ReactElement {
-  const [firstSelectedOption, changeFirstOption] = useState('')
-  const [secondSelectedOption, changeSecondOption] = useState('')
-
   // We can choose at most two options for given field
   const [firstOptionsArray, secondOptionsArray, hasOptions, howManyOptions] = generateItemDescription(props.gadgetToPlace)
+  const [firstSelectedOption, changeFirstOption] = useState(firstOptionsArray.length ? firstOptionsArray[0] : '')
+  const [secondSelectedOption, changeSecondOption] = useState(secondOptionsArray.length ? secondOptionsArray[0] : '')
 
   function parseDropdownInput (): GadgetOptionType {
     const fieldOptionParser: ParseFn<GadgetOptionType> = (x: any) => {
@@ -86,7 +85,7 @@ export function BottomTooltip (props: DispatchProps & {fieldsToPlace: GadgetInfo
       {props.fieldsToPlace.map(
         gadgetToPlaceInfo => buildTooltipItem(gadgetToPlaceInfo))
       }
-      {/* <button onClick={() => props.dispatch({ type: 'DELETE' })}>DELETE PLACED FIELD</button> */}
+      <button onClick={() => props.dispatch({ type: 'DELETE_MODE' })}>DELETE PLACED FIELD</button>
     </div>
   )
 }
