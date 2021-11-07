@@ -1,11 +1,13 @@
-import React from 'react'
-import { DispatchProps } from '../state_manager/reducer'
+import React, { useContext } from 'react'
+import { DispatchContext } from './game'
 
-interface FieldProps extends DispatchProps { id: number, image: string}
+interface FieldProps { id: number, image: string}
 
 export function FieldComponent (props: FieldProps): React.ReactElement {
+  const dispatch = useContext(DispatchContext)
+
   return (
-    <div onClick={() => props.dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='col-lg'>
+    <div onClick={() => dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='col-lg'>
       {props.image}
     </div>
   )

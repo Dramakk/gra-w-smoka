@@ -11,11 +11,15 @@ import { stateReducer } from '../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../state_manager/accessors'
 import ReactDOM from 'react-dom'
 
-// Determine which action user tries to perform
-export type PlacementActions = 'DELETE' | 'PLACE';
+// This variable provides dispatch method to the whole component tree
+// To access this value we use useContext hook in child components
+export const DispatchContext = React.createContext(null)
+
 type GameProps = { engine: EngineState, editorMode: boolean, editor?: editor.Editor};
 
 export function Game (props: GameProps): React.ReactElement {
+  // This is the place where all magic happens. We create state object and dispatch function which is passed down the tree.
+  // Using dispatch we can update state in this place and trigger update of every component (if needed)
   const [state, dispatch] = React.useReducer(stateReducer,
     {
       engineState: props.engine,
@@ -36,18 +40,21 @@ export function Game (props: GameProps): React.ReactElement {
   }
 
   return (
-      <div className='container'>
-        <p>{state.uiState.fieldToAdd}</p>
-        <BoardComponent dispatch={dispatch} dragonPosition={dragon.fieldId} rowCount={level.getRowCount(currentLevelState)} fieldsPerRow={level.getFieldsPerRow(currentLevelState)} board={board}></BoardComponent>
-        <BottomTooltip dispatch={dispatch} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
-        <SpeedControls dispatch={dispatch} />
-        {state.editor
-          ? <div>
-            <GadgetsSelection editor={state.editor} dispatch={dispatch} />
-            <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
-          </div>
-          : null
-        }
-    </div>
+      // Here we provide desired value of dispatch to every component down in the tree.
+      <DispatchContext.Provider value={dispatch}>
+        <div className='container'>
+          <p>{state.uiState.fieldToAdd}</p>
+          <BoardComponent dragonPosition={dragon.fieldId} rowCount={level.getRowCount(currentLevelState)} fieldsPerRow={level.getFieldsPerRow(currentLevelState)} board={board}></BoardComponent>
+          <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
+          <SpeedControls />
+          {state.editor
+            ? <div>
+              <GadgetsSelection editor={state.editor} />
+              <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
+            </div>
+            : null
+          }
+      </div>
+    </DispatchContext.Provider>
   )
 }

@@ -1,9 +1,8 @@
 import * as fields from '../levels/fields'
 import React, { ReactElement } from 'react'
 import { FieldComponent } from './field'
-import { DispatchProps } from '../state_manager/reducer'
 
-interface BoardProps extends DispatchProps {
+interface BoardProps {
   dragonPosition: number;
   board: fields.Field[];
   rowCount: number;
@@ -26,7 +25,7 @@ export function BoardComponent (props:BoardProps): ReactElement {
       <div key={rowNumber} className='row'>
         {[...Array(props.fieldsPerRow).keys()].map((fieldIndex: number) => {
           const field = props.board[offset + fieldIndex]
-          return <FieldComponent key={field.id} id={field.id} image={getImage(field)} dispatch={props.dispatch} />
+          return <FieldComponent key={field.id} id={field.id} image={getImage(field)} />
         })}
       </div>
     )

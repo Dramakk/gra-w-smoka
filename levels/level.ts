@@ -108,7 +108,7 @@ export function fillSquare (level: Level, index : number, fieldType : GadgetType
 export function clearSquare (level: Level, index : number) : Level {
   const userPlacedField = getField(level, index)
 
-  // userPlacedField === 'EMPTY' cannot happen, but we have to tell it to TS. Because of typeOfField type
+  // userPlacedField === 'EMPTY' cannot happen, but we have to tell this to TS.
   if (userPlacedField && userPlacedField.typeOfField !== 'EMPTY') {
     const { [index]: _, ...rest } = level.playerPlacedGadgets
     return { ...level, playerPlacedGadgets: rest, gadgets: add(level.gadgets, userPlacedField.typeOfField) }

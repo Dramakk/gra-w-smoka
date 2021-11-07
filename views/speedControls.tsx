@@ -1,17 +1,19 @@
-import React from 'react'
-import { DispatchProps } from '../state_manager/reducer'
+import React, { useContext } from 'react'
+import { DispatchContext } from './game'
 
-export function SpeedControls (props: DispatchProps): React.ReactElement {
+export function SpeedControls (): React.ReactElement {
+  const dispatch = useContext(DispatchContext)
+  // TODO: Dodać obsługę różnych czasów między akcjami
   return (
     <div className='SpeedControls'>
       <span>
-        <button onClick={() => props.dispatch({ type: 'START', payload: { timeout: 1000, dispatch: props.dispatch } })}>START</button>
+        <button onClick={() => dispatch({ type: 'START', payload: { timeout: 1000, dispatch: dispatch } })}>START</button>
       </span>
       <span>
-        <button onClick={() => props.dispatch({ type: 'STOP', payload: { timeout: 1000, dispatch: props.dispatch } })}>STOP</button>
+        <button onClick={() => dispatch({ type: 'STOP', payload: { timeout: 1000, dispatch: dispatch } })}>STOP</button>
       </span>
       <span>
-        <button onClick={() => props.dispatch({ type: 'RESET', payload: { timeout: 1000, dispatch: props.dispatch } })}>RESET</button>
+        <button onClick={() => dispatch({ type: 'RESET', payload: { timeout: 1000, dispatch: dispatch } })}>RESET</button>
       </span>
     </div>
   )

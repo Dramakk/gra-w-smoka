@@ -4,8 +4,19 @@ import { GadgetType } from '../levels/level'
 import { manageChangeGadgetQty, manageDeleteField, manageDeleteMode, managePlaceField, manageReset, manageSelectField, manageStart, manageStep, manageStop } from './managers'
 import React from 'react'
 
-export type PossibleTypes = 'INITIALIZE' | 'START' | 'STOP' | 'RESET' | 'STEP' | 'SELECT_FIELD' | 'DESELECT_FIELD' | 'FIELD_CLICK' | 'DELETE_MODE' | 'CHANGE_GADGET_QTY'
+export type PossibleActions =
+  | 'START' // Start the game action
+  | 'STOP' // Stop the game action
+  | 'RESET' // Reset gamem action
+  | 'STEP' // Invoked at each step
+  | 'SELECT_FIELD' // Invoked when user selects field to place
+  | 'DESELECT_FIELD' // Invoked after user places the field
+  | 'FIELD_CLICK' // Invoked when user clicks field on the map
+  | 'DELETE_MODE' // Invoked when user switches to/from delete mode
+  | 'CHANGE_GADGET_QTY' // Invoked in editor mode, when user changes quantity of gadgets available to be placed on the map
 
+// Here are types describing possible payloads of actions
+// Naming convention ActionTypePayload
 export interface StartPayload {timeout: number, dispatch: React.Dispatch<Action>}
 export interface SelectFieldPayload {fieldType: GadgetType, option?: GadgetOptionType }
 export interface FieldClickPayload { index: number }
@@ -13,11 +24,12 @@ export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: n
 
 export type PossiblePayloads = StartPayload | SelectFieldPayload | FieldClickPayload | ChangeGadgetQtyPayload
 
-export type Action = { type: PossibleTypes, payload?: PossiblePayloads }
+export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
 export interface UIState { fieldToAdd: GadgetType, option: GadgetOptionType; canDelete: boolean }
+
+// Holds state of the whole game (engine + editor + UI)
 export interface GameState { engineState: EngineState, uiState: UIState, editor?: Editor, loop?: ReturnType<typeof setInterval> }
-export interface DispatchProps { dispatch: React.Dispatch<Action> }
 
 /*
   This function serves as a single source of truth about state. Every action taken in game
@@ -27,8 +39,6 @@ export interface DispatchProps { dispatch: React.Dispatch<Action> }
 */
 export function stateReducer (state: GameState, action: Action): GameState {
   switch (action.type) {
-    case 'INITIALIZE':
-      return state
     case 'STEP':
       return manageStep(state)
     case 'START':

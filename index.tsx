@@ -8,6 +8,8 @@ import { parseLevel } from './levels/levelParser'
 import { createEditor } from './editor/editor'
 
 const domContainer = document.querySelector('#app-container')
+
+// Here we either create game view or editor view. They use the same component, but with different values assigned.
 ReactDOM.render(<MainMenu
   createGameView={(importedLevel: string) => {
     const level = parseLevel(JSON.parse(importedLevel))
