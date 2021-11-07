@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { LevelImportComponent } from './levelImport'
+import { LevelImport } from './levelImport'
 
 interface MainMenuProps {createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}
 
@@ -10,7 +10,7 @@ export function MainMenu (props: MainMenuProps): React.ReactElement {
   const [editorFormDisplay, changeEditorFormDisplay] = useState('none')
 
   function renderImportView () : void {
-    ReactDOM.render(<LevelImportComponent createGameView={props.createGameView}/>, document.querySelector('#app-container'))
+    ReactDOM.render(<LevelImport createGameView={props.createGameView}/>, document.querySelector('#app-container'))
   }
 
   return (
