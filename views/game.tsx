@@ -10,6 +10,7 @@ import { items } from '../helpers/counter'
 import { stateReducer } from '../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../state_manager/accessors'
 import ReactDOM from 'react-dom'
+import { GemControls } from './gemControls'
 
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
@@ -44,12 +45,17 @@ export function Game (props: GameProps): React.ReactElement {
       <DispatchContext.Provider value={dispatch}>
         <div className='container'>
           <p>{state.uiState.fieldToAdd}</p>
+          <p>RESET {JSON.stringify(state.engineState.level.baseDragonGems)}</p>
+          <p>CURRENT {JSON.stringify(state.engineState.dragon.gemsInPocket)}</p>
+          <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>
           <BoardComponent dragonPosition={dragon.fieldId} rowCount={level.getRowCount(currentLevelState)} fieldsPerRow={level.getFieldsPerRow(currentLevelState)} board={board}></BoardComponent>
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           {state.editor
             ? <div>
               <GadgetsSelection editor={state.editor} />
+              <GemControls who='DRAGON' />
+              <GemControls who='TREE' />
               <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
             </div>
             : null

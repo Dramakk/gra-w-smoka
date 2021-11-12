@@ -1,8 +1,9 @@
-import { Directions } from '../levels/level'
+import { Directions, GemColors } from '../levels/level'
 
 export interface Dragon {
   fieldId: number;
   direction: Directions;
+  gemsInPocket: Record<GemColors, number>
   canMove: boolean;
 }
 

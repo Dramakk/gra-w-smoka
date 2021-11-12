@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetOptionType } from '../editor/editor'
-import { GadgetInfo } from '../levels/level'
+import { GadgetInfo, GadgetOptionType } from '../levels/level'
 import { ParseFn, parse } from 'spicery/build/parsers'
 import { DispatchContext } from './game'
 
@@ -10,6 +9,8 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): [string[], string[
   switch (gadgetToPlace[0]) {
     case 'START':
       return [['D', 'U', 'L', 'R'], [], true, 1]
+    case 'SCALE':
+      return [['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW'], [], true, 1]
     default:
       return [[], [], false, 0]
   }
@@ -24,10 +25,15 @@ export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactEl
 
   function parseDropdownInput (): GadgetOptionType {
     const fieldOptionParser: ParseFn<GadgetOptionType> = (x: any) => {
+      const gadgetType = props.gadgetToPlace[0]
       // Parse only one option field
       // TODO: Update after adding more fields
-      if (howManyOptions === 1) {
+      if (gadgetType === 'START') {
         return { direction: x.firstSelectedOption }
+      }
+
+      if (gadgetType === 'SCALE') {
+        return { gemColor: x.firstSelectedOption }
       }
     }
 

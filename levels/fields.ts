@@ -1,10 +1,11 @@
-import { Directions, GadgetType } from './level'
+import { Directions, GadgetType, GemColors } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
-interface FieldAttributes {
-  direction?: Directions
-}
+// Type for possible field attributes
+interface ArrowAttributes { direction: Directions}
+interface ScaleAttributes { gemColor: GemColors, onScale: number }
+type FieldAttributes = ArrowAttributes | ScaleAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -29,7 +30,12 @@ export interface Empty extends Field {
 }
 export interface Arrow extends Field {
   typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT',
-  attributes: { direction: Directions }
+  attributes: ArrowAttributes
+}
+
+export interface Scale extends Field {
+  typeOfField: 'SCALE'
+  attributtes: ScaleAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
