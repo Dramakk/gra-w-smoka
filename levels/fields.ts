@@ -5,7 +5,12 @@ type FieldType = GadgetType | 'EMPTY'
 // Type for possible field attributes
 interface ArrowAttributes { direction: Directions}
 interface ScaleAttributes { gemColor: GemColors, onScale: number }
-type FieldAttributes = ArrowAttributes | ScaleAttributes
+interface FinishAttributes { opened: boolean }
+
+type FieldAttributes =
+  | ArrowAttributes
+  | ScaleAttributes
+  | FinishAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -20,6 +25,7 @@ export interface Start extends Field {
 
 export interface Finish extends Field {
   typeOfField: 'FINISH',
+  attributes: FinishAttributes
 }
 
 export interface Wall extends Field {

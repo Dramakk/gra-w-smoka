@@ -2,7 +2,7 @@ import { add, Counter, counterDelete, get } from '../helpers/counter'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
+export const GadgetTypeArray: GadgetType[] = ['START', 'FINISH', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
 // Gadget is the type for fields that users are allowed to put on board.
 // TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
 export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
@@ -90,6 +90,20 @@ export function setStart (level: Level, index: number, direction: Directions) : 
   return { ...level, start: { position: index, direction: direction }, gadgets: counterDelete(level.gadgets, 'START') }
 }
 
+export function setFinish (level: Level, index: number): Level {
+  const newLevel = {
+    ...level,
+    fields: level.fields.map((field, index) =>
+      field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
+  }
+
+  return {
+    ...newLevel,
+    fields: newLevel.fields.map((field, idx) =>
+      index === idx ? fields.createField('FINISH', 'F', index, { opened: false }) : field)
+  }
+}
+
 // Used as factory for fields to place on board.
 export function newFieldFromType (index: number, fieldType: GadgetType, options: GadgetOptionType) : fields.Field {
   switch (fieldType) {
@@ -107,6 +121,10 @@ export function newFieldFromType (index: number, fieldType: GadgetType, options:
     case 'WALL':
       return fields.createField<fields.Wall>('WALL', 'W', index)
     case 'START':
+      return fields.createField<fields.Start>('START', 'E', index)
+    case 'FINISH':
+      return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: false })
+    default:
       return fields.createField<fields.Empty>('EMPTY', 'E', index)
   }
 }

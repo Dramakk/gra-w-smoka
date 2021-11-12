@@ -1,6 +1,6 @@
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
 import { Field, createField, Wall, Empty } from '../levels/fields'
-import { canPlaceField, GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, getRowCount, Level, newFieldFromType, removeStart, setStart, StartType } from '../levels/level'
+import { canPlaceField, GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, getRowCount, Level, newFieldFromType, removeStart, setFinish, setStart, StartType } from '../levels/level'
 
 export interface Editor {
   level: Level,
@@ -48,6 +48,10 @@ export function fillSquare (level: Level, index: number, gadgetType : GadgetType
 
   if (gadgetType === 'START' && 'direction' in options) {
     newLevel = setStart(level, index, options.direction)
+  }
+
+  if (gadgetType === 'FINISH') {
+    newLevel = setFinish(level, index)
   }
 
   const newGadget = newFieldFromType(index, gadgetType, options)

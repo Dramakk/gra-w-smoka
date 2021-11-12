@@ -25,7 +25,7 @@ export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: n
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
 
 export type PossiblePayloads =
-  StartPayload
+  | StartPayload
   | SelectFieldPayload
   | FieldClickPayload
   | ChangeGadgetQtyPayload
