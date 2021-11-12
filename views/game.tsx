@@ -45,6 +45,7 @@ export function Game (props: GameProps): React.ReactElement {
       <DispatchContext.Provider value={dispatch}>
         <div className='container'>
           <p>{state.uiState.fieldToAdd}</p>
+          <p>WAGI {JSON.stringify(state.engineState.level.fields.filter(field => field.typeOfField === 'SCALE'))}</p>
           <p>RESET {JSON.stringify(state.engineState.level.baseDragonGems)}</p>
           <p>CURRENT {JSON.stringify(state.engineState.dragon.gemsInPocket)}</p>
           <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>

@@ -35,7 +35,7 @@ export interface Arrow extends Field {
 
 export interface Scale extends Field {
   typeOfField: 'SCALE'
-  attributtes: ScaleAttributes
+  attributes: ScaleAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {

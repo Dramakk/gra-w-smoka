@@ -163,12 +163,36 @@ export function getField (level: Level, index: number) : fields.Field {
   }
 }
 
-export function changeLevelGemQty (level: Level, who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number): Level {
-  const levelKey = who === 'DRAGON' ? 'baseDragonGems' : 'treeGems'
+export function changeLevelGemQty (level: Level, who: 'DRAGON' | 'TREE' | 'SCALE', color: GemColors, changeInQty: number, scaleIndex?: number): Level {
+  if (who !== 'SCALE') {
+    const levelKey = who === 'DRAGON' ? 'baseDragonGems' : 'treeGems'
 
-  if (level[levelKey][color] + changeInQty < 0) {
-    return { ...level, [levelKey]: { ...level[levelKey], [color]: 0 } }
+    if (level[levelKey][color] + changeInQty < 0) {
+      return { ...level, [levelKey]: { ...level[levelKey], [color]: 0 } }
+    }
+
+    return { ...level, [levelKey]: { ...level[levelKey], [color]: (level[levelKey][color] + changeInQty) } }
+  } else if (scaleIndex) {
+    const selectedScale = level.fields[scaleIndex] as fields.Scale
+
+    if (selectedScale.typeOfField !== 'SCALE') {
+      throw Error(`Cannot change gem qty in field other than scale on index ${scaleIndex}`)
+    }
+
+    return {
+      ...level,
+      fields: {
+        ...level.fields,
+        [scaleIndex]: fields.createField(selectedScale.typeOfField,
+          selectedScale.image,
+          selectedScale.id,
+          {
+            ...selectedScale.attributes,
+            onScale: selectedScale.attributes.onScale + changeInQty
+          })
+      }
+    }
   }
 
-  return { ...level, [levelKey]: { ...level[levelKey], [color]: (level[levelKey][color] + changeInQty) } }
+  return { ...level }
 }
