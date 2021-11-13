@@ -1,18 +1,21 @@
+import { Dragon } from '../engine/dragon'
 import { Counter, add, createCounter } from '../helpers/counter'
 import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { Directions, GadgetType, GemColors, Level, StartType } from './level'
+import { Directions, GadgetType, GemColors, Level } from './level'
 
 // Level parser using Spicery package from NPM.
 export function parseLevel (levelToParse: string): Level {
   const directionsParser: ParseFn<Directions> = (x: Directions) => {
     return x
   }
-  const startParser: ParseFn<StartType> = (x: fields.Start) => ({
-    position: spicery.fromMap(x, 'position', spicery.aNumber),
-    direction: spicery.fromMap(x, 'direction', directionsParser)
+  const baseDragonParser: ParseFn<Dragon> = (x: Dragon) => ({
+    fieldId: spicery.fromMap(x, 'fieldId', spicery.aNumber),
+    direction: spicery.fromMap(x, 'direction', directionsParser),
+    gemsInPocket: spicery.fromMap(x, 'gemsInPocket', gemRecordParser),
+    canMove: true
   })
 
   const gadgetTypeParser: ParseFn<GadgetType> = (x: GadgetType) => {
@@ -35,7 +38,7 @@ export function parseLevel (levelToParse: string): Level {
   }
 
   const fieldsParser: ParseFn<fields.Field> = (x: fields.Field) => {
-    if (!x.typeOfField || !x.id || !x.image) {
+    if (!x.typeOfField || x.id == null || !x.image) {
       throw Error(`Parser error parsing ${x}`)
     }
 
@@ -49,12 +52,11 @@ export function parseLevel (levelToParse: string): Level {
   const levelParser: ParseFn<Level> = (x: any) => {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
-    const start = spicery.fromMap(x, 'start', startParser)
+    const baseDragon = spicery.fromMap(x, 'baseDragon', baseDragonParser)
     const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
-    const baseDragonGems: Record<GemColors, number> = spicery.fromMap(x, 'baseDragonGems', gemRecordParser)
     const treeGems: Record<GemColors, number> = spicery.fromMap(x, 'treeGems', gemRecordParser)
 
-    return { fieldsPerRow, start, fields, gadgets, playerPlacedGadgets: [], baseDragonGems, treeGems }
+    return { fieldsPerRow, baseDragon, fields, gadgets, playerPlacedGadgets: [], treeGems }
   }
 
   return parse(levelParser)(levelToParse)

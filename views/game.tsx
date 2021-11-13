@@ -31,13 +31,17 @@ export function Game (props: GameProps): React.ReactElement {
 
   const dragon = getDragonFromState(state)
   const currentLevelState = getLevelFromState(state)
-  const board = [...Array(level.getLevelSize(currentLevelState)).keys()].map(index => { return level.getField(currentLevelState, index) })
-  const canExport = !!(dragon.fieldId && dragon.direction)
+  const board = [...Array(level.getLevelSize(currentLevelState)).keys()]
+    .map(index => { return level.getField(currentLevelState, index) })
+  const canExport = !!(dragon.fieldId && dragon.direction) &&
+  state.engineState.level.fields
+    .filter(field => field.typeOfField === 'FINISH').length !== 0
 
   // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
   // Renders exported level in JSON format.
   function exportLevel (editorState: editor.Editor) : void {
-    ReactDOM.render((<div>{editor.exportLevel(editorState)}</div>), document.querySelector('#app-container'))
+    ReactDOM.render((<div>{editor.exportLevel(editorState)}</div>),
+      document.querySelector('#app-container'))
   }
 
   return (
@@ -46,10 +50,14 @@ export function Game (props: GameProps): React.ReactElement {
         <div className='container'>
           <p>{state.uiState.fieldToAdd}</p>
           <p>WAGI {JSON.stringify(state.engineState.level.fields.filter(field => field.typeOfField === 'SCALE'))}</p>
-          <p>RESET {JSON.stringify(state.engineState.level.baseDragonGems)}</p>
+          <p>RESET {JSON.stringify(state.engineState.level.baseDragon)}</p>
           <p>CURRENT {JSON.stringify(state.engineState.dragon.gemsInPocket)}</p>
           <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>
-          <BoardComponent dragonPosition={dragon.fieldId} rowCount={level.getRowCount(currentLevelState)} fieldsPerRow={level.getFieldsPerRow(currentLevelState)} board={board}></BoardComponent>
+          <BoardComponent
+            dragonPosition={dragon.fieldId}
+            rowCount={level.getRowCount(currentLevelState)}
+            fieldsPerRow={level.getFieldsPerRow(currentLevelState)}
+            board={board}></BoardComponent>
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           {state.editor

@@ -1,6 +1,7 @@
+import { Dragon } from '../engine/dragon'
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
 import { Field, createField, Wall, Empty } from '../levels/fields'
-import { canPlaceField, GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, getRowCount, Level, newFieldFromType, removeStart, setFinish, setStart, StartType } from '../levels/level'
+import { canPlaceField, GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, getRowCount, Level, newFieldFromType, removeStart, setFinish, setStart } from '../levels/level'
 
 export interface Editor {
   level: Level,
@@ -93,14 +94,19 @@ function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level
 
     return createField<Empty>('EMPTY', 'E', index)
   })
-  const start: StartType = { position: null, direction: null }
-  const baseDragonGems: Record<GemColors, number> = {
-    BLACK: 0,
-    BLUE: 0,
-    YELLOW: 0,
-    RED: 0,
-    GREEN: 0
+  const baseDragon: Dragon = {
+    fieldId: null,
+    direction: null,
+    gemsInPocket: {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    },
+    canMove: true
   }
+
   const treeGems: Record<GemColors, number> = {
     BLACK: 0,
     BLUE: 0,
@@ -122,9 +128,8 @@ function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level
     fields,
     fieldsPerRow,
     gadgets,
-    start,
+    baseDragon,
     playerPlacedGadgets: [],
-    baseDragonGems,
     treeGems
   }
 }
