@@ -1,6 +1,7 @@
+import update from 'immutability-helper'
 import { Field } from '../levels/fields'
-import { getField, Level, resetLevel } from '../levels/level'
-import { Dragon, changeDragonDirection, moveDragon } from './dragon'
+import { Level, LevelGetters, LevelSpeedControls } from '../levels/level'
+import { Dragon, DragonManipulation } from './dragon'
 
 export type EngineState = {
   level: Level,
@@ -8,10 +9,9 @@ export type EngineState = {
 }
 
 export function resetDragon (currentState: EngineState): EngineState {
-  return {
-    ...currentState,
-    dragon: { ...currentState.level.baseDragon }
-  }
+  return update(currentState, {
+    dragon: { $set: currentState.level.baseDragon }
+  })
 }
 
 export function step (currentState: EngineState): [EngineState, boolean] {
@@ -23,7 +23,9 @@ export function step (currentState: EngineState): [EngineState, boolean] {
 export function resetEngineState (currentState: EngineState): EngineState {
   const afterDragonReset = resetDragon(currentState)
 
-  return { ...afterDragonReset, level: resetLevel(afterDragonReset.level) }
+  return update(afterDragonReset, {
+    level: { $set: LevelSpeedControls.resetLevel(afterDragonReset.level) }
+  })
 }
 
 // Private function definitions
@@ -31,26 +33,26 @@ export function resetEngineState (currentState: EngineState): EngineState {
 function move (currentState: EngineState): [EngineState, boolean] {
   const newFieldId: number = calculateNewField(currentState)
 
-  if (getField(currentState.level, newFieldId).typeOfField === 'WALL') {
+  if (LevelGetters.getField(currentState.level, newFieldId).typeOfField === 'WALL') {
     return [{ ...currentState }, false]
   } else {
-    return [{ ...currentState, dragon: moveDragon(currentState.dragon, newFieldId) }, true]
+    return [update(currentState, { dragon: { $set: DragonManipulation.moveDragon(currentState.dragon, newFieldId) } }), true]
   }
 }
 
 // Changes dragon state based on field dragon is on.
 function changeState (currentState: EngineState): EngineState {
-  const currentField: Field = getField(currentState.level, currentState.dragon.fieldId)
+  const currentField: Field = LevelGetters.getField(currentState.level, currentState.dragon.fieldId)
   switch (currentField.typeOfField) {
     // Again we have to handle all arrows separetly because of typeOfField definition.
     case 'ARROWUP':
-      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'U') }
+      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(currentState.dragon, 'U') } })
     case 'ARROWDOWN':
-      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'D') }
+      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(currentState.dragon, 'D') } })
     case 'ARROWLEFT':
-      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'L') }
+      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(currentState.dragon, 'L') } })
     case 'ARROWRIGHT':
-      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'R') }
+      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(currentState.dragon, 'R') } })
     default:
       return { ...currentState }
   }

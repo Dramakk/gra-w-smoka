@@ -5,7 +5,7 @@ import { Game } from './views/game'
 import { MainMenu } from './views/mainMenu'
 import './views/css/main.css'
 import { parseLevel } from './levels/levelParser'
-import { createEditor } from './editor/editor'
+import { EditorCreation } from './editor/editor'
 
 const domContainer = document.querySelector('#app-container')
 
@@ -17,7 +17,7 @@ ReactDOM.render(<MainMenu
     ReactDOM.render(<Game engine={game} editorMode={false}/>, domContainer)
   }}
   createEditorView={(howManyRows: number, howManyPerRow: number) => {
-    const editor = createEditor(howManyRows, howManyPerRow)
+    const editor = EditorCreation.createEditor(howManyRows, howManyPerRow)
     const game = resetDragon({ level: editor.level, dragon: null })
     ReactDOM.render(<Game engine={game} editorMode={true} editor={editor}
     />, domContainer)

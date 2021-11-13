@@ -1,8 +1,11 @@
 import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
 import { GadgetOptionType, GadgetType, GemColors } from '../levels/level'
-import { manageChangeGadgetQty, manageChangeGemQty, manageDeleteField, manageDeleteMode, managePlaceField, manageReset, manageSelectField, manageStart, manageStep, manageStop } from './managers'
 import React from 'react'
+import { manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
+import { manageDeleteMode, manageSelectField } from './managers/uiStateManagers'
+import { manageDeleteField, managePlaceField } from './managers/placementManagers'
+import { manageChangeGadgetQty, manageChangeGemQty } from './managers/editorManagers'
 
 export type PossibleActions =
   | 'START' // Start the game action
