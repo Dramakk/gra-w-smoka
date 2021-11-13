@@ -1,9 +1,7 @@
 import React from 'react'
 import { EngineState } from '../engine/engine'
-import * as level from '../levels/level'
 import { BottomTooltip } from './bottomTooltip'
 import { SpeedControls } from './speedControls'
-import * as editor from '../editor/editor'
 import { BoardComponent } from './board'
 import { GadgetsSelection } from './gadgetsSelection'
 import { items } from '../helpers/counter'
@@ -11,12 +9,14 @@ import { stateReducer } from '../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../state_manager/accessors'
 import ReactDOM from 'react-dom'
 import { GemControls } from './gemControls'
+import { LevelGetters } from '../levels/level'
+import { Editor, EditorCreation } from '../editor/editor'
 
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
 
-type GameProps = { engine: EngineState, editorMode: boolean, editor?: editor.Editor};
+type GameProps = { engine: EngineState, editorMode: boolean, editor?: Editor};
 
 export function Game (props: GameProps): React.ReactElement {
   // This is the place where all magic happens. We create state object and dispatch function which is passed down the tree.
@@ -31,16 +31,16 @@ export function Game (props: GameProps): React.ReactElement {
 
   const dragon = getDragonFromState(state)
   const currentLevelState = getLevelFromState(state)
-  const board = [...Array(level.getLevelSize(currentLevelState)).keys()]
-    .map(index => { return level.getField(currentLevelState, index) })
+  const board = [...Array(LevelGetters.getLevelSize(currentLevelState)).keys()]
+    .map(index => { return LevelGetters.getField(currentLevelState, index) })
   const canExport = !!(dragon.fieldId && dragon.direction) &&
   state.engineState.level.fields
     .filter(field => field.typeOfField === 'FINISH').length !== 0
 
   // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
   // Renders exported level in JSON format.
-  function exportLevel (editorState: editor.Editor) : void {
-    ReactDOM.render((<div>{editor.exportLevel(editorState)}</div>),
+  function exportLevel (editorState: Editor) : void {
+    ReactDOM.render((<div>{EditorCreation.exportLevel(editorState)}</div>),
       document.querySelector('#app-container'))
   }
 
@@ -55,8 +55,8 @@ export function Game (props: GameProps): React.ReactElement {
           <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>
           <BoardComponent
             dragonPosition={dragon.fieldId}
-            rowCount={level.getRowCount(currentLevelState)}
-            fieldsPerRow={level.getFieldsPerRow(currentLevelState)}
+            rowCount={LevelGetters.getRowCount(currentLevelState)}
+            fieldsPerRow={LevelGetters.getFieldsPerRow(currentLevelState)}
             board={board}></BoardComponent>
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />

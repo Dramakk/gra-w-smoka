@@ -7,15 +7,17 @@ export interface Dragon {
   canMove: boolean;
 }
 
-export function changeDragonDirection (dragon: Dragon, direction: Directions): Dragon {
-  return { ...dragon, direction: direction }
-}
+export const DragonManipulation = {
+  changeDragonDirection: function (dragon: Dragon, direction: Directions): Dragon {
+    return { ...dragon, direction: direction }
+  },
 
-export function moveDragon (dragon: Dragon, fieldId: number): Dragon {
-  return { ...dragon, fieldId }
-}
+  moveDragon: function (dragon: Dragon, fieldId: number): Dragon {
+    return { ...dragon, fieldId }
+  },
 
-export function changePocketGemsQty (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
-  const finalValue = dragon.gemsInPocket[color] + changeInQty < 0 ? 0 : dragon.gemsInPocket[color] + changeInQty
-  return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: finalValue } }
+  changePocketGemsQty: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
+    const finalValue = dragon.gemsInPocket[color] + changeInQty < 0 ? 0 : dragon.gemsInPocket[color] + changeInQty
+    return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: finalValue } }
+  }
 }
