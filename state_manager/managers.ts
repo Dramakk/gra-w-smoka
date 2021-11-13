@@ -2,7 +2,7 @@ import { resetDragon, step } from '../engine/engine'
 import * as levelUtils from '../levels/level'
 import * as editorUtils from '../editor/editor'
 import { getDragonFromState, getLevelFromState } from './accessors'
-import { ChangeGadgetQtyPayload, FieldClickPayload, GameState, SelectFieldPayload, StartPayload } from './reducer'
+import { ChangeGadgetQtyPayload, ChangeGemQtyPayload, FieldClickPayload, GameState, SelectFieldPayload, StartPayload } from './reducer'
 import { add, counterDelete } from '../helpers/counter'
 
 // This file contains functions used by actions in reducer. We decided to separate them, for cleaner implementation.
@@ -91,7 +91,7 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
       ...state,
       engineState: resetDragon({
         ...state.engineState,
-        level: state.editor ? { ...newEditor.level } : levelUtils.fillSquare(level, payload.index, uiState.fieldToAdd)
+        level: state.editor ? { ...newEditor.level } : levelUtils.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.option)
       }),
       uiState: { fieldToAdd: null, option: null, canDelete: false },
       editor: newEditor
@@ -107,4 +107,17 @@ export function manageChangeGadgetQty (state: GameState, payload: ChangeGadgetQt
     : { ...state.editor, playerGadgets: counterDelete(state.editor.playerGadgets, payload.gadgetType) }
 
   return { ...state, editor: newEditor }
+}
+
+export function manageChangeGemQty (state: GameState, payload: ChangeGemQtyPayload): GameState {
+  const { who, color, changeInQty } = payload
+
+  return {
+    ...state,
+    engineState: resetDragon({
+      ...state.engineState,
+      level: levelUtils.changeLevelGemQty(state.engineState.level, who, color, changeInQty)
+    }),
+    editor: state.editor && { ...state.editor, level: levelUtils.changeLevelGemQty(state.editor.level, who, color, changeInQty) }
+  }
 }

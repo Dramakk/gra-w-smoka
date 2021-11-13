@@ -4,7 +4,17 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
   // TODO: Dodać obsługę błędu przy wklejeniu nieprawidłowego JSONa
   const [importedLevel, updateImportedLevel] = React.useState(`{
     "fieldsPerRow": 4,
-    "start": {"position": 5, "direction": "R"},
+    "baseDragon": {
+      "fieldId": 5, 
+      "direction": "R", 
+      "canMove": true, 
+      "gemsInPocket": {
+        "BLACK": 0,
+        "BLUE": 0,
+        "YELLOW": 0,
+        "RED": 0,
+        "GREEN": 0
+      }},
     "gadgets": [
         ["ARROWLEFT", 1],
         ["ARROWUP", 1],
@@ -31,7 +41,14 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
         {"id": 13, "image": "W", "typeOfField": "WALL"},
         {"id": 14, "image": "W", "typeOfField": "WALL"},
         {"id": 15, "image": "W", "typeOfField": "WALL"}
-    ]
+    ],
+    "treeGems": {
+      "BLACK":0,
+      "BLUE":0,
+      "YELLOW":0,
+      "RED":0,
+      "GREEN":0
+    }
   }`)
 
   function onSubmit (event : React.FormEvent<HTMLFormElement>) : void {

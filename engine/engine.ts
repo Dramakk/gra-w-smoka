@@ -10,7 +10,7 @@ export type EngineState = {
 export function resetDragon (currentState: EngineState): EngineState {
   return {
     ...currentState,
-    dragon: { fieldId: currentState.level.start.position, direction: currentState.level.start.direction, canMove: true }
+    dragon: { ...currentState.level.baseDragon }
   }
 }
 

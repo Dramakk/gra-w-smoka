@@ -1,9 +1,7 @@
+import { Dragon } from '../engine/dragon'
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
 import { Field, createField, Wall, Empty } from '../levels/fields'
-import { canPlaceField, Directions, GadgetType, GadgetTypeArray, getRowCount, Level, newFieldFromType, removeStart, setStart, StartType } from '../levels/level'
-
-// Type for dropdown options of fields to place by user.
-export type GadgetOptionType = {direction : Directions}
+import { canPlaceField, GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, getRowCount, Level, newFieldFromType, removeStart, setFinish, setStart } from '../levels/level'
 
 export interface Editor {
   level: Level,
@@ -48,11 +46,16 @@ export function fillSquare (level: Level, index: number, gadgetType : GadgetType
   if (!canPlaceField(newLevel, gadgetType)) {
     return { ...newLevel }
   }
-  if (gadgetType === 'START') {
+
+  if (gadgetType === 'START' && 'direction' in options) {
     newLevel = setStart(level, index, options.direction)
   }
 
-  const newGadget = newFieldFromType(index, gadgetType)
+  if (gadgetType === 'FINISH') {
+    newLevel = setFinish(level, index)
+  }
+
+  const newGadget = newFieldFromType(index, gadgetType, options)
 
   return { ...newLevel, fields: newLevel.fields.map((item, itemIndex) => itemIndex === index ? newGadget : item) }
 }
@@ -91,7 +94,27 @@ function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level
 
     return createField<Empty>('EMPTY', 'E', index)
   })
-  const start: StartType = { position: null, direction: null }
+  const baseDragon: Dragon = {
+    fieldId: null,
+    direction: null,
+    gemsInPocket: {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    },
+    canMove: true
+  }
+
+  const treeGems: Record<GemColors, number> = {
+    BLACK: 0,
+    BLUE: 0,
+    YELLOW: 0,
+    RED: 0,
+    GREEN: 0
+  }
+
   let gadgets: Counter<GadgetType> = createCounter<GadgetType>()
 
   GadgetTypeArray.forEach((gadgetType: GadgetType) => {
@@ -101,5 +124,12 @@ function createLevelForEditor (howManyRows: number, fieldsPerRow: number): Level
     gadgets = setInfinity(gadgets, gadgetType)
   })
 
-  return { fields, fieldsPerRow, gadgets, start, playerPlacedGadgets: [] }
+  return {
+    fields,
+    fieldsPerRow,
+    gadgets,
+    baseDragon,
+    playerPlacedGadgets: [],
+    treeGems
+  }
 }

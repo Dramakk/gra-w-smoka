@@ -1,15 +1,25 @@
 import { add, Counter, counterDelete, get } from '../helpers/counter'
+import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN']
+export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
 // Gadget is the type for fields that users are allowed to put on board.
 // TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
-export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN'
+export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
 export type Directions = 'U' | 'L' | 'D' | 'R'
-export type StartType = {position: number, direction: Directions}
+export type GemColors = 'GREEN' | 'YELLOW' | 'BLACK' | 'RED' | 'BLUE'
+
+// Type for dropdown options of fields to place by user.
+export type GadgetOptionType = {direction : Directions} | {gemColor: GemColors}
+
+// Utility type to extract keys from given union of objects
+type Keys<T> = T extends {[key: string]: any} ? keyof T : never
+
+export type GadgetOptionKeys = Keys<GadgetOptionType>
+export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, string[]>>
 
 // Used to represent Index => Field map
 type FieldMap = {
@@ -21,10 +31,17 @@ export interface Level {
   fieldsPerRow: number
   gadgets : Counter<GadgetType>
   playerPlacedGadgets : FieldMap
-  start: StartType
+  baseDragon: Dragon
+  treeGems: Record<GemColors, number>
 }
 
-export function createLevel (fields : fields.Field[], fieldsPerRow : number, gadgets : Counter<GadgetType>, start : StartType): Level {
+export function createLevel (
+  fields : fields.Field[],
+  fieldsPerRow : number,
+  gadgets : Counter<GadgetType>,
+  baseDragon: Dragon,
+  treeGems: Record<GemColors, number>
+): Level {
   // Flag determining if all ids from 0 to fields.length are assigned to fields.
   fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
   // Iterate over array and chceck if every element is at it's place
@@ -35,7 +52,14 @@ export function createLevel (fields : fields.Field[], fieldsPerRow : number, gad
     return true
   })
 
-  return { fields, fieldsPerRow, gadgets, playerPlacedGadgets: [], start }
+  return {
+    fields,
+    fieldsPerRow,
+    gadgets,
+    playerPlacedGadgets: [],
+    baseDragon,
+    treeGems
+  }
 }
 
 export function resetLevel (level: Level): Level {
@@ -62,15 +86,29 @@ export function getRowCount (level: Level) : number {
 export function removeStart (level: Level) : Level {
   // We can set position and direction to null. When either is null, game won't start.
   // Using nulls instead of undefined because of engine implementation.
-  return { ...level, gadgets: add(level.gadgets, 'START'), start: { position: null, direction: null } }
+  return { ...level, gadgets: add(level.gadgets, 'START'), baseDragon: { ...level.baseDragon, fieldId: null, direction: null } }
 }
 
 export function setStart (level: Level, index: number, direction: Directions) : Level {
-  return { ...level, start: { position: index, direction: direction }, gadgets: counterDelete(level.gadgets, 'START') }
+  return { ...level, baseDragon: { ...level.baseDragon, fieldId: index, direction: direction }, gadgets: counterDelete(level.gadgets, 'START') }
+}
+
+export function setFinish (level: Level, index: number): Level {
+  const newLevel = {
+    ...level,
+    fields: level.fields.map((field, index) =>
+      field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
+  }
+
+  return {
+    ...newLevel,
+    fields: newLevel.fields.map((field, idx) =>
+      index === idx ? fields.createField('FINISH', 'F', index, { opened: false }) : field)
+  }
 }
 
 // Used as factory for fields to place on board.
-export function newFieldFromType (index: number, fieldType: GadgetType) : fields.Field {
+export function newFieldFromType (index: number, fieldType: GadgetType, options: GadgetOptionType) : fields.Field {
   switch (fieldType) {
     case 'ARROWUP':
       return fields.createField<fields.Arrow>('ARROWUP', 'AU', index, { direction: 'U' })
@@ -80,15 +118,22 @@ export function newFieldFromType (index: number, fieldType: GadgetType) : fields
       return fields.createField<fields.Arrow>('ARROWLEFT', 'AL', index, { direction: 'L' })
     case 'ARROWRIGHT':
       return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
+    case 'SCALE':
+      if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor, onScale: 0 })
+      else throw Error('Wrong options')
     case 'WALL':
       return fields.createField<fields.Wall>('WALL', 'W', index)
     case 'START':
+      return fields.createField<fields.Start>('START', 'E', index)
+    case 'FINISH':
+      return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: false })
+    default:
       return fields.createField<fields.Empty>('EMPTY', 'E', index)
   }
 }
 
-export function fillSquare (level: Level, index : number, fieldType : GadgetType) : Level {
-  const newUserPlacedField : fields.Field = newFieldFromType(index, fieldType)
+export function fillSquare (level: Level, index : number, fieldType : GadgetType, options: GadgetOptionType) : Level {
+  const newUserPlacedField : fields.Field = newFieldFromType(index, fieldType, options)
   const foundField : fields.Field = level.playerPlacedGadgets[index]
   let playerPlacedGadgets: FieldMap = { ...level.playerPlacedGadgets }
 
@@ -136,5 +181,39 @@ export function getField (level: Level, index: number) : fields.Field {
     return placedByPlayer
   } else {
     return level.fields[index]
+  }
+}
+
+export function changeLevelGemQty (level: Level, who: 'DRAGON' | 'TREE' | 'SCALE', color: GemColors, changeInQty: number): Level {
+  switch (who) {
+    case 'DRAGON':
+      if (level.baseDragon.gemsInPocket[color] + changeInQty < 0) {
+        return {
+          ...level,
+          baseDragon: {
+            ...level.baseDragon,
+            gemsInPocket: { ...level.baseDragon.gemsInPocket, [color]: 0 }
+          }
+        }
+      }
+
+      return {
+        ...level,
+        baseDragon: {
+          ...level.baseDragon,
+          gemsInPocket: { ...level.baseDragon.gemsInPocket, [color]: (level.baseDragon.gemsInPocket[color] + changeInQty) }
+        }
+      }
+    case 'TREE':
+      if (level.treeGems[color] + changeInQty < 0) {
+        return { ...level, treeGems: { ...level.treeGems, [color]: 0 } }
+      }
+
+      return { ...level, treeGems: { ...level.treeGems, [color]: (level.treeGems[color] + changeInQty) } }
+    case 'SCALE':
+      // TODO: Dorobić zmianę kryształów w balansie, kiedy będzie zrobiony
+      return
+    default:
+      return { ...level }
   }
 }
