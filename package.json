@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "compile": "node ./node_modules/webpack/bin/webpack.js --config webpack.config.js",
-    "lint": "eslint ./",
+    "lint": "eslint --fix ./ && eslint ./",
     "start": "./node_modules/serve/bin/serve.js ./dist",
-    "dev": "concurrently --kill-others 'webpack --config webpack.config.js --watch' './node_modules/serve/bin/serve.js ./dist'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently --kill-others 'webpack --config webpack.config.js --watch' './node_modules/serve/bin/serve.js ./dist'"
   },
   "repository": {
     "type": "git",

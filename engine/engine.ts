@@ -1,78 +1,71 @@
 import { Field } from '../levels/fields'
-import { Level } from '../levels/level'
-import { Dragon } from './dragon'
+import { getField, Level } from '../levels/level'
+import { Dragon, changeDragonDirection, moveDragon } from './dragon'
 
-export class Engine {
-  level: Level;
-  dragon: Dragon;
+export type EngineState = {
+  level: Level,
+  dragon: Dragon
+}
 
-  constructor (level: Level) {
-    this.level = level
-    this.dragon = new Dragon(this.level.start.position, this.level.start.direction)
+export function resetDragon (currentState: EngineState): EngineState {
+  return {
+    ...currentState,
+    dragon: { fieldId: currentState.level.start.position, direction: currentState.level.start.direction, canMove: true }
   }
+}
 
-  resetDragon (): void {
-    this.dragon = new Dragon(this.level.start.position, this.level.start.direction)
+export function step (currentState: EngineState): [EngineState, boolean] {
+  const [nextState, hasMoved] = move(currentState)
+
+  return hasMoved ? [changeState(nextState), hasMoved] : [nextState, hasMoved]
+}
+
+// Private function definitions
+// Moves dragon to new field (returns false if dragon cant move)
+function move (currentState: EngineState): [EngineState, boolean] {
+  const newFieldId: number = calculateNewField(currentState)
+
+  if (getField(currentState.level, newFieldId).typeOfField === 'WALL') {
+    return [{ ...currentState }, false]
+  } else {
+    return [{ ...currentState, dragon: moveDragon(currentState.dragon, newFieldId) }, true]
   }
+}
 
-  step (): boolean {
-    if (!this.move()) {
-      return false
-    }
-
-    this.changeState()
-
-    return true
+// Changes dragon state based on field dragon is on.
+function changeState (currentState: EngineState): EngineState {
+  const currentField: Field = getField(currentState.level, currentState.dragon.fieldId)
+  switch (currentField.typeOfField) {
+    // Again we have to handle all arrows separetly because of typeOfField definition.
+    case 'ARROWUP':
+      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'U') }
+    case 'ARROWDOWN':
+      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'D') }
+    case 'ARROWLEFT':
+      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'L') }
+    case 'ARROWRIGHT':
+      return { ...currentState, dragon: changeDragonDirection(currentState.dragon, 'R') }
+    default:
+      return { ...currentState }
   }
+}
 
-  // Moves dragon to new field (returns false if dragon cant move)
-  move (): boolean {
-    const newFieldId: number = this.calculateNewField()
-    if (this.level.getField(newFieldId).typeOfField === 'WALL') {
-      return false
-    } else {
-      this.dragon.fieldId = newFieldId
-      return true
-    }
+// Calculates new fieldId based on dragon direction.
+function calculateNewField (currentState: EngineState): number {
+  let newFieldId: number = currentState.dragon.fieldId
+  switch (currentState.dragon.direction) {
+    case 'L':
+      newFieldId -= 1
+      break
+    case 'R':
+      newFieldId += 1
+      break
+    case 'U':
+      newFieldId -= currentState.level.fieldsPerRow
+      break
+    case 'D':
+      newFieldId += currentState.level.fieldsPerRow
+      break
   }
-
-  // Changes dragon state based on field dragon is on.
-  changeState (): void {
-    const currentField: Field = this.level.getField(this.dragon.fieldId)
-    switch (currentField.typeOfField) {
-      // Again we have to handle all arrows separetly because of typeOfField definition.
-      case 'ARROWUP':
-        this.dragon.direction = 'U'
-        break
-      case 'ARROWDOWN':
-        this.dragon.direction = 'D'
-        break
-      case 'ARROWLEFT':
-        this.dragon.direction = 'L'
-        break
-      case 'ARROWRIGHT':
-        this.dragon.direction = 'R'
-        break
-    }
-  }
-
-  // Calculates new fieldId based on dragon direction.
-  private calculateNewField (): number {
-    let newFieldId: number = this.dragon.fieldId
-    switch (this.dragon.direction) {
-      case 'L':
-        newFieldId -= 1
-        break
-      case 'R':
-        newFieldId += 1
-        break
-      case 'U':
-        newFieldId -= this.level.fieldsPerRow
-        break
-      case 'D':
-        newFieldId += this.level.fieldsPerRow
-        break
-    }
-    return newFieldId
-  }
+  return newFieldId
 }

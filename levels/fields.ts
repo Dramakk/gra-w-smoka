@@ -2,76 +2,36 @@ import { Directions, GadgetType } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
-export abstract class Field {
-    typeOfField: FieldType;
-    id: number;
-    image: string;
-    attributes: {direction : Directions};
+interface FieldAttributes {
+  direction?: Directions
 }
 
-export class Start extends Field {
-  attributes: null
-
-  constructor (image: string, id: number) {
-    super()
-    this.image = image
-    this.id = id
-    this.typeOfField = 'START'
-  }
+export interface Field {
+    typeOfField: FieldType
+    id: number
+    image: string
+    attributes?: FieldAttributes
 }
 
-export class Finish extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'FINISH'
-    }
+export interface Start extends Field {
+  typeOfField: 'START',
 }
 
-export class Wall extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'WALL'
-    }
+export interface Finish extends Field {
+  typeOfField: 'FINISH',
 }
 
-export class Empty extends Field {
-    attributes: null
-
-    constructor (image: string, id: number) {
-      super()
-      this.image = image
-      this.id = id
-      this.typeOfField = 'EMPTY'
-    }
+export interface Wall extends Field {
+  typeOfField: 'WALL',
+}
+export interface Empty extends Field {
+  typeOfField: 'EMPTY',
+}
+export interface Arrow extends Field {
+  typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT',
+  attributes: { direction: Directions }
 }
 
-export class Arrow extends Field {
-  constructor (direction: Directions, image: string, id: number) {
-    super()
-    this.image = image
-    this.attributes = { direction: direction }
-    this.id = id
-    switch (direction) {
-      case 'U':
-        this.typeOfField = 'ARROWUP'
-        break
-      case 'D':
-        this.typeOfField = 'ARROWDOWN'
-        break
-      case 'L':
-        this.typeOfField = 'ARROWLEFT'
-        break
-      case 'R':
-        this.typeOfField = 'ARROWRIGHT'
-        break
-    }
-  }
+export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
+  return { typeOfField, image, id, attributes } as T
 }

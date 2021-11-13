@@ -1,23 +1,23 @@
-import * as fields from '../levels/fields'
 import React, { ReactElement } from 'react'
-import { Engine } from '../engine/engine'
-import { GadgetType, Level } from '../levels/level'
+import { EngineState, resetDragon, step } from '../engine/engine'
+import * as level from '../levels/level'
 import { BottomTooltipComponent } from './bottomTooltip'
 import { SpeedControlsComponent } from './speedControls'
-import { Editor, GadgetOptionType } from '../editor/editor'
+import * as editor from '../editor/editor'
 import { BoardComponent } from './board'
 import { GadgetsSelectionComponent } from './gadgetsSelection'
 import ReactDOM from 'react-dom'
+import { items } from '../helpers/counter'
 
 // Determine which action user tries to perform
 export type PlacementActions = 'DELETE' | 'PLACE';
-export type GameState = { fieldToAdd: GadgetType, level: Level, placementAction: PlacementActions, option: GadgetOptionType; };
-type GameProps = { engine: Engine, editorMode: boolean, editor?: Editor};
+export type GameState = { fieldToAdd: level.GadgetType, level: level.Level, placementAction: PlacementActions, option: editor.GadgetOptionType; };
+type GameProps = { engine: EngineState, editorMode: boolean, editor?: editor.Editor};
 
 // This class serves as the wrapper for game (either just playing or editing).
 export class GameComponent extends React.Component<GameProps, GameState> {
-  engine: Engine;
-  editor?: Editor;
+  engine: EngineState;
+  editor?: editor.Editor;
   loop: ReturnType<typeof setInterval>;
 
   constructor (props: GameProps) {
@@ -30,12 +30,12 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     // When in editor mode, we want to override standard behaviour of filling and clearing the square.
     if (props.editorMode) {
       this.placeElement = (index: number) => {
-        this.editor.fillSquare(index, this.state.fieldToAdd, this.state.option)
+        this.editor.level = editor.fillSquare(this.editor.level, index, this.state.fieldToAdd, this.state.option)
         this.engine.level = this.editor.level
         this.setState({ fieldToAdd: null, level: this.editor.level, placementAction: null, option: null })
       }
       this.deleteElement = (index: number) => {
-        this.editor.clearSquare(index)
+        this.editor.level = editor.clearSquare(this.editor.level, index)
         this.engine.level = this.editor.level
         this.setState({ fieldToAdd: null, level: this.editor.level, placementAction: null, option: null })
       }
@@ -45,7 +45,7 @@ export class GameComponent extends React.Component<GameProps, GameState> {
   }
 
   // Updates state to match currently selected field to place on board.
-  changeFieldToPlace (fieldType: GadgetType, option?: GadgetOptionType): void {
+  changeFieldToPlace (fieldType: level.GadgetType, option?: editor.GadgetOptionType): void {
     this.setState({ fieldToAdd: fieldType, level: this.engine.level, placementAction: 'PLACE', option: option })
   }
 
@@ -66,21 +66,21 @@ export class GameComponent extends React.Component<GameProps, GameState> {
       this.placeElement(index)
     }
 
-    this.engine.resetDragon()
+    this.engine = resetDragon(this.engine)
   }
 
   // Deletes element from board and updates view. Overriden in editor mode.
   deleteElement (index: number): void {
-    if (this.engine.level.isPlacedByUser(index)) {
-      this.engine.level.clearSquare(index)
+    if (level.isPlacedByUser(this.engine.level, index)) {
+      this.engine.level = level.clearSquare(this.engine.level, index)
     }
     this.setState({ fieldToAdd: null, level: this.engine.level, placementAction: null })
   }
 
   // Places element on board and updates view. Overriden in editor mode.
   placeElement (index: number): void {
-    if (this.state.fieldToAdd && this.engine.level.getField(index) instanceof fields.Empty) {
-      this.engine.level.fillSquare(index, this.state.fieldToAdd)
+    if (this.state.fieldToAdd && level.getField(this.engine.level, index).typeOfField === 'EMPTY') {
+      this.engine.level = level.fillSquare(this.engine.level, index, this.state.fieldToAdd)
     }
     this.setState({ fieldToAdd: null, level: this.engine.level, placementAction: null })
   }
@@ -95,7 +95,8 @@ export class GameComponent extends React.Component<GameProps, GameState> {
     }
 
     this.loop = setInterval(() => {
-      const moved = this.engine.step()
+      const [nextState, moved] = step(this.engine)
+      this.engine = nextState
 
       if (!moved) {
         this.gameStop()
@@ -114,29 +115,29 @@ export class GameComponent extends React.Component<GameProps, GameState> {
   // Level (and placed fields) ramains unchanged.
   gameReset () : void {
     this.gameStop()
-    this.engine.resetDragon()
+    this.engine = resetDragon(this.engine)
     this.setState({ level: this.engine.level })
   }
 
   // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
   // Renders exported level in JSON format.
   exportLevel () : void {
-    ReactDOM.render((<div>{this.editor.exportLevel()}</div>), document.querySelector('#app-container'))
+    ReactDOM.render((<div>{editor.exportLevel(this.editor)}</div>), document.querySelector('#app-container'))
   }
 
   render (): ReactElement {
-    const board = [...Array(this.engine.level.getLevelSize()).keys()].map(index => { return this.engine.level.getField(index) })
+    const board = [...Array(level.getLevelSize(this.engine.level)).keys()].map(index => { return level.getField(this.engine.level, index) })
     const canExport = !!(this.engine.dragon.fieldId && this.engine.dragon.direction)
 
     return (
       <div className='container'>
         <p>{this.state.fieldToAdd}</p>
-        <BoardComponent fieldPlacementController={this.fieldPlacementController.bind(this)} dragonPosition={this.engine.dragon.fieldId} rowCount={this.engine.level.getRowCount()} fieldsPerRow={this.engine.level.getFieldsPerRow()} board={board}></BoardComponent>
-        <BottomTooltipComponent fieldsToPlace={[...this.engine.level.gadgets.items().entries()]} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
+        <BoardComponent fieldPlacementController={this.fieldPlacementController.bind(this)} dragonPosition={this.engine.dragon.fieldId} rowCount={level.getRowCount(this.engine.level)} fieldsPerRow={level.getFieldsPerRow(this.engine.level)} board={board}></BoardComponent>
+        <BottomTooltipComponent fieldsToPlace={[...items(this.engine.level.gadgets).entries()]} chooseGadgetToPlace={this.changeFieldToPlace.bind(this)} changePlacementMode={this.changePlacementAction.bind(this)} />
         <SpeedControlsComponent gameStart={this.gameStart.bind(this)} gameStop={this.gameStop.bind(this)} gameReset={this.gameReset.bind(this)} />
         {this.props.editorMode
           ? <div>
-            <GadgetsSelectionComponent editor={this.editor} initialGadgets={this.editor.gadgetsPlayer} />
+            <GadgetsSelectionComponent editor={this.editor} initialGadgets={this.editor.playerGadgets} />
             <button disabled={!canExport} onClick={() => this.exportLevel()}>EXPORT LEVEL</button>
           </div>
           : null
