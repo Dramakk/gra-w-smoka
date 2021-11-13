@@ -1,12 +1,15 @@
 import { Directions } from '../levels/level'
 
-export class Dragon {
+export interface Dragon {
   fieldId: number;
   direction: Directions;
   canMove: boolean;
+}
 
-  constructor (startId: number, direction : Directions) {
-    this.fieldId = startId
-    this.direction = direction
-  }
+export function changeDragonDirection (dragon: Dragon, direction: Directions): Dragon {
+  return { ...dragon, direction: direction }
+}
+
+export function moveDragon (dragon: Dragon, fieldId: number): Dragon {
+  return { ...dragon, fieldId }
 }

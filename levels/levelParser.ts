@@ -1,4 +1,4 @@
-import { Counter } from '../helpers/counter'
+import { Counter, add, createCounter } from '../helpers/counter'
 import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
@@ -19,36 +19,40 @@ export function parseLevel (levelToParse: string): Level {
     return x
   }
 
-  const gadgetsParser: (counter: Counter<GadgetType>) => ParseFn<void> = (counter: Counter<GadgetType>) => {
-    return (x: any) => {
-      const gadgetToAdd = gadgetTypeParser(x[0])
-      const howManyAvailable = aNumber(x[1])
+  const gadgetsParser: ParseFn<Counter<GadgetType>> = (x: [string, number][]) => {
+    let counterToReturn = createCounter<GadgetType>()
+
+    x.forEach(gadgetDescription => {
+      const gadgetToAdd = gadgetTypeParser(gadgetDescription[0])
+      const howManyAvailable = aNumber(gadgetDescription[1])
 
       for (let i = 0; i < howManyAvailable; i++) {
-        counter.add(gadgetToAdd)
+        counterToReturn = add(counterToReturn, gadgetToAdd)
       }
-    }
+    })
+
+    return counterToReturn
   }
 
   const fieldsParser: ParseFn<fields.Field> = (x: any) => {
     // We have to consider all arrows separetly, because of possible typeOfField values.
     switch (x.typeOfField) {
       case 'FINISH':
-        return new fields.Finish(x.image, x.id)
+        return fields.createField<fields.Finish>('FINISH', x.image, x.id)
       case 'WALL':
-        return new fields.Wall(x.image, x.id)
+        return fields.createField<fields.Wall>('WALL', x.image, x.id)
       case 'EMPTY':
-        return new fields.Empty(x.image, x.id)
+        return fields.createField<fields.Empty>('EMPTY', x.image, x.id)
       case 'ARROWUP':
-        return new fields.Arrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWUP', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWDOWN':
-        return new fields.Arrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWDOWN', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWLEFT':
-        return new fields.Arrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWLEFT', x.image, x.id, { direction: x.attributes.direction })
       case 'ARROWRIGHT':
-        return new fields.Arrow(x.attributes.direction, x.image, x.id)
+        return fields.createField<fields.Arrow>('ARROWRIGHT', x.image, x.id, { direction: x.attributes.direction })
       case 'START':
-        return new fields.Start(x.image, x.id)
+        return fields.createField<fields.Start>('START', x.image, x.id)
     }
   }
 
@@ -56,10 +60,9 @@ export function parseLevel (levelToParse: string): Level {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
     const start = spicery.fromMap(x, 'start', startParser)
-    const gadgets = new Counter<GadgetType>()
-    spicery.fromMap(x, 'gadgets', spicery.anArrayContaining(gadgetsParser(gadgets)))
+    const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
 
-    return new Level(fields, fieldsPerRow, gadgets, start)
+    return { fieldsPerRow, start, fields, gadgets, playerPlacedGadgets: [] }
   }
 
   return parse(levelParser)(levelToParse)
