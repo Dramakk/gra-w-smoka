@@ -46,7 +46,8 @@ export function parseLevel (levelToParse: string): Level {
   }
 
   const gemRecordParser: ParseFn<Record<GemColors, number>> = (x: Record<GemColors, number>) => {
-    return x
+    if ('BLUE' in x && 'GREEN' in x && 'RED' in x && 'YELLOW' in x && 'BLACK' in x && Object.keys(x).length === 5) return x
+    throw Error(`Parser error parsing ${x}`)
   }
 
   const levelParser: ParseFn<Level> = (x: any) => {
