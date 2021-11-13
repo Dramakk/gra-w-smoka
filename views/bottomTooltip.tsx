@@ -1,78 +1,64 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetOptionType } from '../editor/editor'
-import { GadgetInfo } from '../levels/level'
-import { ParseFn, parse } from 'spicery/build/parsers'
+import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys } from '../levels/level'
 import { DispatchContext } from './game'
+
+type SelectedOptions = Partial<Record<GadgetOptionKeys, string>>
 
 // This function generates [firstOptionsArray, secondOptionsArrray, hasOptions, howManyOptions] for given gadget.
 // These informations are used to render options to choose from in editor mode.
-function generateItemDescription (gadgetToPlace: GadgetInfo): [string[], string[], boolean, number] {
+function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescription {
   switch (gadgetToPlace[0]) {
     case 'START':
-      return [['D', 'U', 'L', 'R'], [], true, 1]
+      return {
+        direction: ['D', 'U', 'L', 'R']
+      }
+    case 'SCALE':
+      return {
+        gemColor: ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
+      }
     default:
-      return [[], [], false, 0]
+      return {}
   }
 }
 
 export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
   const dispatch = useContext(DispatchContext)
   // We can choose at most two options for given field
-  const [firstOptionsArray, secondOptionsArray, hasOptions, howManyOptions] = generateItemDescription(props.gadgetToPlace)
-  const [firstSelectedOption, changeFirstOption] = useState(firstOptionsArray.length ? firstOptionsArray[0] : '')
-  const [secondSelectedOption, changeSecondOption] = useState(secondOptionsArray.length ? secondOptionsArray[0] : '')
-
-  function parseDropdownInput (): GadgetOptionType {
-    const fieldOptionParser: ParseFn<GadgetOptionType> = (x: any) => {
-      // Parse only one option field
-      // TODO: Update after adding more fields
-      if (howManyOptions === 1) {
-        return { direction: x.firstSelectedOption }
-      }
-    }
-
-    return parse(fieldOptionParser)({ firstSelectedOption, secondSelectedOption })
-  }
+  const options = generateItemDescription(props.gadgetToPlace)
+  const [selectedOptions, changeSelectedOptions] = useState(Object
+    .keys(options)
+    .reduce((prev, optionKey: GadgetOptionKeys) => {
+      prev[optionKey] = options[optionKey][0]
+      return { ...prev }
+    }, {} as SelectedOptions))
 
   // Update state to currently selected options.
-  function updateSelectedOption (whichOption: number): (event: React.ChangeEvent<HTMLSelectElement>) => void {
+  function updateSelectedOption (optionKey: string): (event: React.ChangeEvent<HTMLSelectElement>) => void {
     return (event: React.ChangeEvent<HTMLSelectElement>) => {
-      if (whichOption === 1) {
-        changeFirstOption(event.target.value)
-      } else {
-        changeSecondOption(event.target.value)
-      }
+      changeSelectedOptions({ ...selectedOptions, [optionKey]: event.target.value })
     }
   }
 
   let dropdown = null
 
-  if (hasOptions) {
-    // Determine how many dropdowns we need
-    if (howManyOptions === 1) {
-      dropdown = (
-          <select onChange={updateSelectedOption(1).bind(this)} value={firstSelectedOption}>
-            {firstOptionsArray.map((value, index) => {
+  if (Object.keys(options).length) {
+    dropdown = Object.keys(options).reduce((previousDropdown: React.ReactElement, optionKey: GadgetOptionKeys) => {
+      return (
+        <>
+          {previousDropdown}
+          <select onChange={updateSelectedOption(optionKey).bind(this)} value={selectedOptions[optionKey]}>
+            {options[optionKey].map((value, index) => {
               return <option key={index} value={value}>{value}</option>
             })}
-          </select>)
-    }
-    if (howManyOptions === 2) {
-      dropdown = (
-          <>
-            {dropdown}
-            <select onChange={updateSelectedOption(2).bind(this)} value={secondSelectedOption}>
-              {secondOptionsArray.map((value, index) => {
-                return <option key={index} value={value}>{value}</option>
-              })}
-            </select>
-          </>)
-    }
+          </select>
+        </>
+      )
+    }, null)
   }
   // If element has options add dropdown.
   return (
       <span>
-        <button onClick={() => dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.gadgetToPlace[0], option: parseDropdownInput() } })}>{props.gadgetToPlace[0]} {props.gadgetToPlace[1]}</button>
+        <button onClick={() => dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.gadgetToPlace[0], option: selectedOptions } })}>{props.gadgetToPlace[0]} {props.gadgetToPlace[1]}</button>
         {dropdown}
       </span>
   )
