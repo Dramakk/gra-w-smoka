@@ -19,5 +19,10 @@ export const DragonManipulation = {
   changePocketGemsQty: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
     const finalValue = dragon.gemsInPocket[color] + changeInQty < 0 ? 0 : dragon.gemsInPocket[color] + changeInQty
     return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: finalValue } }
+  },
+
+  // Removes all gems of given color
+  removeAllGems: function (dragon: Dragon, color: GemColors): Dragon {
+    return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: 0 } }
   }
 }

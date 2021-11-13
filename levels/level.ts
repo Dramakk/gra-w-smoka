@@ -160,7 +160,7 @@ export const LevelCreation = {
       case 'ARROWRIGHT':
         return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
       case 'SCALE':
-        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor})
+        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor })
         else throw Error('Wrong options')
       case 'WALL':
         return fields.createField<fields.Wall>('WALL', 'W', index)
@@ -222,8 +222,9 @@ export const LevelManipulation = {
           treeGems: { $merge: { [color]: level.treeGems[color] + changeInQty < 0 ? 0 : (level.treeGems[color] + changeInQty) } }
         })
       case 'SCALE':
-        // TODO: Dorobić zmianę kryształów w balansie, kiedy będzie zrobiony
-        return
+        return update(level, {
+          scalesGems: { $merge: { [color]: level.scalesGems[color] + changeInQty < 0 ? 0 : (level.scalesGems[color] + changeInQty) } }
+        })
       default:
         return { ...level }
     }
