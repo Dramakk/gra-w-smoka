@@ -1,11 +1,14 @@
-import React, { ReactElement } from 'react'
+import React, { useContext } from 'react'
+import { DispatchContext } from './game'
 
-export class FieldComponent extends React.Component<{ id: number, image: string, fieldUpdate : (index : number) => void}> {
-  render () : ReactElement {
-    return (
-      <div onClick={() => this.props.fieldUpdate(this.props.id)} className='col-lg'>
-        {this.props.image}
-      </div>
-    )
-  }
+interface FieldProps { id: number, image: string}
+
+export function FieldComponent (props: FieldProps): React.ReactElement {
+  const dispatch = useContext(DispatchContext)
+
+  return (
+    <div onClick={() => dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='col-lg'>
+      {props.image}
+    </div>
+  )
 }

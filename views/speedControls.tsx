@@ -1,25 +1,20 @@
-import React, { ReactElement } from 'react'
+import React, { useContext } from 'react'
+import { DispatchContext } from './game'
 
-interface SpeedControlsProps {
-  gameStart: () => void,
-  gameStop: () => void,
-  gameReset: () => void,
-}
-
-export class SpeedControlsComponent extends React.Component< SpeedControlsProps > {
-  render () : ReactElement {
-    return (
-      <div className='SpeedControls'>
-        <span>
-          <button onClick={this.props.gameStart}>START</button>
-        </span>
-        <span>
-          <button onClick={this.props.gameStop}>STOP</button>
-        </span>
-        <span>
-          <button onClick={this.props.gameReset}>RESET</button>
-        </span>
-      </div>
-    )
-  }
+export function SpeedControls (): React.ReactElement {
+  const dispatch = useContext(DispatchContext)
+  // TODO: Dodać obsługę różnych czasów między akcjami
+  return (
+    <div className='SpeedControls'>
+      <span>
+        <button onClick={() => dispatch({ type: 'START', payload: { timeout: 1000, dispatch: dispatch } })}>START</button>
+      </span>
+      <span>
+        <button onClick={() => dispatch({ type: 'STOP', payload: { timeout: 1000, dispatch: dispatch } })}>STOP</button>
+      </span>
+      <span>
+        <button onClick={() => dispatch({ type: 'RESET', payload: { timeout: 1000, dispatch: dispatch } })}>RESET</button>
+      </span>
+    </div>
+  )
 }

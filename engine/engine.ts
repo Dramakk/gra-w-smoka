@@ -1,5 +1,5 @@
 import { Field } from '../levels/fields'
-import { getField, Level } from '../levels/level'
+import { getField, Level, resetLevel } from '../levels/level'
 import { Dragon, changeDragonDirection, moveDragon } from './dragon'
 
 export type EngineState = {
@@ -18,6 +18,12 @@ export function step (currentState: EngineState): [EngineState, boolean] {
   const [nextState, hasMoved] = move(currentState)
 
   return hasMoved ? [changeState(nextState), hasMoved] : [nextState, hasMoved]
+}
+
+export function resetEngineState (currentState: EngineState): EngineState {
+  const afterDragonReset = resetDragon(currentState)
+
+  return { ...afterDragonReset, level: resetLevel(afterDragonReset.level) }
 }
 
 // Private function definitions
