@@ -33,6 +33,7 @@ export interface Level {
   gadgets : Counter<GadgetType>
   playerPlacedGadgets : FieldMap
   baseDragon: Dragon
+  scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
 }
 
@@ -123,6 +124,7 @@ export const LevelCreation = {
     fieldsPerRow : number,
     gadgets : Counter<GadgetType>,
     baseDragon: Dragon,
+    scalesGems: Record<GemColors, number>,
     treeGems: Record<GemColors, number>
   ): Level {
     // Flag determining if all ids from 0 to fields.length are assigned to fields.
@@ -141,6 +143,7 @@ export const LevelCreation = {
       gadgets,
       playerPlacedGadgets: [],
       baseDragon,
+      scalesGems,
       treeGems
     }
   },
@@ -157,7 +160,7 @@ export const LevelCreation = {
       case 'ARROWRIGHT':
         return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
       case 'SCALE':
-        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor, onScale: 0 })
+        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor})
         else throw Error('Wrong options')
       case 'WALL':
         return fields.createField<fields.Wall>('WALL', 'W', index)

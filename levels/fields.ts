@@ -4,7 +4,7 @@ type FieldType = GadgetType | 'EMPTY'
 
 // Type for possible field attributes
 interface ArrowAttributes { direction: Directions}
-interface ScaleAttributes { gemColor: GemColors, onScale: number }
+interface ScaleAttributes { gemColor: GemColors}
 interface FinishAttributes { opened: boolean }
 
 type FieldAttributes =

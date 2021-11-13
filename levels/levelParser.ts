@@ -55,8 +55,15 @@ export function parseLevel (levelToParse: string): Level {
     const baseDragon = spicery.fromMap(x, 'baseDragon', baseDragonParser)
     const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
     const treeGems: Record<GemColors, number> = spicery.fromMap(x, 'treeGems', gemRecordParser)
+    const scalesGems: Record<GemColors, number> = {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    }
 
-    return { fieldsPerRow, baseDragon, fields, gadgets, playerPlacedGadgets: [], treeGems }
+    return { fieldsPerRow, baseDragon, fields, gadgets, playerPlacedGadgets: [], scalesGems, treeGems }
   }
 
   return parse(levelParser)(levelToParse)

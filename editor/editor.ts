@@ -79,6 +79,14 @@ export const EditorCreation = {
       GREEN: 0
     }
 
+    const scalesGems: Record<GemColors, number> = {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    }
+
     let gadgets: Counter<GadgetType> = createCounter<GadgetType>()
 
     GadgetTypeArray.forEach((gadgetType: GadgetType) => {
@@ -94,6 +102,7 @@ export const EditorCreation = {
       gadgets,
       baseDragon,
       playerPlacedGadgets: [],
+      scalesGems,
       treeGems
     }
   }

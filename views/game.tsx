@@ -52,6 +52,7 @@ export function Game (props: GameProps): React.ReactElement {
           <p>WAGI {JSON.stringify(state.engineState.level.fields.filter(field => field.typeOfField === 'SCALE'))}</p>
           <p>RESET {JSON.stringify(state.engineState.level.baseDragon)}</p>
           <p>CURRENT {JSON.stringify(state.engineState.dragon.gemsInPocket)}</p>
+          <p>ON SCALES {JSON.stringify(state.engineState.level.scalesGems)}</p>
           <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>
           <BoardComponent
             dragonPosition={dragon.fieldId}
