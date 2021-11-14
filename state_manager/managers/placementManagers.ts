@@ -26,7 +26,9 @@ export function manageDeleteField (state: GameState, payload: FieldClickPayload)
     })
   }
 
-  return { ...state, uiState: { fieldToAdd: null, canDelete: false, option: null } }
+  return update(state, {
+    uiState: { $set: { fieldToAdd: null, canDelete: false, option: null } }
+  })
 }
 
 export function managePlaceField (state: GameState, payload: FieldClickPayload): GameState {
@@ -50,5 +52,7 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
     })
   }
 
-  return update(state, { uiState: { $set: { fieldToAdd: null, canDelete: false, option: null } } })
+  return update(state, {
+    uiState: { $set: { fieldToAdd: null, canDelete: false, option: null } }
+  })
 }
