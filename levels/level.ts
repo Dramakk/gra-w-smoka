@@ -159,6 +159,12 @@ export const LevelCreation = {
       GREEN: 0
     }
 
+    // Open exit if treeGems are all 0. By default exit is closed.
+    if (Object.values(treeGems).every(val => val === 0)) {
+      const finishField = fields[finishId] as fields.Finish
+      finishField.attributes.opened = true
+    }
+
     return {
       fields,
       fieldsPerRow,
