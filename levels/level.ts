@@ -77,13 +77,34 @@ export const LevelGetters = {
 }
 
 export const LevelSpeedControls = {
-  resetLevel: function (level: Level): Level {
+  resetFinish: function (level: Level): Level {
+    if (level.finishId !== null) {
+      const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
+      return update(level, {
+        fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
+      })
+    }
+    return { ...level }
+  },
+  resetGems: function (level: Level): Level {
+    return update(level, {
+      scalesGems: { $set: { BLACK: 0, BLUE: 0, YELLOW: 0, RED: 0, GREEN: 0 } }
+    })
+  },
+  resetPlacedGadgets (level: Level) : Level {
     if (!level.playerPlacedGadgets || Object.keys(level.playerPlacedGadgets).length === 0) {
       return { ...level }
     }
 
     const indexToClear = Number(Object.keys(level.playerPlacedGadgets)[0])
     return LevelSpeedControls.resetLevel(LevelManipulation.clearSquare(level, indexToClear))
+  },
+  // Resets finish, gems on scales and placed gadgets
+  resetLevel: function (level: Level): Level {
+    const afterFinishReset = LevelSpeedControls.resetFinish(level)
+    const afterGemsReset = LevelSpeedControls.resetGems(afterFinishReset)
+
+    return LevelSpeedControls.resetPlacedGadgets(afterGemsReset)
   },
 
   removeStart: function (level: Level) : Level {
