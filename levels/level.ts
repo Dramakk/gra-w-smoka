@@ -79,10 +79,7 @@ export const LevelGetters = {
 export const LevelSpeedControls = {
   resetFinish: function (level: Level): Level {
     if (level.finishId !== null) {
-      const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
-      return update(level, {
-        fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
-      })
+      return LevelManipulation.checkOpenExit(level)
     }
     return { ...level }
   },
@@ -268,9 +265,9 @@ export const LevelManipulation = {
           }
         })
       case 'TREE':
-        return update(level, {
+        return LevelManipulation.checkOpenExit(update(level, {
           treeGems: { $merge: { [color]: level.treeGems[color] + changeInQty < 0 ? 0 : (level.treeGems[color] + changeInQty) } }
-        })
+        }))
       case 'SCALE':
         return LevelManipulation.tryOpenExit(update(level, {
           scalesGems: { $merge: { [color]: level.scalesGems[color] + changeInQty < 0 ? 0 : (level.scalesGems[color] + changeInQty) } }
@@ -278,6 +275,12 @@ export const LevelManipulation = {
       default:
         return { ...level }
     }
+  },
+  checkOpenExit: function (level : Level) : Level {
+    const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
+    return update(level, {
+      fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
+    })
   },
   tryOpenExit: function (level : Level) : Level {
     if (LevelManipulation.checkLevelGemQty(level)) {
@@ -288,7 +291,12 @@ export const LevelManipulation = {
     return { ...level }
   },
   checkLevelGemQty: function (level: Level) : boolean {
-    for (const color in Object.keys(level.scalesGems)) {
+    console.log(Object.keys(level.scalesGems))
+    for (const color of Object.keys(level.scalesGems)) {
+      console.log(color)
+      console.log((level.scalesGems as any)[color])
+      console.log((level.treeGems as any)[color])
+      console.log('-------------------')
       if ((level.scalesGems as any)[color] !== (level.treeGems as any)[color]) return false
     }
     return true
