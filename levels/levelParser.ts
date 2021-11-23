@@ -4,7 +4,7 @@ import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { Directions, GadgetType, GemColors, Level } from './level'
+import { Directions, GadgetType, GemColors, Level, LevelCreation } from './level'
 
 // Level parser using Spicery package from NPM.
 export function parseLevel (levelToParse: string): Level {
@@ -56,15 +56,9 @@ export function parseLevel (levelToParse: string): Level {
     const baseDragon = spicery.fromMap(x, 'baseDragon', baseDragonParser)
     const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
     const treeGems: Record<GemColors, number> = spicery.fromMap(x, 'treeGems', gemRecordParser)
-    const scalesGems: Record<GemColors, number> = {
-      BLACK: 0,
-      BLUE: 0,
-      YELLOW: 0,
-      RED: 0,
-      GREEN: 0
-    }
+    const finishId: number = spicery.fromMap(x, 'finishId', aNumber)
 
-    return { fieldsPerRow, baseDragon, fields, gadgets, playerPlacedGadgets: [], scalesGems, treeGems }
+    return LevelCreation.createLevel(fields, fieldsPerRow, gadgets, baseDragon, treeGems, finishId)
   }
 
   return parse(levelParser)(levelToParse)

@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import { Field, Scale } from '../levels/fields'
+import { Field, Scale, Finish } from '../levels/fields'
 import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
@@ -54,13 +54,21 @@ function changeState (currentState: EngineState): EngineState {
     case 'ARROWRIGHT':
       return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(currentState.dragon, 'R') } })
     case 'SCALE': {
-      // TS can't deduct that attributes includes gemColor
+      // TS can't deduct that attributes include gemColor
       const currentScale = currentField as Scale
       const gemColor : GemColors = currentScale.attributes.gemColor
       return update(currentState, {
         level: { $set: LevelManipulation.changeLevelGemQty(currentState.level, 'SCALE', gemColor, currentState.dragon.gemsInPocket[gemColor]) },
         dragon: { $set: DragonManipulation.removeAllGems(currentState.dragon, gemColor) }
       })
+    }
+    case 'FINISH': {
+      const currentFinish = currentField as Finish
+      console.log(currentFinish)
+      if (currentFinish.attributes.opened) {
+        console.log('game finished')
+      }
+      return { ...currentState }
     }
     default:
       return { ...currentState }

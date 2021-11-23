@@ -4,7 +4,7 @@ import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
+export const GadgetTypeArray: GadgetType[] = ['START', 'FINISH', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
 // Gadget is the type for fields that users are allowed to put on board.
 // TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
 export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
@@ -35,6 +35,7 @@ export interface Level {
   baseDragon: Dragon
   scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
+  finishId: number
 }
 
 export const LevelPredicates = {
@@ -94,6 +95,15 @@ export const LevelSpeedControls = {
     })
   },
 
+  removeFinish: function (level: Level) : Level {
+    // We set finishId to null
+    // Using nulls instead of undefined because of engine implementation.
+    return update(level, {
+      gadgets: { $set: add(level.gadgets, 'FINISH') },
+      finishId: { $set: null }
+    })
+  },
+
   setStart: function (level: Level, index: number, direction: Directions) : Level {
     return update(level, {
       baseDragon: { $merge: { fieldId: index, direction: direction } },
@@ -113,7 +123,8 @@ export const LevelSpeedControls = {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
           index === idx ? fields.createField('FINISH', 'F', index, { opened: false }) : field)
-      }
+      },
+      finishId: { $set: index }
     })
   }
 }
@@ -124,18 +135,29 @@ export const LevelCreation = {
     fieldsPerRow : number,
     gadgets : Counter<GadgetType>,
     baseDragon: Dragon,
-    scalesGems: Record<GemColors, number>,
-    treeGems: Record<GemColors, number>
+    treeGems: Record<GemColors, number>,
+    finishId: number
   ): Level {
     // Flag determining if all ids from 0 to fields.length are assigned to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
     // Iterate over array and chceck if every element is at it's place
-    fields.map((field, index) => {
+    fields.forEach((field, index) => {
       if (field.id !== index) {
         throw Error('Wrong level format, ids missing')
       }
-      return true
     })
+
+    if (finishId === null) {
+      finishId = fields.findIndex(field => field.typeOfField === 'FINISH')
+    }
+
+    const scalesGems: Record<GemColors, number> = {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    }
 
     return {
       fields,
@@ -144,7 +166,8 @@ export const LevelCreation = {
       playerPlacedGadgets: [],
       baseDragon,
       scalesGems,
-      treeGems
+      treeGems,
+      finishId
     }
   },
 
@@ -222,11 +245,25 @@ export const LevelManipulation = {
           treeGems: { $merge: { [color]: level.treeGems[color] + changeInQty < 0 ? 0 : (level.treeGems[color] + changeInQty) } }
         })
       case 'SCALE':
-        return update(level, {
+        return LevelManipulation.tryOpenExit(update(level, {
           scalesGems: { $merge: { [color]: level.scalesGems[color] + changeInQty < 0 ? 0 : (level.scalesGems[color] + changeInQty) } }
-        })
+        }))
       default:
         return { ...level }
     }
+  },
+  tryOpenExit: function (level : Level) : Level {
+    if (LevelManipulation.checkLevelGemQty(level)) {
+      return update(level, {
+        fields: { [level.finishId]: { attributes: { $merge: { opened: true } } } }
+      })
+    }
+    return { ...level }
+  },
+  checkLevelGemQty: function (level: Level) : boolean {
+    for (const color in Object.keys(level.scalesGems)) {
+      if ((level.scalesGems as any)[color] !== (level.treeGems as any)[color]) return false
+    }
+    return true
   }
 }
