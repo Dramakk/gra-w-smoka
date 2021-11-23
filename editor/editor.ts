@@ -47,6 +47,7 @@ export const EditorCreation = {
     levelToExport.gadgets = [...items(gadgetsToExport).entries()]
     // We don't use this field in parsing
     delete levelToExport.playerPlacedGadgets
+    delete levelToExport.scalesGems
     return JSON.stringify(levelToExport)
   },
 
