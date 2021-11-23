@@ -291,12 +291,7 @@ export const LevelManipulation = {
     return { ...level }
   },
   checkLevelGemQty: function (level: Level) : boolean {
-    console.log(Object.keys(level.scalesGems))
     for (const color of Object.keys(level.scalesGems)) {
-      console.log(color)
-      console.log((level.scalesGems as any)[color])
-      console.log((level.treeGems as any)[color])
-      console.log('-------------------')
       if ((level.scalesGems as any)[color] !== (level.treeGems as any)[color]) return false
     }
     return true
