@@ -291,9 +291,7 @@ export const LevelManipulation = {
     return { ...level }
   },
   checkLevelGemQty: function (level: Level) : boolean {
-    for (const color of Object.keys(level.scalesGems)) {
-      if ((level.scalesGems as any)[color] !== (level.treeGems as any)[color]) return false
-    }
-    return true
+    const gemColors = Object.keys(level.scalesGems) as GemColors[]
+    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
   }
 }

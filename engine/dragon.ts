@@ -1,3 +1,4 @@
+import update from 'immutability-helper'
 import { Directions, GemColors } from '../levels/level'
 
 export interface Dragon {
@@ -9,20 +10,28 @@ export interface Dragon {
 
 export const DragonManipulation = {
   changeDragonDirection: function (dragon: Dragon, direction: Directions): Dragon {
-    return { ...dragon, direction: direction }
+    return update(dragon, {
+      $merge: { direction: direction }
+    })
   },
 
   moveDragon: function (dragon: Dragon, fieldId: number): Dragon {
-    return { ...dragon, fieldId }
+    return update(dragon, {
+      $merge: { fieldId: fieldId }
+    })
   },
 
   changePocketGemsQty: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
     const finalValue = dragon.gemsInPocket[color] + changeInQty < 0 ? 0 : dragon.gemsInPocket[color] + changeInQty
-    return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: finalValue } }
+    return update(dragon, {
+      gemsInPocket: { $merge: { [color]: finalValue } }
+    })
   },
 
   // Removes all gems of given color
   removeAllGems: function (dragon: Dragon, color: GemColors): Dragon {
-    return { ...dragon, gemsInPocket: { ...dragon.gemsInPocket, [color]: 0 } }
+    return update(dragon, {
+      gemsInPocket: { $merge: { [color]: 0 } }
+    })
   }
 }
