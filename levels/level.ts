@@ -4,17 +4,30 @@ import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'FINISH', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
+export const GadgetTypeArray = [
+  'START',
+  'FINISH',
+  'WALL',
+  'ARROWLEFT',
+  'ARROWRIGHT',
+  'ARROWUP',
+  'ARROWDOWN',
+  'SCALE',
+  'ADDITION',
+  'SUBSTRACTION',
+  'MULTIPLICATION',
+  'DIVISION'
+] as const
 // Gadget is the type for fields that users are allowed to put on board.
 // TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
-export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
+export type GadgetType = typeof GadgetTypeArray[number]
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
 export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = 'GREEN' | 'YELLOW' | 'BLACK' | 'RED' | 'BLUE'
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = {direction : Directions} | {gemColor: GemColors}
+export type GadgetOptionType = {direction : Directions} | {gemColor: GemColors} | { targetGemColor: GemColors, numberOfGems: GemColors | number }
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -215,6 +228,18 @@ export const LevelCreation = {
         return fields.createField<fields.Start>('START', 'E', index)
       case 'FINISH':
         return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: false })
+      case 'ADDITION':
+        if ('targetGemColor' in options) return fields.createField<fields.ArithmeticOperation>('ADDITION', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { targetGemColor: options.targetGemColor, numberOfGems: options.numberOfGems })
+        else throw Error('Wrong options')
+      case 'SUBSTRACTION':
+        if ('targetGemColor' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACTION', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { targetGemColor: options.targetGemColor, numberOfGems: options.numberOfGems })
+        else throw Error('Wrong options')
+      case 'MULTIPLICATION':
+        if ('targetGemColor' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLICATION', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { targetGemColor: options.targetGemColor, numberOfGems: options.numberOfGems })
+        else throw Error('Wrong options')
+      case 'DIVISION':
+        if ('targetGemColor' in options) return fields.createField<fields.ArithmeticOperation>('DIVISION', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { targetGemColor: options.targetGemColor, numberOfGems: options.numberOfGems })
+        else throw Error('Wrong options')
       default:
         return fields.createField<fields.Empty>('EMPTY', 'E', index)
     }

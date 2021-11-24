@@ -6,11 +6,13 @@ type FieldType = GadgetType | 'EMPTY'
 export interface ArrowAttributes { direction: Directions}
 export interface ScaleAttributes { gemColor: GemColors}
 export interface FinishAttributes { opened: boolean }
+export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
 
 type FieldAttributes =
   | ArrowAttributes
   | ScaleAttributes
   | FinishAttributes
+  | ArithmeticOperationAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -44,6 +46,11 @@ export interface Arrow extends Field {
 export interface Scale extends Field {
   typeOfField: 'SCALE'
   attributes: ScaleAttributes
+}
+
+export interface ArithmeticOperation extends Field {
+  typeOfField: 'ADDITION' | 'SUBSTRACTION' | 'MULTIPLICATION' | 'DIVISION'
+  attributes: ArithmeticOperationAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
