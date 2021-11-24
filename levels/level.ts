@@ -4,7 +4,7 @@ import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
+export const GadgetTypeArray: GadgetType[] = ['START', 'FINISH', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
 // Gadget is the type for fields that users are allowed to put on board.
 // TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
 export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
@@ -35,6 +35,7 @@ export interface Level {
   baseDragon: Dragon
   scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
+  finishId: number
 }
 
 export const LevelPredicates = {
@@ -76,13 +77,31 @@ export const LevelGetters = {
 }
 
 export const LevelSpeedControls = {
-  resetLevel: function (level: Level): Level {
+  resetFinish: function (level: Level): Level {
+    if (level.finishId !== null) {
+      return LevelManipulation.checkOpenExit(level)
+    }
+    return { ...level }
+  },
+  resetGems: function (level: Level): Level {
+    return update(level, {
+      scalesGems: { $set: { BLACK: 0, BLUE: 0, YELLOW: 0, RED: 0, GREEN: 0 } }
+    })
+  },
+  resetPlacedGadgets (level: Level) : Level {
     if (!level.playerPlacedGadgets || Object.keys(level.playerPlacedGadgets).length === 0) {
       return { ...level }
     }
 
     const indexToClear = Number(Object.keys(level.playerPlacedGadgets)[0])
     return LevelSpeedControls.resetLevel(LevelManipulation.clearSquare(level, indexToClear))
+  },
+  // Resets finish, gems on scales and placed gadgets
+  resetLevel: function (level: Level): Level {
+    const afterFinishReset = LevelSpeedControls.resetFinish(level)
+    const afterGemsReset = LevelSpeedControls.resetGems(afterFinishReset)
+
+    return LevelSpeedControls.resetPlacedGadgets(afterGemsReset)
   },
 
   removeStart: function (level: Level) : Level {
@@ -91,6 +110,15 @@ export const LevelSpeedControls = {
     return update(level, {
       gadgets: { $set: add(level.gadgets, 'START') },
       baseDragon: { $merge: { fieldId: null, direction: null } }
+    })
+  },
+
+  removeFinish: function (level: Level) : Level {
+    // We set finishId to null
+    // Using nulls instead of undefined because of engine implementation.
+    return update(level, {
+      gadgets: { $set: add(level.gadgets, 'FINISH') },
+      finishId: { $set: null }
     })
   },
 
@@ -113,7 +141,8 @@ export const LevelSpeedControls = {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
           index === idx ? fields.createField('FINISH', 'F', index, { opened: false }) : field)
-      }
+      },
+      finishId: { $set: index }
     })
   }
 }
@@ -124,18 +153,35 @@ export const LevelCreation = {
     fieldsPerRow : number,
     gadgets : Counter<GadgetType>,
     baseDragon: Dragon,
-    scalesGems: Record<GemColors, number>,
-    treeGems: Record<GemColors, number>
+    treeGems: Record<GemColors, number>,
+    finishId: number
   ): Level {
     // Flag determining if all ids from 0 to fields.length are assigned to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
     // Iterate over array and chceck if every element is at it's place
-    fields.map((field, index) => {
+    fields.forEach((field, index) => {
       if (field.id !== index) {
         throw Error('Wrong level format, ids missing')
       }
-      return true
     })
+
+    if (finishId === null) {
+      finishId = fields.findIndex(field => field.typeOfField === 'FINISH')
+    }
+
+    const scalesGems: Record<GemColors, number> = {
+      BLACK: 0,
+      BLUE: 0,
+      YELLOW: 0,
+      RED: 0,
+      GREEN: 0
+    }
+
+    // Open exit if treeGems are all 0. By default exit is closed.
+    if (Object.values(treeGems).every(val => val === 0)) {
+      const finishField = fields[finishId] as fields.Finish
+      finishField.attributes.opened = true
+    }
 
     return {
       fields,
@@ -144,7 +190,8 @@ export const LevelCreation = {
       playerPlacedGadgets: [],
       baseDragon,
       scalesGems,
-      treeGems
+      treeGems,
+      finishId
     }
   },
 
@@ -160,7 +207,7 @@ export const LevelCreation = {
       case 'ARROWRIGHT':
         return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
       case 'SCALE':
-        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor})
+        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor })
         else throw Error('Wrong options')
       case 'WALL':
         return fields.createField<fields.Wall>('WALL', 'W', index)
@@ -218,14 +265,33 @@ export const LevelManipulation = {
           }
         })
       case 'TREE':
-        return update(level, {
+        return LevelManipulation.checkOpenExit(update(level, {
           treeGems: { $merge: { [color]: level.treeGems[color] + changeInQty < 0 ? 0 : (level.treeGems[color] + changeInQty) } }
-        })
+        }))
       case 'SCALE':
-        // TODO: Dorobić zmianę kryształów w balansie, kiedy będzie zrobiony
-        return
+        return LevelManipulation.tryOpenExit(update(level, {
+          scalesGems: { $merge: { [color]: level.scalesGems[color] + changeInQty < 0 ? 0 : (level.scalesGems[color] + changeInQty) } }
+        }))
       default:
         return { ...level }
     }
+  },
+  checkOpenExit: function (level : Level) : Level {
+    const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
+    return update(level, {
+      fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
+    })
+  },
+  tryOpenExit: function (level : Level) : Level {
+    if (LevelManipulation.checkLevelGemQty(level)) {
+      return update(level, {
+        fields: { [level.finishId]: { attributes: { $merge: { opened: true } } } }
+      })
+    }
+    return { ...level }
+  },
+  checkLevelGemQty: function (level: Level) : boolean {
+    const gemColors = Object.keys(level.scalesGems) as GemColors[]
+    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
   }
 }

@@ -3,9 +3,9 @@ import { Directions, GadgetType, GemColors } from './level'
 type FieldType = GadgetType | 'EMPTY'
 
 // Type for possible field attributes
-interface ArrowAttributes { direction: Directions}
-interface ScaleAttributes { gemColor: GemColors}
-interface FinishAttributes { opened: boolean }
+export interface ArrowAttributes { direction: Directions}
+export interface ScaleAttributes { gemColor: GemColors}
+export interface FinishAttributes { opened: boolean }
 
 type FieldAttributes =
   | ArrowAttributes
@@ -31,9 +31,11 @@ export interface Finish extends Field {
 export interface Wall extends Field {
   typeOfField: 'WALL',
 }
+
 export interface Empty extends Field {
   typeOfField: 'EMPTY',
 }
+
 export interface Arrow extends Field {
   typeOfField: 'ARROWUP' | 'ARROWDOWN' | 'ARROWLEFT' | 'ARROWRIGHT',
   attributes: ArrowAttributes
