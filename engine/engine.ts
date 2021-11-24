@@ -14,10 +14,10 @@ export function resetDragon (currentState: EngineState): EngineState {
   })
 }
 
-export function step (currentState: EngineState): [EngineState, boolean] {
-  const [nextState, hasMoved] = move(currentState)
+export function step (currentState: EngineState): EngineState {
+  const nextState = move(currentState)
 
-  return hasMoved ? [changeState(nextState), hasMoved] : [nextState, hasMoved]
+  return (nextState.dragon.canMove) ? changeState(nextState) : nextState
 }
 
 export function resetEngineState (currentState: EngineState): EngineState {
@@ -30,13 +30,13 @@ export function resetEngineState (currentState: EngineState): EngineState {
 
 // Private function definitions
 // Moves dragon to new field (returns false if dragon cant move)
-function move (currentState: EngineState): [EngineState, boolean] {
+function move (currentState: EngineState): EngineState {
   const newFieldId: number = calculateNewField(currentState)
 
-  if (LevelGetters.getField(currentState.level, newFieldId).typeOfField === 'WALL') {
-    return [{ ...currentState }, false]
+  if (LevelGetters.getField(currentState.level, newFieldId).typeOfField === 'WALL' || !currentState.dragon.canMove) {
+    return update(currentState, { dragon: { $merge: { canMove: false } } })
   } else {
-    return [update(currentState, { dragon: { $set: DragonManipulation.moveDragon(currentState.dragon, newFieldId) } }), true]
+    return update(currentState, { dragon: { $set: DragonManipulation.moveDragon(currentState.dragon, newFieldId) } })
   }
 }
 
