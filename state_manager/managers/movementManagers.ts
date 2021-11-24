@@ -1,4 +1,4 @@
-import { resetDragon, step } from '../../engine/engine'
+import { resetEngineState, step } from '../../engine/engine'
 import { getDragonFromState } from '../accessors'
 import { GameState, StartPayload } from '../reducer'
 import update from 'immutability-helper'
@@ -38,5 +38,5 @@ export function manageStop (state: GameState): GameState {
 export function manageReset (state: GameState): GameState {
   const newState = state.loop ? manageStop(state) : state
 
-  return update(newState, { engineState: { $set: resetDragon(newState.engineState) } })
+  return update(newState, { engineState: { $set: resetEngineState(newState.engineState) } })
 }

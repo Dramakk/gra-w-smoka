@@ -17,9 +17,11 @@ export const EditorCreation = {
   createEditor: function (howManyRows: number, howManyPerRow: number): Editor {
     const level = EditorCreation.createLevelForEditor(howManyRows, howManyPerRow)
     let playerGadgets = createCounter<GadgetType>()
-    GadgetTypeArray.filter((fieldType) => fieldType !== 'START' && fieldType !== 'WALL').forEach((fieldType) => {
-      playerGadgets = setZero(playerGadgets, fieldType)
-    })
+    GadgetTypeArray
+      .filter(fieldType => fieldType !== 'FINISH' && fieldType !== 'START' && fieldType !== 'WALL')
+      .forEach((fieldType) => {
+        playerGadgets = setZero(playerGadgets, fieldType)
+      })
 
     return { level, playerGadgets }
   },
@@ -45,6 +47,7 @@ export const EditorCreation = {
     levelToExport.gadgets = [...items(gadgetsToExport).entries()]
     // We don't use this field in parsing
     delete levelToExport.playerPlacedGadgets
+    delete levelToExport.scalesGems
     return JSON.stringify(levelToExport)
   },
 
@@ -96,6 +99,8 @@ export const EditorCreation = {
       gadgets = setInfinity(gadgets, gadgetType)
     })
 
+    const finishId : number = null
+
     return {
       fields,
       fieldsPerRow,
@@ -103,7 +108,8 @@ export const EditorCreation = {
       baseDragon,
       playerPlacedGadgets: [],
       scalesGems,
-      treeGems
+      treeGems,
+      finishId
     }
   }
 }
@@ -126,6 +132,10 @@ export const EditorManipulation = {
     const currentlyPlacedField = newLevel.fields[index]
     if (currentlyPlacedField.typeOfField === 'START') {
       newLevel = LevelSpeedControls.removeStart(newLevel)
+    }
+
+    if (currentlyPlacedField.typeOfField === 'FINISH') {
+      newLevel = LevelSpeedControls.removeFinish(newLevel)
     }
 
     return update(newLevel, {
