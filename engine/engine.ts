@@ -97,6 +97,7 @@ function changeState (currentState: EngineState): EngineState {
   }
 }
 
+// Helper functions to handle arithmetic operations on gems
 function getNumberOfGems (dragon: Dragon, numberOfGems: GemColors | number) : number {
   if (typeof (numberOfGems) === 'number') return numberOfGems
   else return dragon.gemsInPocket[numberOfGems]
@@ -109,8 +110,6 @@ function handleMultiplication (currentState: EngineState, targetGemColor: GemCol
 }
 function handleDivision (currentState: EngineState, targetGemColor: GemColors, numberOfGems: number) : EngineState {
   // Stop if divisin by 0
-  console.log(numberOfGems)
-  console.log(currentState.dragon)
   if (numberOfGems === 0) return update(currentState, { dragon: { $merge: { canMove: false } } })
   const newNumberOfGems = Math.floor(currentState.dragon.gemsInPocket[targetGemColor] / numberOfGems)
   return update(currentState, {
