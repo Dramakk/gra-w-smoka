@@ -4,9 +4,9 @@ import { GameState, StartPayload } from '../reducer'
 import update from 'immutability-helper'
 
 export function manageStep (state: GameState): GameState {
-  const [nextState, moved] = step(state.engineState)
+  const nextState = step(state.engineState)
 
-  if (!moved) {
+  if (!state.engineState.dragon.canMove) {
     return manageStop(update(state, { engineState: { $set: nextState } }))
   }
 
