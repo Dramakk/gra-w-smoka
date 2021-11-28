@@ -7,12 +7,14 @@ export interface ArrowAttributes { direction: Directions}
 export interface ScaleAttributes { gemColor: GemColors}
 interface FinishAttributes { opened: boolean }
 export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
+export interface RegisterOperationAttributes {targetGemColor: GemColors, registerNumber: GemColors | number}
 
 type FieldAttributes =
   | ArrowAttributes
   | ScaleAttributes
   | FinishAttributes
   | ArithmeticOperationAttributes
+  | RegisterOperationAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -55,12 +57,12 @@ export interface ArithmeticOperation extends Field {
 
 export interface Take extends Field {
   typeofField: 'TAKE'
-  attributes: ArithmeticOperationAttributes
+  attributes: RegisterOperationAttributes
 }
 
 export interface Store extends Field {
   typeofField: 'STORE'
-  attributes: ArithmeticOperationAttributes
+  attributes: RegisterOperationAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
