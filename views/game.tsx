@@ -36,6 +36,7 @@ export function Game (props: GameProps): React.ReactElement {
   const canExport = !!(dragon.fieldId && dragon.direction) &&
   state.engineState.level.fields
     .filter(field => field.typeOfField === 'FINISH').length !== 0
+  const canEdit = state.editor && !state.loop
 
   // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
   // Renders exported level in JSON format.
@@ -58,11 +59,11 @@ export function Game (props: GameProps): React.ReactElement {
             treeGems={state.engineState.level.treeGems}
             gemsInPocket={state.engineState.dragon.gemsInPocket}
             scaleGems={state.engineState.level.scalesGems}
-            canEdit={state.editor && !state.loop}
+            canEdit={canEdit}
           />
+          <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
-          <Tree />
           {state.editor
             ? <div>
               <GadgetsSelection editor={state.editor} />

@@ -9,6 +9,7 @@ import { EditorCreation } from './editor/editor'
 import './views/css/main.css'
 import './views/css/board.css'
 import './views/css/gemPanel.css'
+import './views/css/treeRegisters.css'
 
 const domContainer = document.querySelector('#app-container')
 
