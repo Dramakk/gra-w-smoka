@@ -1,5 +1,5 @@
 import * as fields from '../levels/fields'
-import React, { ReactElement } from 'react'
+import React, { CSSProperties, ReactElement } from 'react'
 import { FieldComponent } from './field'
 
 interface BoardProps {
@@ -10,6 +10,10 @@ interface BoardProps {
 }
 
 export function BoardComponent (props:BoardProps): ReactElement {
+  const calculatedStyles: CSSProperties = {
+    gridTemplateColumns: `repeat(${props.fieldsPerRow}, 1fr)`,
+    gridTemplateRows: `repeat(${props.rowCount}, 1fr)`
+  }
   function getImage (field: fields.Field): string {
     if (field.id === props.dragonPosition) {
       return 'S'
@@ -18,22 +22,12 @@ export function BoardComponent (props:BoardProps): ReactElement {
     }
   }
 
-  function buildRow (rowNumber: number): ReactElement {
-    const offset = rowNumber * props.fieldsPerRow
-
-    return (
-      <div key={rowNumber} className='row'>
-        {[...Array(props.fieldsPerRow).keys()].map((fieldIndex: number) => {
-          const field = props.board[offset + fieldIndex]
+  return (
+    <div className='board-container' style={calculatedStyles}>
+        {[...Array(props.fieldsPerRow * props.rowCount).keys()].map((fieldIndex: number) => {
+          const field = props.board[fieldIndex]
           return <FieldComponent key={field.id} id={field.id} image={getImage(field)} />
         })}
-      </div>
-    )
-  }
-
-  return (
-      <div className='board-container'>
-        {[...Array(props.rowCount).keys()].map(rowNumber => buildRow(rowNumber))}
       </div>
   )
 }

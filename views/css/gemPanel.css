@@ -1,0 +1,15 @@
+.gem-panel-header, .gem-panel-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 0.5fr 1fr;
+  text-align: center;
+}
+
+.gem-panel-header div:first-child {
+  grid-column-start: 2;
+}
+
+@media screen and (max-width: 992px) {
+  .gem-panel {
+    width: 100%;
+  }
+}

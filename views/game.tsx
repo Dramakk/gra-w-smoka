@@ -8,11 +8,10 @@ import { items } from '../helpers/counter'
 import { stateReducer } from '../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../state_manager/accessors'
 import ReactDOM from 'react-dom'
-import { GemControls } from './gemControls'
 import { LevelGetters } from '../levels/level'
 import { Editor, EditorCreation } from '../editor/editor'
 import { Tree } from './tree'
-
+import { GemPanel } from './gemPanel'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
@@ -48,26 +47,25 @@ export function Game (props: GameProps): React.ReactElement {
   return (
       // Here we provide desired value of dispatch to every component down in the tree.
       <DispatchContext.Provider value={dispatch}>
-        <div className='container'>
-          <p>{state.uiState.fieldToAdd}</p>
-          <p>WAGI {JSON.stringify(state.engineState.level.fields.filter(field => field.typeOfField === 'SCALE'))}</p>
-          <p>RESET {JSON.stringify(state.engineState.level.baseDragon)}</p>
-          <p>CURRENT {JSON.stringify(state.engineState.dragon.gemsInPocket)}</p>
-          <p>ON SCALES {JSON.stringify(state.engineState.level.scalesGems)}</p>
-          <p>TREE {JSON.stringify(state.engineState.level.treeGems)}</p>
+        <div className='game-container'>
           <BoardComponent
             dragonPosition={dragon.fieldId}
             rowCount={LevelGetters.getRowCount(currentLevelState)}
             fieldsPerRow={LevelGetters.getFieldsPerRow(currentLevelState)}
-            board={board}></BoardComponent>
+            board={board}
+          />
+          <GemPanel
+            treeGems={state.engineState.level.treeGems}
+            gemsInPocket={state.engineState.dragon.gemsInPocket}
+            scaleGems={state.engineState.level.scalesGems}
+            canEdit={state.editor && !state.loop}
+          />
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           <Tree />
           {state.editor
             ? <div>
               <GadgetsSelection editor={state.editor} />
-              <GemControls who='DRAGON' />
-              <GemControls who='TREE' />
               <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
             </div>
             : null

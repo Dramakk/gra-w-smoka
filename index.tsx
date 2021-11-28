@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom'
 import { EngineState, resetDragon } from './engine/engine'
 import { Game } from './views/game'
 import { MainMenu } from './views/mainMenu'
-import './views/css/main.css'
 import { parseLevel } from './levels/levelParser'
 import { EditorCreation } from './editor/editor'
+
+import './views/css/main.css'
+import './views/css/board.css'
+import './views/css/gemPanel.css'
 
 const domContainer = document.querySelector('#app-container')
 
