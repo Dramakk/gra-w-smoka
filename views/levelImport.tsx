@@ -64,10 +64,19 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
     props.createGameView(importedLevel)
   }
 
+  function onBlur (event: React.FocusEvent<HTMLTextAreaElement>): void {
+    try {
+      const parsedJSON = JSON.parse(event.target.value)
+      updateImportedLevel(JSON.stringify(parsedJSON, null, 4))
+    } catch (e) {
+      updateImportedLevel(event.target.value)
+    }
+  }
+
   return (
       <form onSubmit={onSubmit}>
         <label>Wpisz poziom</label>
-        <textarea name='level' onChange={(event) => updateImportedLevel(JSON.stringify(JSON.parse(event.target.value), null, 4))} rows={50} cols={50} value={importedLevel}>
+        <textarea name='level' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} rows={50} cols={50} value={importedLevel}>
         </textarea>
         <input type="submit" value="Graj"/>
       </form>

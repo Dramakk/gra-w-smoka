@@ -1,11 +1,11 @@
 import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
-import { GadgetOptionType, GadgetType, GemColors } from '../levels/level'
+import { GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
 import { manageDeleteMode, manageSelectField } from './managers/uiStateManagers'
 import { manageDeleteField, managePlaceField } from './managers/placementManagers'
-import { manageChangeGadgetQty, manageChangeGemQty } from './managers/editorManagers'
+import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 
 export type PossibleActions =
   | 'START' // Start the game action
@@ -18,6 +18,7 @@ export type PossibleActions =
   | 'DELETE_MODE' // Invoked when user switches to/from delete mode
   | 'CHANGE_GADGET_QTY' // Invoked in editor mode, when user changes quantity of gadgets available to be placed on the map
   | 'CHANGE_GEM_QTY' // Invoked in editor mode, when user changes quantity gems held by the dragon or needed by the tree
+  | 'CHANGE_REGISTER' // Invoked in editor mode, when user changes register description
 
 // Here are types describing possible payloads of actions
 // Naming convention ActionTypePayload
@@ -26,6 +27,7 @@ export interface SelectFieldPayload {fieldType: GadgetType, option?: GadgetOptio
 export interface FieldClickPayload { index: number }
 export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: number}
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
+export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
 
 export type PossiblePayloads =
   | StartPayload
@@ -33,6 +35,7 @@ export type PossiblePayloads =
   | FieldClickPayload
   | ChangeGadgetQtyPayload
   | ChangeGemQtyPayload
+  | ChangeRegisterPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
@@ -73,6 +76,8 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageChangeGadgetQty(state, action.payload as ChangeGadgetQtyPayload)
     case 'CHANGE_GEM_QTY':
       return manageChangeGemQty(state, action.payload as ChangeGemQtyPayload)
+    case 'CHANGE_REGISTER':
+      return manageChangeRegister(state, action.payload as ChangeRegisterPayload)
     default:
       throw new Error('Impossible action')
   }

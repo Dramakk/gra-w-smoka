@@ -58,6 +58,11 @@ export interface Level {
 }
 
 export const LevelPredicates = {
+  checkLevelGemQty: function (level: Level) : boolean {
+    const gemColors = Object.keys(level.scalesGems) as GemColors[]
+    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
+  },
+
   isPlacedByUser: function (level: Level, index : number): boolean {
     return (level.playerPlacedGadgets[index] !== undefined)
   },
@@ -185,6 +190,10 @@ export const LevelCreation = {
       }
     })
 
+    if (fields.length % fieldsPerRow !== 0) {
+      throw Error('Too many fields for given description')
+    }
+
     if (finishId === null) {
       finishId = fields.findIndex(field => field.typeOfField === 'FINISH')
     }
@@ -309,22 +318,26 @@ export const LevelManipulation = {
         return { ...level }
     }
   },
+
   checkOpenExit: function (level : Level) : Level {
     const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
     return update(level, {
       fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
     })
   },
+
   tryOpenExit: function (level : Level) : Level {
-    if (LevelManipulation.checkLevelGemQty(level)) {
+    if (LevelPredicates.checkLevelGemQty(level)) {
       return update(level, {
         fields: { [level.finishId]: { attributes: { $merge: { opened: true } } } }
       })
     }
     return { ...level }
   },
-  checkLevelGemQty: function (level: Level) : boolean {
-    const gemColors = Object.keys(level.scalesGems) as GemColors[]
-    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
+
+  changeLevelRegisters: function (level: Level, registerIndex: number, register: RegisterData): Level {
+    return update(level, {
+      treeRegisters: { [registerIndex]: { $set: register } }
+    })
   }
 }
