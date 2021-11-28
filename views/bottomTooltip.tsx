@@ -1,8 +1,8 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys } from '../levels/level'
+import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray } from '../levels/level'
 import { DispatchContext } from './game'
 
-type SelectedOptions = Partial<Record<GadgetOptionKeys, string>>
+type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number>>
 
 // This function generates [firstOptionsArray, secondOptionsArrray, hasOptions, howManyOptions] for given gadget.
 // These informations are used to render options to choose from in editor mode.
@@ -14,7 +14,15 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
       }
     case 'SCALE':
       return {
-        gemColor: ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
+        gemColor: [...GemColorsArray]
+      }
+    case 'ADDITION':
+    case 'SUBSTRACTION':
+    case 'DIVISION':
+    case 'MULTIPLICATION':
+      return {
+        targetGemColor: [...GemColorsArray],
+        numberOfGems: [...GemColorsArray, ...new Array(20).keys()]
       }
     default:
       return {}

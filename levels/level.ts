@@ -17,28 +17,33 @@ export const GadgetTypeArray = [
   'SUBSTRACTION',
   'MULTIPLICATION',
   'DIVISION'
-] as const
+]
+
+export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
 // Gadget is the type for fields that users are allowed to put on board.
-// TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
 export type GadgetType = typeof GadgetTypeArray[number]
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
 export type Directions = 'U' | 'L' | 'D' | 'R'
-export type GemColors = 'GREEN' | 'YELLOW' | 'BLACK' | 'RED' | 'BLUE'
+export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = {direction : Directions} | {gemColor: GemColors} | { targetGemColor: GemColors, numberOfGems: GemColors | number }
+export type GadgetOptionType = fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
 
 export type GadgetOptionKeys = Keys<GadgetOptionType>
-export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, string[]>>
+export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, (string | number)[]>>
 
 // Used to represent Index => Field map
 type FieldMap = {
   [key: number]: fields.Field
 }
+
+// Representation of 20 tree registers
+export interface RegisterData {needed: number, stored: number}
+export interface TreeRegisters {[key: number]: RegisterData}
 
 export interface Level {
   fields: fields.Field[]
@@ -48,6 +53,7 @@ export interface Level {
   baseDragon: Dragon
   scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
+  treeRegisters: TreeRegisters
   finishId: number
 }
 
@@ -167,6 +173,7 @@ export const LevelCreation = {
     gadgets : Counter<GadgetType>,
     baseDragon: Dragon,
     treeGems: Record<GemColors, number>,
+    treeRegisters: TreeRegisters,
     finishId: number
   ): Level {
     // Flag determining if all ids from 0 to fields.length are assigned to fields.
@@ -204,6 +211,7 @@ export const LevelCreation = {
       baseDragon,
       scalesGems,
       treeGems,
+      treeRegisters,
       finishId
     }
   },

@@ -1,10 +1,9 @@
 import React, { ReactElement, useContext } from 'react'
-import { GemColors } from '../levels/level'
+import { GemColors, GemColorsArray } from '../levels/level'
 import { DispatchContext } from './game'
 
 export function GemControls (props: {who: 'TREE' | 'DRAGON'}): ReactElement {
   const dispatch = useContext(DispatchContext)
-  const gemColors: GemColors[] = ['RED', 'BLUE', 'BLACK', 'YELLOW', 'GREEN']
 
   // Build selection component for one type of field.
   function buildForField (gemColor: GemColors, index: number): ReactElement {
@@ -21,7 +20,7 @@ export function GemControls (props: {who: 'TREE' | 'DRAGON'}): ReactElement {
     <div>
       Set gems for {props.who}
       <ul>
-        {gemColors.map((gemColor, index) => buildForField(gemColor, index))}
+        {GemColorsArray.map((gemColor, index) => buildForField(gemColor, index))}
       </ul>
     </div>
   )
