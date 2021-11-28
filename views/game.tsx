@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom'
 import { GemControls } from './gemControls'
 import { LevelGetters } from '../levels/level'
 import { Editor, EditorCreation } from '../editor/editor'
+import { Tree } from './tree'
 
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
@@ -61,6 +62,7 @@ export function Game (props: GameProps): React.ReactElement {
             board={board}></BoardComponent>
           <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
+          <Tree />
           {state.editor
             ? <div>
               <GadgetsSelection editor={state.editor} />

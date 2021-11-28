@@ -22,20 +22,20 @@ export interface Field {
 }
 
 export interface Start extends Field {
-  typeOfField: 'START',
+  typeOfField: 'START'
 }
 
 export interface Finish extends Field {
-  typeOfField: 'FINISH',
+  typeOfField: 'FINISH'
   attributes: FinishAttributes
 }
 
 export interface Wall extends Field {
-  typeOfField: 'WALL',
+  typeOfField: 'WALL'
 }
 
 export interface Empty extends Field {
-  typeOfField: 'EMPTY',
+  typeOfField: 'EMPTY'
 }
 
 export interface Arrow extends Field {
@@ -50,6 +50,16 @@ export interface Scale extends Field {
 
 export interface ArithmeticOperation extends Field {
   typeOfField: 'ADDITION' | 'SUBSTRACTION' | 'MULTIPLICATION' | 'DIVISION'
+  attributes: ArithmeticOperationAttributes
+}
+
+export interface Take extends Field {
+  typeofField: 'TAKE'
+  attributes: ArithmeticOperationAttributes
+}
+
+export interface Store extends Field {
+  typeofField: 'STORE'
   attributes: ArithmeticOperationAttributes
 }
 

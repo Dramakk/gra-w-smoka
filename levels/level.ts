@@ -16,7 +16,9 @@ export const GadgetTypeArray = [
   'ADDITION',
   'SUBSTRACTION',
   'MULTIPLICATION',
-  'DIVISION'
+  'DIVISION',
+  'TAKE',
+  'STORE'
 ]
 
 export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
