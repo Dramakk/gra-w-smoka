@@ -1,9 +1,9 @@
 import React, { ReactElement, useContext } from 'react'
-import { GemColors } from '../levels/level'
-import { DispatchContext } from './game'
-import { GemOwner } from './gemPanel'
+import { GemColors } from '../../levels/level'
+import { DispatchContext } from './Game'
+import { GemOwner } from './GemPanel'
 
-export function GemControls (props: {gemColor: GemColors, howMany: Record<GemOwner, number>, canEdit: boolean}): ReactElement {
+export default function GemControls (props: {gemColor: GemColors, howMany: Record<GemOwner, number>, canEdit: boolean}): ReactElement {
   const dispatch = useContext(DispatchContext)
 
   function buildItem (who: GemOwner): ReactElement {

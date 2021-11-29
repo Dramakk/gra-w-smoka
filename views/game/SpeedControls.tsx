@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { DispatchContext } from './game'
+import { DispatchContext } from './Game'
 
-export function SpeedControls (): React.ReactElement {
+export default function SpeedControls (): React.ReactElement {
   const dispatch = useContext(DispatchContext)
   // TODO: Dodać obsługę różnych czasów między akcjami
   return (

@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import { GemColors } from '../levels/level'
-import { GemControls } from './gemControls'
+import { GemColors } from '../../levels/level'
+import GemControls from './GemControls'
 
 type GemInfo = Record<GemColors, number>
 export type GemOwner = 'SCALE' | 'TREE' | 'DRAGON'
 
-export function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemInfo, treeGems: GemInfo, canEdit: boolean}): ReactElement {
+export default function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemInfo, treeGems: GemInfo, canEdit: boolean}): ReactElement {
   const gemColors: GemColors[] = ['RED', 'GREEN', 'BLUE', 'YELLOW', 'BLACK']
 
   return (

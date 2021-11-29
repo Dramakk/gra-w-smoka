@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { DispatchContext } from './game'
+import { DispatchContext } from './Game'
 
 interface FieldProps { id: number, image: string}
 
-export function FieldComponent (props: FieldProps): React.ReactElement {
+export default function FieldComponent (props: FieldProps): React.ReactElement {
   const dispatch = useContext(DispatchContext)
 
   return (

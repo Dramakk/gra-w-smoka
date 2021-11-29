@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray } from '../levels/level'
-import { DispatchContext } from './game'
+import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray } from '../../levels/level'
+import { DispatchContext } from './Game'
 
 type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number>>
 
@@ -35,7 +35,7 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
   }
 }
 
-export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
+function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
   const dispatch = useContext(DispatchContext)
   // We can choose at most two options for given field
   const options = generateItemDescription(props.gadgetToPlace)
@@ -78,7 +78,7 @@ export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactEl
   )
 }
 
-export function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
+export default function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
   const dispatch = useContext(DispatchContext)
 
   function buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { LevelImport } from './levelImport'
+import LevelImport from './LevelImport'
 
 interface MainMenuProps {createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}
 
-export function MainMenu (props: MainMenuProps): React.ReactElement {
+export default function MainMenu (props: MainMenuProps): React.ReactElement {
   const [howManyRows, changeHowManyRows] = useState(5)
   const [howManyPerRow, changeHowManyPerRow] = useState(5)
   const [editorFormDisplay, changeEditorFormDisplay] = useState('none')
