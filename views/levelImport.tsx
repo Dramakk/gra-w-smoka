@@ -56,6 +56,7 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
         "RED":0,
         "GREEN":3
       },
+      "treeRegisters": {"0":{"stored":0,"needed":0},"1":{"stored":0,"needed":0},"2":{"stored":0,"needed":0},"3":{"stored":0,"needed":0},"4":{"stored":0,"needed":0},"5":{"stored":0,"needed":0},"6":{"stored":0,"needed":0},"7":{"stored":0,"needed":0},"8":{"stored":0,"needed":0},"9":{"stored":0,"needed":0},"10":{"stored":0,"needed":0},"11":{"stored":0,"needed":0},"12":{"stored":0,"needed":0},"13":{"stored":0,"needed":0},"14":{"stored":0,"needed":0},"15":{"stored":0,"needed":0},"16":{"stored":0,"needed":0},"17":{"stored":0,"needed":0},"18":{"stored":0,"needed":0},"19":{"stored":0,"needed":0}},
       "finishId":18}`)
 
   function onSubmit (event : React.FormEvent<HTMLFormElement>) : void {
@@ -63,10 +64,19 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
     props.createGameView(importedLevel)
   }
 
+  function onBlur (event: React.FocusEvent<HTMLTextAreaElement>): void {
+    try {
+      const parsedJSON = JSON.parse(event.target.value)
+      updateImportedLevel(JSON.stringify(parsedJSON, null, 4))
+    } catch (e) {
+      updateImportedLevel(event.target.value)
+    }
+  }
+
   return (
       <form onSubmit={onSubmit}>
         <label>Wpisz poziom</label>
-        <textarea name='level' onChange={(event) => updateImportedLevel(JSON.stringify(JSON.parse(event.target.value), null, 4))} rows={50} cols={50} value={importedLevel}>
+        <textarea name='level' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} rows={50} cols={50} value={importedLevel}>
         </textarea>
         <input type="submit" value="Graj"/>
       </form>

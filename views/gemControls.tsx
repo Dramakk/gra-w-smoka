@@ -1,28 +1,28 @@
 import React, { ReactElement, useContext } from 'react'
 import { GemColors } from '../levels/level'
 import { DispatchContext } from './game'
+import { GemOwner } from './gemPanel'
 
-export function GemControls (props: {who: 'TREE' | 'DRAGON'}): ReactElement {
+export function GemControls (props: {gemColor: GemColors, howMany: Record<GemOwner, number>, canEdit: boolean}): ReactElement {
   const dispatch = useContext(DispatchContext)
-  const gemColors: GemColors[] = ['RED', 'BLUE', 'BLACK', 'YELLOW', 'GREEN']
 
-  // Build selection component for one type of field.
-  function buildForField (gemColor: GemColors, index: number): ReactElement {
-    return (
-      <li key={index}>
-        <p>{gemColor}</p>
-        <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who: props.who, color: gemColor, changeInQty: 1 } })}>+</button>
-        <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who: props.who, color: gemColor, changeInQty: -1 } })}>-</button>
-      </li>
-    )
+  function buildItem (who: GemOwner): ReactElement {
+    const addButtons = who === 'SCALE' ? false : props.canEdit
+    const gemQty = <span>{props.howMany[who]}</span>
+
+    return addButtons
+      ? <div>
+          <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who, color: props.gemColor, changeInQty: -1 } })}>-</button>
+          {gemQty}
+          <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who, color: props.gemColor, changeInQty: 1 } })}>+</button>
+        </div>
+      : gemQty
   }
 
   return (
-    <div>
-      Set gems for {props.who}
-      <ul>
-        {gemColors.map((gemColor, index) => buildForField(gemColor, index))}
-      </ul>
+    <div className="gem-panel-row">
+      <span>{props.gemColor}</span>
+      {Object.keys(props.howMany).map((key: GemOwner) => buildItem(key))}
     </div>
   )
 }

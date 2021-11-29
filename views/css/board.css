@@ -1,0 +1,9 @@
+.board-container {
+  overflow: auto;
+  width: 100%;
+  display: grid;
+}
+
+.board-field {
+  padding: 5px;
+}

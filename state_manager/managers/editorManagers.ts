@@ -2,7 +2,7 @@ import update from 'immutability-helper'
 import { LevelManipulation } from '../../levels/level'
 import { resetDragon } from '../../engine/engine'
 import { add, counterDelete } from '../../helpers/counter'
-import { ChangeGadgetQtyPayload, ChangeGemQtyPayload, GameState } from '../reducer'
+import { ChangeGadgetQtyPayload, ChangeGemQtyPayload, ChangeRegisterPayload, GameState } from '../reducer'
 
 export function manageChangeGadgetQty (state: GameState, payload: ChangeGadgetQtyPayload): GameState {
   const newEditor = payload.changeInQty > 0
@@ -20,5 +20,16 @@ export function manageChangeGemQty (state: GameState, payload: ChangeGemQtyPaylo
       $set: resetDragon(update(state.engineState, { level: { $set: LevelManipulation.changeLevelGemQty(state.engineState.level, who, color, changeInQty) } }))
     },
     editor: { $set: state.editor && update(state.editor, { level: { $set: LevelManipulation.changeLevelGemQty(state.editor.level, who, color, changeInQty) } }) }
+  })
+}
+
+export function manageChangeRegister (state: GameState, payload: ChangeRegisterPayload): GameState {
+  const { registerNumber, register } = payload
+
+  return update(state, {
+    engineState: {
+      $set: resetDragon(update(state.engineState, { level: { $set: LevelManipulation.changeLevelRegisters(state.engineState.level, registerNumber, register) } }))
+    },
+    editor: { $set: state.editor && update(state.editor, { level: { $set: LevelManipulation.changeLevelRegisters(state.editor.level, registerNumber, register) } }) }
   })
 }

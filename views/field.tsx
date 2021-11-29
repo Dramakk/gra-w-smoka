@@ -7,7 +7,7 @@ export function FieldComponent (props: FieldProps): React.ReactElement {
   const dispatch = useContext(DispatchContext)
 
   return (
-    <div onClick={() => dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='col-lg'>
+    <div onClick={() => dispatch({ type: 'FIELD_CLICK', payload: { index: props.id } })} className='board-field'>
       {props.image}
     </div>
   )

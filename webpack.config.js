@@ -1,8 +1,9 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
+  devtool: 'inline-source-map',
   entry: {
     index: path.join(__dirname, 'index.tsx')
   },
@@ -18,14 +19,18 @@ module.exports = {
         exclude: '/node_modules/'
       },
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
         exclude: '/node_modules/'
-      }
+      },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/,
+        use: ['file-loader'],
+      },
     ]
   },
   output: {
-    filename: '[name].js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
@@ -33,4 +38,4 @@ module.exports = {
       template: path.join(__dirname, 'index.html')
     })
   ]
-}
+};

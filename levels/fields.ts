@@ -5,14 +5,16 @@ type FieldType = GadgetType | 'EMPTY'
 // Type for possible field attributes
 export interface ArrowAttributes { direction: Directions}
 export interface ScaleAttributes { gemColor: GemColors}
-export interface FinishAttributes { opened: boolean }
+interface FinishAttributes { opened: boolean }
 export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
+export interface RegisterOperationAttributes {targetGemColor: GemColors, registerNumber: GemColors | number}
 
 type FieldAttributes =
   | ArrowAttributes
   | ScaleAttributes
   | FinishAttributes
   | ArithmeticOperationAttributes
+  | RegisterOperationAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -22,20 +24,20 @@ export interface Field {
 }
 
 export interface Start extends Field {
-  typeOfField: 'START',
+  typeOfField: 'START'
 }
 
 export interface Finish extends Field {
-  typeOfField: 'FINISH',
+  typeOfField: 'FINISH'
   attributes: FinishAttributes
 }
 
 export interface Wall extends Field {
-  typeOfField: 'WALL',
+  typeOfField: 'WALL'
 }
 
 export interface Empty extends Field {
-  typeOfField: 'EMPTY',
+  typeOfField: 'EMPTY'
 }
 
 export interface Arrow extends Field {
@@ -51,6 +53,16 @@ export interface Scale extends Field {
 export interface ArithmeticOperation extends Field {
   typeOfField: 'ADDITION' | 'SUBSTRACTION' | 'MULTIPLICATION' | 'DIVISION'
   attributes: ArithmeticOperationAttributes
+}
+
+export interface Take extends Field {
+  typeofField: 'TAKE'
+  attributes: RegisterOperationAttributes
+}
+
+export interface Store extends Field {
+  typeofField: 'STORE'
+  attributes: RegisterOperationAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
