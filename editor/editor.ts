@@ -4,7 +4,7 @@ import { Counter, add, setInfinity, createCounter, setZero, items } from '../hel
 import { Field, createField, Wall, Empty } from '../levels/fields'
 import {
   LevelGetters, LevelPredicates, LevelSpeedControls, LevelCreation,
-  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level
+  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters
 } from '../levels/level'
 
 export interface Editor {
@@ -100,6 +100,11 @@ export const EditorCreation = {
     })
 
     const finishId : number = null
+    const treeRegisters: TreeRegisters = [...Array(20).keys()].reduce((acc, key) => {
+      acc[key] = { stored: 0, needed: 0 }
+
+      return acc
+    }, {} as TreeRegisters)
 
     return {
       fields,
@@ -109,6 +114,7 @@ export const EditorCreation = {
       playerPlacedGadgets: [],
       scalesGems,
       treeGems,
+      treeRegisters,
       finishId
     }
   }

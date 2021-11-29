@@ -21,10 +21,16 @@ export const DragonManipulation = {
     })
   },
 
-  changePocketGemsQty: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
+  addPocketGems: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
     const finalValue = dragon.gemsInPocket[color] + changeInQty < 0 ? 0 : dragon.gemsInPocket[color] + changeInQty
     return update(dragon, {
       gemsInPocket: { $merge: { [color]: finalValue } }
+    })
+  },
+
+  setPocketGems: function (dragon: Dragon, color: GemColors, changeInQty: number): Dragon {
+    return update(dragon, {
+      gemsInPocket: { $merge: { [color]: changeInQty } }
     })
   },
 

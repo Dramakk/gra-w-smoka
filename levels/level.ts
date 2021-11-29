@@ -4,28 +4,48 @@ import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
-export const GadgetTypeArray: GadgetType[] = ['START', 'FINISH', 'WALL', 'ARROWLEFT', 'ARROWRIGHT', 'ARROWUP', 'ARROWDOWN', 'SCALE']
+export const GadgetTypeArray = [
+  'START',
+  'FINISH',
+  'WALL',
+  'ARROWLEFT',
+  'ARROWRIGHT',
+  'ARROWUP',
+  'ARROWDOWN',
+  'SCALE',
+  'ADDITION',
+  'SUBSTRACTION',
+  'MULTIPLICATION',
+  'DIVISION',
+  'TAKE',
+  'STORE'
+]
+
+export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
 // Gadget is the type for fields that users are allowed to put on board.
-// TODO: Dodaj obsługę pola kończącego przy edytowaniu poziomu
-export type GadgetType = 'START' | 'FINISH' | 'WALL' | 'ARROWLEFT' | 'ARROWRIGHT' | 'ARROWUP' | 'ARROWDOWN' | 'SCALE'
+export type GadgetType = typeof GadgetTypeArray[number]
 // Used to handle gadgets in views
 export type GadgetInfo = [GadgetType, number]
 export type Directions = 'U' | 'L' | 'D' | 'R'
-export type GemColors = 'GREEN' | 'YELLOW' | 'BLACK' | 'RED' | 'BLUE'
+export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = {direction : Directions} | {gemColor: GemColors}
+export type GadgetOptionType = fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.RegisterOperationAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
 
 export type GadgetOptionKeys = Keys<GadgetOptionType>
-export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, string[]>>
+export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, (string | number)[]>>
 
 // Used to represent Index => Field map
 type FieldMap = {
   [key: number]: fields.Field
 }
+
+// Representation of 20 tree registers
+export interface RegisterData {needed: number, stored: number}
+export interface TreeRegisters {[key: number]: RegisterData}
 
 export interface Level {
   fields: fields.Field[]
@@ -35,10 +55,16 @@ export interface Level {
   baseDragon: Dragon
   scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
+  treeRegisters: TreeRegisters
   finishId: number
 }
 
 export const LevelPredicates = {
+  checkLevelGemQty: function (level: Level) : boolean {
+    const gemColors = Object.keys(level.scalesGems) as GemColors[]
+    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
+  },
+
   isPlacedByUser: function (level: Level, index : number): boolean {
     return (level.playerPlacedGadgets[index] !== undefined)
   },
@@ -154,6 +180,7 @@ export const LevelCreation = {
     gadgets : Counter<GadgetType>,
     baseDragon: Dragon,
     treeGems: Record<GemColors, number>,
+    treeRegisters: TreeRegisters,
     finishId: number
   ): Level {
     // Flag determining if all ids from 0 to fields.length are assigned to fields.
@@ -164,6 +191,10 @@ export const LevelCreation = {
         throw Error('Wrong level format, ids missing')
       }
     })
+
+    if (fields.length % fieldsPerRow !== 0) {
+      throw Error('Too many fields for given description')
+    }
 
     if (finishId === null) {
       finishId = fields.findIndex(field => field.typeOfField === 'FINISH')
@@ -191,6 +222,7 @@ export const LevelCreation = {
       baseDragon,
       scalesGems,
       treeGems,
+      treeRegisters,
       finishId
     }
   },
@@ -215,6 +247,24 @@ export const LevelCreation = {
         return fields.createField<fields.Start>('START', 'E', index)
       case 'FINISH':
         return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: false })
+      case 'ADDITION':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADDITION', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'SUBSTRACTION':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACTION', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'MULTIPLICATION':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLICATION', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'DIVISION':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVISION', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'STORE':
+        if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        else throw Error('Wrong options for STORE')
+      case 'TAKE':
+        if ('registerNumber' in options) return fields.createField<fields.Store>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        else throw Error('Wrong options for TAKE')
       default:
         return fields.createField<fields.Empty>('EMPTY', 'E', index)
     }
@@ -276,22 +326,26 @@ export const LevelManipulation = {
         return { ...level }
     }
   },
+
   checkOpenExit: function (level : Level) : Level {
     const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
     return update(level, {
       fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
     })
   },
+
   tryOpenExit: function (level : Level) : Level {
-    if (LevelManipulation.checkLevelGemQty(level)) {
+    if (LevelPredicates.checkLevelGemQty(level)) {
       return update(level, {
         fields: { [level.finishId]: { attributes: { $merge: { opened: true } } } }
       })
     }
     return { ...level }
   },
-  checkLevelGemQty: function (level: Level) : boolean {
-    const gemColors = Object.keys(level.scalesGems) as GemColors[]
-    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
+
+  changeLevelRegisters: function (level: Level, registerIndex: number, register: RegisterData): Level {
+    return update(level, {
+      treeRegisters: { [registerIndex]: { $set: register } }
+    })
   }
 }
