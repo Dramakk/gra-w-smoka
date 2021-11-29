@@ -6,10 +6,11 @@ import { MainMenu } from './views/mainMenu'
 import { parseLevel } from './levels/levelParser'
 import { EditorCreation } from './editor/editor'
 
-import './views/css/main.css'
-import './views/css/board.css'
-import './views/css/gemPanel.css'
-import './views/css/treeRegisters.css'
+import './views/css/main.scss'
+import './views/css/board.scss'
+import './views/css/gemPanel.scss'
+import './views/css/treeRegisters.scss'
+import './assets/fonts/MouseMemoirs-Regular.woff2'
 
 const domContainer = document.querySelector('#app-container')
 
