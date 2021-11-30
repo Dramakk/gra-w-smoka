@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Modal from '../helpers/Modal'
+import Modal, { ButtonDescription } from '../helpers/Modal'
 
 export default function LevelImport (props: {createGameView : (importedLevelString: string) => void}): React.ReactElement {
   // TODO: Dodać obsługę błędu przy wklejeniu nieprawidłowego JSONa
@@ -60,6 +60,13 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
       },
       "treeRegisters": {"0":{"stored":0,"needed":0},"1":{"stored":0,"needed":0},"2":{"stored":0,"needed":0},"3":{"stored":0,"needed":0},"4":{"stored":0,"needed":0},"5":{"stored":0,"needed":0},"6":{"stored":0,"needed":0},"7":{"stored":0,"needed":0},"8":{"stored":0,"needed":0},"9":{"stored":0,"needed":0},"10":{"stored":0,"needed":0},"11":{"stored":0,"needed":0},"12":{"stored":0,"needed":0},"13":{"stored":0,"needed":0},"14":{"stored":0,"needed":0},"15":{"stored":0,"needed":0},"16":{"stored":0,"needed":0},"17":{"stored":0,"needed":0},"18":{"stored":0,"needed":0},"19":{"stored":0,"needed":0}},
       "finishId":18}`)
+  const modalButtons: ButtonDescription[] = [
+    {
+      buttonText: 'Zamknij',
+      buttonType: 'primary',
+      onClick: () => onModalClose(false)
+    }
+  ]
 
   function onSubmit () : void {
     try {
@@ -89,7 +96,7 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
       <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
       </textarea>
       <button onClick={onSubmit}>Graj</button>
-      <Modal show={showModal} onClose={onModalClose}>
+      <Modal show={showModal} buttons={modalButtons}>
         <div>Definicja poziomu zawiera błędy. Popraw je i spróbuj ponownie.</div>
       </Modal>
     </div>

@@ -11,10 +11,20 @@ export default function GemControls (props: {gemColor: GemColors, howMany: Recor
     const gemQty = <span>{props.howMany[who]}</span>
 
     return addButtons
-      ? <div>
-          <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who, color: props.gemColor, changeInQty: -1 } })}>-</button>
+      ? <div className="gem-controls">
+          <button className="gem-controls-button material-icons"
+            onClick={() => dispatch({
+              type: 'CHANGE_GEM_QTY',
+              payload: { who, color: props.gemColor, changeInQty: -1 }
+            })}
+          >remove</button>
           {gemQty}
-          <button onClick={() => dispatch({ type: 'CHANGE_GEM_QTY', payload: { who, color: props.gemColor, changeInQty: 1 } })}>+</button>
+          <button className="gem-controls-button material-icons"
+            onClick={() => dispatch({
+              type: 'CHANGE_GEM_QTY',
+              payload: { who, color: props.gemColor, changeInQty: 1 }
+            })}
+          >add</button>
         </div>
       : gemQty
   }

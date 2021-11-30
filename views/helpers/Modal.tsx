@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { MouseEventHandler, useEffect } from 'react'
+
+export interface ButtonDescription {
+  buttonType: 'danger' | 'primary' | 'success'
+  buttonText: string
+  onClick: MouseEventHandler
+}
 
 interface ModalProps {
-  onClose: (event: boolean) => void
+  buttons: ButtonDescription[]
   show: boolean
   title?: string
   children: React.ReactNode
@@ -19,10 +25,6 @@ export default function Modal (props: ModalProps): React.ReactElement {
     }
   }, [show])
 
-  function closeModal () {
-    props.onClose(false)
-  }
-
   return (
   <div className={`modal-background ${show ? 'modal-visible' : ''}`}>
     <div className="modal-container">
@@ -32,9 +34,13 @@ export default function Modal (props: ModalProps): React.ReactElement {
           {props.children}
         </div>
         <div className="modal-buttons">
-          <button onClick={closeModal} className="modal-button-close">
-            Zamknij
-          </button>
+          {props.buttons.map((buttonDescription, index) => {
+            return (
+              <button key={index} className={`button-${buttonDescription.buttonType}`} onClick={buttonDescription.onClick}>
+                {buttonDescription.buttonText}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>
