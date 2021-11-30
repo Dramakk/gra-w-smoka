@@ -30,7 +30,7 @@ export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.RegisterOperationAttributes
+export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.RegisterOperationAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -61,8 +61,7 @@ export interface Level {
 
 export const LevelPredicates = {
   checkLevelGemQty: function (level: Level) : boolean {
-    const gemColors = Object.keys(level.scalesGems) as GemColors[]
-    return gemColors.every(color => level.scalesGems[color] === level.treeGems[color])
+    return GemColorsArray.every(color => level.scalesGems[color] === level.treeGems[color])
   },
 
   isPlacedByUser: function (level: Level, index : number): boolean {
@@ -162,11 +161,11 @@ export const LevelSpeedControls = {
           field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
       }
     })
-
+    const isFinishOpened = LevelPredicates.checkLevelGemQty(level)
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
-          index === idx ? fields.createField('FINISH', 'F', index, { opened: false }) : field)
+          index === idx ? fields.createField('FINISH', 'F', index, { opened: isFinishOpened }) : field)
       },
       finishId: { $set: index }
     })
@@ -208,12 +207,6 @@ export const LevelCreation = {
       GREEN: 0
     }
 
-    // Open exit if treeGems are all 0. By default exit is closed.
-    if (Object.values(treeGems).every(val => val === 0)) {
-      const finishField = fields[finishId] as fields.Finish
-      finishField.attributes.opened = true
-    }
-
     return {
       fields,
       fieldsPerRow,
@@ -246,7 +239,8 @@ export const LevelCreation = {
       case 'START':
         return fields.createField<fields.Start>('START', 'E', index)
       case 'FINISH':
-        return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: false })
+        if ('opened' in options) return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: options.opened })
+        else throw Error('Wrong options')
       case 'ADDITION':
         if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADDITION', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
@@ -328,16 +322,20 @@ export const LevelManipulation = {
   },
 
   checkOpenExit: function (level : Level) : Level {
-    const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
-    return update(level, {
-      fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
-    })
+    // Guard becasuse used in editor too
+    if (level.finishId != null) {
+      const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
+      return update(level, { fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } } })
+    }
+    return { ...level }
   },
 
   tryOpenExit: function (level : Level) : Level {
-    if (LevelPredicates.checkLevelGemQty(level)) {
+    // Guard because used in editor too
+    if (level.finishId != null) {
+      const isFinishOpened = LevelPredicates.checkLevelGemQty(level)
       return update(level, {
-        fields: { [level.finishId]: { attributes: { $merge: { opened: true } } } }
+        fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
       })
     }
     return { ...level }

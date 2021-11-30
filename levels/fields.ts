@@ -5,7 +5,7 @@ type FieldType = GadgetType | 'EMPTY'
 // Type for possible field attributes
 export interface ArrowAttributes { direction: Directions}
 export interface ScaleAttributes { gemColor: GemColors}
-interface FinishAttributes { opened: boolean }
+export interface FinishAttributes { opened: boolean }
 export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
 export interface RegisterOperationAttributes {targetGemColor: GemColors, registerNumber: GemColors | number}
 
