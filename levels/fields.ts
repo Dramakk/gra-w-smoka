@@ -7,6 +7,7 @@ export interface ArrowAttributes { direction: Directions}
 export interface ScaleAttributes { gemColor: GemColors}
 export interface FinishAttributes { opened: boolean }
 export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
+export interface SwapOperationAttributes { firstGemColor: GemColors, secondGemColor: GemColors }
 export interface RegisterOperationAttributes {targetGemColor: GemColors, registerNumber: GemColors | number}
 
 type FieldAttributes =
@@ -14,6 +15,7 @@ type FieldAttributes =
   | ScaleAttributes
   | FinishAttributes
   | ArithmeticOperationAttributes
+  | SwapOperationAttributes
   | RegisterOperationAttributes
 
 export interface Field {
@@ -51,7 +53,7 @@ export interface Scale extends Field {
 }
 
 export interface ArithmeticOperation extends Field {
-  typeOfField: 'ADD' | 'SUBSTRACT' | 'MULTIPLY' | 'DIVIDE'
+  typeOfField: 'ADD' | 'SUBSTRACT' | 'MULTIPLY' | 'DIVIDE' | 'SET'
   attributes: ArithmeticOperationAttributes
 }
 

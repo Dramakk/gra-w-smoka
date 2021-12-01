@@ -20,6 +20,7 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
     case 'SUBSTRACT':
     case 'DIVIDE':
     case 'MULTIPLY':
+    case 'SET':
       return {
         targetGemColor: [...GemColorsArray],
         numberOfGems: [...GemColorsArray, ...new Array(20).keys()]

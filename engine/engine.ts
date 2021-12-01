@@ -93,6 +93,13 @@ function changeState (currentState: EngineState): EngineState {
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return handleDivision(currentState, currentArithmeticOperation.attributes.targetGemColor, numberOfGems)
     }
+    case 'SET': {
+      const currentArithmeticOperation = currentField as ArithmeticOperation
+      const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
+      return update(currentState, {
+        dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, numberOfGems) }
+      })
+    }
     default:
       return { ...currentState }
   }

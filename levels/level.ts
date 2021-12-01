@@ -17,6 +17,7 @@ export const GadgetTypeArray = [
   'SUBSTRACT',
   'MULTIPLY',
   'DIVIDE',
+  'SET',
   'TAKE',
   'STORE'
 ]
@@ -252,6 +253,9 @@ export const LevelCreation = {
         else throw Error('Wrong options')
       case 'DIVIDE':
         if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVIDE', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'SET':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SET', `SET ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
         if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
