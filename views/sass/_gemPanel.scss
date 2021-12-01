@@ -8,6 +8,14 @@
   grid-column-start: 2;
 }
 
+.gem-controls {
+  .gem-controls-button {
+    color: black;
+    min-width: unset;
+    background: none;
+    @include fontSize(16px)
+  }
+}
 @media screen and (max-width: 992px) {
   .gem-panel {
     width: 100%;

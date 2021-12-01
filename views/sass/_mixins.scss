@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "Mouse Memoirs";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../../assets/fonts/MouseMemoirs-Regular.woff2") format("woff2");
+}
+
+@function calculateRem($size) {
+  $remSize: $size / 16px;
+  @return #{$remSize}rem;
+}
+
+@mixin fontSize($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+

@@ -1,0 +1,10 @@
+.import-level-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  textarea {
+    width: 100%;
+    min-height: 600px;
+  }
+}

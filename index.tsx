@@ -1,15 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { EngineState, resetDragon } from './engine/engine'
-import { Game } from './views/game'
-import { MainMenu } from './views/mainMenu'
 import { parseLevel } from './levels/levelParser'
 import { EditorCreation } from './editor/editor'
+import MainMenu from './views/game/MainMenu'
+import Game from './views/game/Game'
 
-import './views/css/main.css'
-import './views/css/board.css'
-import './views/css/gemPanel.css'
-import './views/css/treeRegisters.css'
+import './views/sass/main.scss'
+import './assets/fonts/MouseMemoirs-Regular.woff2'
 
 const domContainer = document.querySelector('#app-container')
 
