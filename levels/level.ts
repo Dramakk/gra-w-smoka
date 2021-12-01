@@ -18,6 +18,7 @@ export const GadgetTypeArray = [
   'MULTIPLY',
   'DIVIDE',
   'SET',
+  'SWAP',
   'TAKE',
   'STORE'
 ]
@@ -31,7 +32,7 @@ export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.RegisterOperationAttributes
+export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.SwapOperationAttributes | fields.RegisterOperationAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -256,6 +257,9 @@ export const LevelCreation = {
         else throw Error('Wrong options')
       case 'SET':
         if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SET', `SET ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'SWAP':
+        if ('firstGemColor' in options) return fields.createField<fields.ArithmeticOperation>('SWAP', `SWAP ${options.firstGemColor} ${options.secondGemColor}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
         if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })

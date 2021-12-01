@@ -57,6 +57,11 @@ export interface ArithmeticOperation extends Field {
   attributes: ArithmeticOperationAttributes
 }
 
+export interface Swap extends Field {
+  typeOfField: 'SWAP'
+  attributes: SwapOperationAttributes
+}
+
 export interface Take extends Field {
   typeofField: 'TAKE'
   attributes: RegisterOperationAttributes

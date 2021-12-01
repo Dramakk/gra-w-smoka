@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import { Field, Scale, Finish, ArithmeticOperation, Arrow } from '../levels/fields'
+import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap } from '../levels/fields'
 import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
@@ -99,6 +99,14 @@ function changeState (currentState: EngineState): EngineState {
       return update(currentState, {
         dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, numberOfGems) }
       })
+    }
+    case 'SWAP': {
+      const currentSwap = currentField as Swap
+      if (currentSwap.attributes.firstGemColor !== currentSwap.attributes.secondGemColor) {
+        return update(currentState, {
+          dragon: { $set: DragonManipulation.swapPocketGems(currentState.dragon, currentSwap.attributes.firstGemColor, currentSwap.attributes.secondGemColor) }
+        })
+      } else return { ...currentState }
     }
     default:
       return { ...currentState }

@@ -39,5 +39,15 @@ export const DragonManipulation = {
     return update(dragon, {
       gemsInPocket: { $merge: { [color]: 0 } }
     })
+  },
+
+  swapPocketGems: function (dragon: Dragon, firstColor: GemColors, secondColor: GemColors): Dragon {
+    const firstColorNumber = dragon.gemsInPocket[firstColor]
+    const newDragon = update(dragon, {
+      gemsInPocket: { $merge: { [firstColor]: dragon.gemsInPocket[secondColor] } }
+    })
+    return update(newDragon, {
+      gemsInPocket: { $merge: { [secondColor]: firstColorNumber } }
+    })
   }
 }

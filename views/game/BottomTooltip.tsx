@@ -25,6 +25,11 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
         targetGemColor: [...GemColorsArray],
         numberOfGems: [...GemColorsArray, ...new Array(20).keys()]
       }
+    case 'SWAP':
+      return {
+        firstGemColor: [...GemColorsArray],
+        secondGemColor: [...GemColorsArray]
+      }
     case 'TAKE':
     case 'STORE':
       return {
