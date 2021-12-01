@@ -1,10 +1,10 @@
 import React, { ReactElement, useContext } from 'react'
-import { Editor } from '../editor/editor'
-import { items } from '../helpers/counter'
-import { GadgetInfo } from '../levels/level'
-import { DispatchContext } from './game'
+import { Editor } from '../../editor/editor'
+import { items } from '../../helpers/counter'
+import { GadgetInfo } from '../../levels/level'
+import { DispatchContext } from './Game'
 
-export function GadgetsSelection (props: {editor: Editor}): ReactElement {
+export default function GadgetsSelection (props: {editor: Editor}): ReactElement {
   const dispatch = useContext(DispatchContext)
 
   // Build selection component for one type of field.

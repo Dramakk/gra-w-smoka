@@ -4,7 +4,7 @@ import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { Directions, GadgetType, GemColors, Level, LevelCreation } from './level'
+import { Directions, GadgetType, GemColors, Level, LevelCreation, TreeRegisters } from './level'
 
 // Level parser using Spicery package from NPM.
 export function parseLevel (levelToParse: string): Level {
@@ -46,8 +46,29 @@ export function parseLevel (levelToParse: string): Level {
   }
 
   const gemRecordParser: ParseFn<Record<GemColors, number>> = (x: Record<GemColors, number>) => {
-    if ('BLUE' in x && 'GREEN' in x && 'RED' in x && 'YELLOW' in x && 'BLACK' in x && Object.keys(x).length === 5) return x
+    if ('BLUE' in x &&
+      'GREEN' in x &&
+      'RED' in x &&
+      'YELLOW' in x &&
+      'BLACK' in x &&
+      Object.keys(x).length === 5 &&
+      Object.values(x).every(val => (typeof val) === 'number')) return x
     throw Error(`Parser error parsing ${x}`)
+  }
+
+  const treeRegistersParser: ParseFn<TreeRegisters> = (x: TreeRegisters) => {
+    const keys = [...new Set(Object.keys(x))]
+    const keyConstraintCheck = keys.every(key => {
+      const parsedKey = parseInt(key)
+
+      return !isNaN(parsedKey) && parsedKey >= 0 && parsedKey < 20
+    })
+
+    if (keys.length !== 20 || !keyConstraintCheck) {
+      throw Error(`Parse error parsing ${x}`)
+    }
+
+    return x
   }
 
   const levelParser: ParseFn<Level> = (x: any) => {
@@ -57,8 +78,9 @@ export function parseLevel (levelToParse: string): Level {
     const gadgets: Counter<GadgetType> = spicery.fromMap(x, 'gadgets', gadgetsParser)
     const treeGems: Record<GemColors, number> = spicery.fromMap(x, 'treeGems', gemRecordParser)
     const finishId: number = spicery.fromMap(x, 'finishId', aNumber)
+    const treeRegisters: TreeRegisters = spicery.fromMap(x, 'treeRegisters', treeRegistersParser)
 
-    return LevelCreation.createLevel(fields, fieldsPerRow, gadgets, baseDragon, treeGems, finishId)
+    return LevelCreation.createLevel(fields, fieldsPerRow, gadgets, baseDragon, treeGems, treeRegisters, finishId)
   }
 
   return parse(levelParser)(levelToParse)

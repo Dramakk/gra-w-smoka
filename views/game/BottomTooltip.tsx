@@ -1,8 +1,8 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys } from '../levels/level'
-import { DispatchContext } from './game'
+import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray } from '../../levels/level'
+import { DispatchContext } from './Game'
 
-type SelectedOptions = Partial<Record<GadgetOptionKeys, string>>
+type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number>>
 
 // This function generates [firstOptionsArray, secondOptionsArrray, hasOptions, howManyOptions] for given gadget.
 // These informations are used to render options to choose from in editor mode.
@@ -14,14 +14,28 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
       }
     case 'SCALE':
       return {
-        gemColor: ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
+        gemColor: [...GemColorsArray]
+      }
+    case 'ADDITION':
+    case 'SUBSTRACTION':
+    case 'DIVISION':
+    case 'MULTIPLICATION':
+      return {
+        targetGemColor: [...GemColorsArray],
+        numberOfGems: [...GemColorsArray, ...new Array(20).keys()]
+      }
+    case 'TAKE':
+    case 'STORE':
+      return {
+        targetGemColor: [...GemColorsArray],
+        registerNumber: [...GemColorsArray, ...new Array(20).keys()]
       }
     default:
       return {}
   }
 }
 
-export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
+function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
   const dispatch = useContext(DispatchContext)
   // We can choose at most two options for given field
   const options = generateItemDescription(props.gadgetToPlace)
@@ -35,7 +49,8 @@ export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactEl
   // Update state to currently selected options.
   function updateSelectedOption (optionKey: string): (event: React.ChangeEvent<HTMLSelectElement>) => void {
     return (event: React.ChangeEvent<HTMLSelectElement>) => {
-      changeSelectedOptions({ ...selectedOptions, [optionKey]: event.target.value })
+      const parsedValue = parseInt(event.target.value)
+      changeSelectedOptions({ ...selectedOptions, [optionKey]: isNaN(parsedValue) ? event.target.value : parsedValue })
     }
   }
 
@@ -64,7 +79,7 @@ export function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactEl
   )
 }
 
-export function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
+export default function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
   const dispatch = useContext(DispatchContext)
 
   function buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {
