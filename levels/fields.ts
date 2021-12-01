@@ -51,7 +51,7 @@ export interface Scale extends Field {
 }
 
 export interface ArithmeticOperation extends Field {
-  typeOfField: 'ADDITION' | 'SUBSTRACTION' | 'MULTIPLICATION' | 'DIVISION'
+  typeOfField: 'ADD' | 'SUBSTRACT' | 'MULTIPLY' | 'DIVIDE'
   attributes: ArithmeticOperationAttributes
 }
 

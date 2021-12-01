@@ -16,10 +16,10 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
       return {
         gemColor: [...GemColorsArray]
       }
-    case 'ADDITION':
-    case 'SUBSTRACTION':
-    case 'DIVISION':
-    case 'MULTIPLICATION':
+    case 'ADD':
+    case 'SUBSTRACT':
+    case 'DIVIDE':
+    case 'MULTIPLY':
       return {
         targetGemColor: [...GemColorsArray],
         numberOfGems: [...GemColorsArray, ...new Array(20).keys()]

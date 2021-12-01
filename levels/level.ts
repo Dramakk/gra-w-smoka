@@ -13,10 +13,10 @@ export const GadgetTypeArray = [
   'ARROWUP',
   'ARROWDOWN',
   'SCALE',
-  'ADDITION',
-  'SUBSTRACTION',
-  'MULTIPLICATION',
-  'DIVISION',
+  'ADD',
+  'SUBSTRACT',
+  'MULTIPLY',
+  'DIVIDE',
   'TAKE',
   'STORE'
 ]
@@ -241,17 +241,17 @@ export const LevelCreation = {
       case 'FINISH':
         if ('opened' in options) return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: options.opened })
         else throw Error('Wrong options')
-      case 'ADDITION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADDITION', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'ADD':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADD', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'SUBSTRACTION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACTION', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'SUBSTRACT':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACT', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'MULTIPLICATION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLICATION', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'MULTIPLY':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLY', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'DIVISION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVISION', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'DIVIDE':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVIDE', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
         if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })

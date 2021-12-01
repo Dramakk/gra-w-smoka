@@ -69,26 +69,26 @@ function changeState (currentState: EngineState): EngineState {
       }
       return { ...currentState }
     }
-    case 'ADDITION': {
+    case 'ADD': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return update(currentState, {
         dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, numberOfGems) }
       })
     }
-    case 'SUBSTRACTION': {
+    case 'SUBSTRACT': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return update(currentState, {
         dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, -numberOfGems) }
       })
     }
-    case 'MULTIPLICATION': {
+    case 'MULTIPLY': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return handleMultiplication(currentState, currentArithmeticOperation.attributes.targetGemColor, numberOfGems)
     }
-    case 'DIVISION': {
+    case 'DIVIDE': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return handleDivision(currentState, currentArithmeticOperation.attributes.targetGemColor, numberOfGems)
