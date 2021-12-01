@@ -1,4 +1,4 @@
-import { Directions, GadgetType, GemColors } from './level'
+import { Directions, GadgetType, GemColors, Signs } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
@@ -9,6 +9,7 @@ export interface FinishAttributes { opened: boolean }
 export interface ArithmeticOperationAttributes { targetGemColor: GemColors, numberOfGems: GemColors | number }
 export interface SwapOperationAttributes { firstGemColor: GemColors, secondGemColor: GemColors }
 export interface RegisterOperationAttributes {targetGemColor: GemColors, registerNumber: GemColors | number}
+export interface IfAttributes {leftGemColor: GemColors, sign: Signs, rightNumberOfGems: GemColors | number}
 
 type FieldAttributes =
   | ArrowAttributes
@@ -17,6 +18,7 @@ type FieldAttributes =
   | ArithmeticOperationAttributes
   | SwapOperationAttributes
   | RegisterOperationAttributes
+  | IfAttributes
 
 export interface Field {
     typeOfField: FieldType
@@ -70,6 +72,11 @@ export interface Take extends Field {
 export interface Store extends Field {
   typeofField: 'STORE'
   attributes: RegisterOperationAttributes
+}
+
+export interface If extends Field {
+  typeofField: 'IF'
+  attributes: IfAttributes
 }
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {

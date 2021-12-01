@@ -1,6 +1,6 @@
 import update from 'immutability-helper'
-import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap } from '../levels/fields'
-import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls } from '../levels/level'
+import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If } from '../levels/fields'
+import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls, Signs } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
 export type EngineState = {
@@ -108,6 +108,12 @@ function changeState (currentState: EngineState): EngineState {
         })
       } else return { ...currentState }
     }
+    case 'IF': {
+      const currentIf = currentField as If
+      return update(currentState, {
+        dragon: { $set: handleIf(currentState.dragon, currentIf.attributes.leftGemColor, currentIf.attributes.rightNumberOfGems, currentIf.attributes.sign) }
+      })
+    }
     default:
       return { ...currentState }
   }
@@ -131,6 +137,15 @@ function handleDivision (currentState: EngineState, targetGemColor: GemColors, n
   return update(currentState, {
     dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, targetGemColor, newNumberOfGems) }
   })
+}
+function handleIf (currentDragon: Dragon, leftGemColor: GemColors, rightNumberOfGems: GemColors | number, sign: Signs) : Dragon {
+  const numberOfLeftGems = currentDragon.gemsInPocket[leftGemColor]
+  const numberOfRightGems = getNumberOfGems(currentDragon, rightNumberOfGems)
+  if ((sign === '<' && numberOfLeftGems < numberOfRightGems) || (sign === '=' && numberOfLeftGems === numberOfRightGems) || (sign === '>' && numberOfLeftGems > numberOfRightGems)) {
+    return DragonManipulation.changeDragonDirection(currentDragon, 'R')
+  } else {
+    return DragonManipulation.changeDragonDirection(currentDragon, 'L')
+  }
 }
 
 // Calculates new fieldId based on dragon direction.

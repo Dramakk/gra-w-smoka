@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext, useState } from 'react'
-import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray } from '../../levels/level'
+import { GadgetInfo, GadgetOptionDescription, GadgetOptionKeys, GemColorsArray, SignsArray } from '../../levels/level'
 import { DispatchContext } from './Game'
 
 type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number>>
@@ -35,6 +35,12 @@ function generateItemDescription (gadgetToPlace: GadgetInfo): GadgetOptionDescri
       return {
         targetGemColor: [...GemColorsArray],
         registerNumber: [...GemColorsArray, ...new Array(20).keys()]
+      }
+    case 'IF':
+      return {
+        leftGemColor: [...GemColorsArray],
+        sign: [...SignsArray],
+        rightNumberOfGems: [...GemColorsArray, ...new Array(20).keys()]
       }
     default:
       return {}
