@@ -165,7 +165,7 @@ export const EditorManipulation = {
     }
 
     if (gadgetType === 'FINISH') {
-      newLevel = LevelSpeedControls.setFinish(level, index)
+      return LevelSpeedControls.setFinish(level, index)
     }
 
     const newGadget = LevelCreation.newFieldFromType(index, gadgetType, options)

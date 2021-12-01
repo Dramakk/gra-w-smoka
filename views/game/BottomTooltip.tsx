@@ -49,7 +49,8 @@ function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
   // Update state to currently selected options.
   function updateSelectedOption (optionKey: string): (event: React.ChangeEvent<HTMLSelectElement>) => void {
     return (event: React.ChangeEvent<HTMLSelectElement>) => {
-      changeSelectedOptions({ ...selectedOptions, [optionKey]: event.target.value })
+      const parsedValue = parseInt(event.target.value)
+      changeSelectedOptions({ ...selectedOptions, [optionKey]: isNaN(parsedValue) ? event.target.value : parsedValue })
     }
   }
 
