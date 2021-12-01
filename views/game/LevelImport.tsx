@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Modal, { ButtonDescription } from '../helpers/Modal'
 
-export function LevelImport (props: {createGameView : (importedLevelString: string) => void}): React.ReactElement {
+export default function LevelImport (props: {createGameView : (importedLevelString: string) => void}): React.ReactElement {
   // TODO: Dodać obsługę błędu przy wklejeniu nieprawidłowego JSONa
-  const [importedLevel, updateImportedLevel] = React.useState(`{
+  const [showModal, updateShowModal] = useState(false)
+  const [importedLevel, updateImportedLevel] = useState(`{
     "fields":[
       {"typeOfField":"WALL","image":"W","id":0},
       {"typeOfField":"WALL","image":"W","id":1},
@@ -58,10 +60,20 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
       },
       "treeRegisters": {"0":{"stored":0,"needed":0},"1":{"stored":0,"needed":0},"2":{"stored":0,"needed":0},"3":{"stored":0,"needed":0},"4":{"stored":0,"needed":0},"5":{"stored":0,"needed":0},"6":{"stored":0,"needed":0},"7":{"stored":0,"needed":0},"8":{"stored":0,"needed":0},"9":{"stored":0,"needed":0},"10":{"stored":0,"needed":0},"11":{"stored":0,"needed":0},"12":{"stored":0,"needed":0},"13":{"stored":0,"needed":0},"14":{"stored":0,"needed":0},"15":{"stored":0,"needed":0},"16":{"stored":0,"needed":0},"17":{"stored":0,"needed":0},"18":{"stored":0,"needed":0},"19":{"stored":0,"needed":0}},
       "finishId":18}`)
+  const modalButtons: ButtonDescription[] = [
+    {
+      buttonText: 'Zamknij',
+      buttonType: 'primary',
+      onClick: () => onModalClose(false)
+    }
+  ]
 
-  function onSubmit (event : React.FormEvent<HTMLFormElement>) : void {
-    event.preventDefault()
-    props.createGameView(importedLevel)
+  function onSubmit () : void {
+    try {
+      props.createGameView(importedLevel)
+    } catch (e) {
+      updateShowModal(true)
+    }
   }
 
   function onBlur (event: React.FocusEvent<HTMLTextAreaElement>): void {
@@ -70,15 +82,23 @@ export function LevelImport (props: {createGameView : (importedLevelString: stri
       updateImportedLevel(JSON.stringify(parsedJSON, null, 4))
     } catch (e) {
       updateImportedLevel(event.target.value)
+      updateShowModal(true)
     }
   }
 
+  function onModalClose (event: boolean): void {
+    updateShowModal(event)
+  }
+
   return (
-      <form onSubmit={onSubmit}>
-        <label>Wpisz poziom</label>
-        <textarea name='level' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} rows={50} cols={50} value={importedLevel}>
-        </textarea>
-        <input type="submit" value="Graj"/>
-      </form>
+    <div className="import-level-container">
+      <label htmlFor="level-input">Wpisz poziom</label>
+      <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
+      </textarea>
+      <button onClick={onSubmit}>Graj</button>
+      <Modal show={showModal} buttons={modalButtons}>
+        <div>Definicja poziomu zawiera błędy. Popraw je i spróbuj ponownie.</div>
+      </Modal>
+    </div>
   )
 }

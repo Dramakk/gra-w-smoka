@@ -1,7 +1,7 @@
 import React from 'react'
-import { TreeRegisters } from '../levels/level'
+import { TreeRegisters } from '../../levels/level'
 
-export function Tree (props: { treeRegisters: TreeRegisters, canEdit: boolean}): React.ReactElement {
+export default function Tree (props: { treeRegisters: TreeRegisters, canEdit: boolean}): React.ReactElement {
   return (
     <div className="tree-registers-container">
       {Object.keys(props.treeRegisters).map(key => {

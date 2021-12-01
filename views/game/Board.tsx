@@ -1,6 +1,6 @@
-import * as fields from '../levels/fields'
+import * as fields from '../../levels/fields'
 import React, { CSSProperties, ReactElement } from 'react'
-import { FieldComponent } from './field'
+import FieldComponent from './Field'
 
 interface BoardProps {
   dragonPosition: number;
@@ -9,7 +9,7 @@ interface BoardProps {
   fieldsPerRow: number;
 }
 
-export function BoardComponent (props:BoardProps): ReactElement {
+export default function BoardComponent (props:BoardProps): ReactElement {
   const calculatedStyles: CSSProperties = {
     gridTemplateColumns: `repeat(${props.fieldsPerRow}, 1fr)`,
     gridTemplateRows: `repeat(${props.rowCount}, 1fr)`

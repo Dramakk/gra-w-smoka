@@ -1,24 +1,24 @@
 import React from 'react'
-import { EngineState } from '../engine/engine'
-import { BottomTooltip } from './bottomTooltip'
-import { SpeedControls } from './speedControls'
-import { BoardComponent } from './board'
-import { GadgetsSelection } from './gadgetsSelection'
-import { items } from '../helpers/counter'
-import { stateReducer } from '../state_manager/reducer'
-import { getDragonFromState, getLevelFromState } from '../state_manager/accessors'
+import { EngineState } from '../../engine/engine'
+import { items } from '../../helpers/counter'
+import { stateReducer } from '../../state_manager/reducer'
+import { getDragonFromState, getLevelFromState } from '../../state_manager/accessors'
 import ReactDOM from 'react-dom'
-import { LevelGetters } from '../levels/level'
-import { Editor, EditorCreation } from '../editor/editor'
-import { Tree } from './tree'
-import { GemPanel } from './gemPanel'
+import { LevelGetters } from '../../levels/level'
+import { Editor, EditorCreation } from '../../editor/editor'
+import BoardComponent from './Board'
+import GemPanel from './GemPanel'
+import Tree from './Tree'
+import BottomTooltip from './BottomTooltip'
+import SpeedControls from './SpeedControls'
+import GadgetsSelection from './GadgetsSelection'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
 
 type GameProps = { engine: EngineState, editorMode: boolean, editor?: Editor};
 
-export function Game (props: GameProps): React.ReactElement {
+export default function Game (props: GameProps): React.ReactElement {
   // This is the place where all magic happens. We create state object and dispatch function which is passed down the tree.
   // Using dispatch we can update state in this place and trigger update of every component (if needed)
   const [state, dispatch] = React.useReducer(stateReducer,

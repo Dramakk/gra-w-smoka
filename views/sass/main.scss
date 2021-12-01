@@ -1,0 +1,87 @@
+@import "../../node_modules/normalize-scss/sass/normalize/import-now";
+@import "mixins";
+@import "materialIcons";
+@import "colors";
+@import "modal";
+@import "board";
+@import "gemPanel";
+@import "treeRegisters";
+@import "levelImport";
+
+html, body {
+  font-family: 'Mouse Memoirs', sans-serif;
+  @include fontSize(20px);
+  background-color: $backgroundPrimary;
+}
+
+h1 {
+  text-align: center;
+  letter-spacing: 3px;
+}
+
+button, textarea {
+  font-family: 'Mouse Memoirs';
+}
+
+textarea {
+  resize: none;
+  margin: 20px 0;
+}
+
+button {
+  color: white;
+  border-radius: 25px;
+  padding: 5px 10px;
+  min-width: 64px;
+  border: 0;
+  background-color: $primaryColor;
+
+  &.button-danger {
+    background-color: $dangerColor; 
+  }
+
+  &.button-success {
+    background-color: $successColor;
+  }
+}
+
+#app-container {
+  position: relative;
+  padding: 0 20px;
+
+  @media screen and (max-width: 768px) {
+    padding: 0 10px;
+  }
+}
+
+.menu {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  width: auto;
+  flex-direction: column;
+  .menu-item {
+    width: 100%;
+  }
+}
+
+.bottom-tooltip {
+  border: 1px solid black;
+}
+
+.game-container {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  padding: 0 50px;
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+
