@@ -76,6 +76,10 @@ export const LevelPredicates = {
 
   canPlaceField: function (level: Level, fieldType: GadgetType) : boolean {
     return get(level.gadgets, fieldType) > 0
+  },
+
+  checkRegisters: function (level : Level) : boolean {
+    return Object.values(level.treeRegisters).every(register => register.stored === register.needed)
   }
 }
 
@@ -110,7 +114,7 @@ export const LevelGetters = {
 export const LevelSpeedControls = {
   resetFinish: function (level: Level): Level {
     if (level.finishId !== null) {
-      return LevelManipulation.checkOpenExit(level)
+      return LevelManipulation.tryOpenExit(level)
     }
     return { ...level }
   },
@@ -266,10 +270,10 @@ export const LevelCreation = {
         if ('firstGemColor' in options) return fields.createField<fields.Swap>('SWAP', `SWAP ${options.firstGemColor} ${options.secondGemColor}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
-        if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for STORE')
       case 'TAKE':
-        if ('registerNumber' in options) return fields.createField<fields.Take>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for TAKE')
       case 'IF':
         if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
@@ -324,7 +328,7 @@ export const LevelManipulation = {
           }
         })
       case 'TREE':
-        return LevelManipulation.checkOpenExit(update(level, {
+        return LevelManipulation.tryOpenExit(update(level, {
           treeGems: { $merge: { [color]: level.treeGems[color] + changeInQty < 0 ? 0 : (level.treeGems[color] + changeInQty) } }
         }))
       case 'SCALE':
@@ -336,19 +340,10 @@ export const LevelManipulation = {
     }
   },
 
-  checkOpenExit: function (level : Level) : Level {
-    // Guard becasuse used in editor too
-    if (level.finishId != null) {
-      const isFinishOpened = Object.values(level.treeGems).every(val => val === 0)
-      return update(level, { fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } } })
-    }
-    return { ...level }
-  },
-
   tryOpenExit: function (level : Level) : Level {
     // Guard because used in editor too
     if (level.finishId != null) {
-      const isFinishOpened = LevelPredicates.checkLevelGemQty(level)
+      const isFinishOpened = LevelPredicates.checkLevelGemQty(level) && LevelPredicates.checkRegisters(level)
       return update(level, {
         fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
       })
@@ -360,5 +355,11 @@ export const LevelManipulation = {
     return update(level, {
       treeRegisters: { [registerIndex]: { $set: register } }
     })
+  },
+
+  changeGemsRegister: function (level: Level, registerIndex: number, numberOfGems: number): Level {
+    return LevelManipulation.tryOpenExit(update(level, {
+      treeRegisters: { [registerIndex]: { $merge: { stored: numberOfGems } } }
+    }))
   }
 }
