@@ -8,7 +8,10 @@ interface BoardProps {
   board: fields.Field[];
   rowCount: number;
   fieldsPerRow: number;
-  dragonDirections: Directions[];
+  dragonDirectionHistory: {
+    previous: Directions;
+    current: Directions;
+  };
 }
 
 export default function BoardComponent (props:BoardProps): ReactElement {
@@ -28,7 +31,7 @@ export default function BoardComponent (props:BoardProps): ReactElement {
     <div className='board-container' style={calculatedStyles}>
         {[...Array(props.fieldsPerRow * props.rowCount).keys()].map((fieldIndex: number) => {
           const field = props.board[fieldIndex]
-          return <FieldComponent dragonDirections={props.dragonDirections} key={field.id} id={field.id} image={getImage(field)} />
+          return <FieldComponent dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} id={field.id} image={getImage(field)} />
         })}
       </div>
   )

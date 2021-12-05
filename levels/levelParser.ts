@@ -11,12 +11,20 @@ export function parseLevel (levelToParse: string): Level {
   const directionsParser: ParseFn<Directions> = (x: Directions) => {
     return x
   }
-  const baseDragonParser: ParseFn<Dragon> = (x: Dragon) => ({
-    fieldId: spicery.fromMap(x, 'fieldId', spicery.aNumber),
-    direction: spicery.fromMap(x, 'direction', directionsParser),
-    gemsInPocket: spicery.fromMap(x, 'gemsInPocket', gemRecordParser),
-    canMove: true
-  })
+
+  const baseDragonParser: ParseFn<Dragon> = (x: Dragon) => {
+    const dragonDirection = spicery.fromMap(x, 'direction', directionsParser)
+    return {
+      fieldId: spicery.fromMap(x, 'fieldId', spicery.aNumber),
+      direction: dragonDirection,
+      gemsInPocket: spicery.fromMap(x, 'gemsInPocket', gemRecordParser),
+      canMove: true,
+      directionHistory: {
+        previous: dragonDirection,
+        current: dragonDirection
+      }
+    }
+  }
 
   const gadgetTypeParser: ParseFn<GadgetType> = (x: GadgetType) => {
     return x

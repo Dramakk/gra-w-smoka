@@ -6,15 +6,17 @@ import { Directions } from '../../levels/level'
 interface FieldProps {
   id: number;
   image: string;
-  dragonDirections: Directions[];
+  dragonDirectionHistory: {
+    previous: Directions;
+    current: Directions;
+  };
 }
 
 export default function FieldComponent (props: FieldProps): React.ReactElement {
   const dispatch = useContext(DispatchContext)
-  const direction = props.dragonDirections.length === 0 ? props.dragonDirections[0] : props.dragonDirections[props.dragonDirections.length - 1]
   let animationClass
 
-  switch (direction) {
+  switch (props.dragonDirectionHistory.previous) {
     case 'U':
       animationClass = 'up-1000'
       break
@@ -25,7 +27,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
       animationClass = 'left-1000'
       break
     case 'R':
-      animationClass = 'righ-1000'
+      animationClass = 'right-1000'
       break
     default:
       animationClass = ''
