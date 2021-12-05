@@ -1,6 +1,6 @@
 import update from 'immutability-helper'
-import { Field, Scale, Finish, ArithmeticOperation, Arrow } from '../levels/fields'
-import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls } from '../levels/level'
+import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If } from '../levels/fields'
+import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls, Signs } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
 export type EngineState = {
@@ -69,29 +69,50 @@ function changeState (currentState: EngineState): EngineState {
       }
       return { ...currentState }
     }
-    case 'ADDITION': {
+    case 'ADD': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return update(currentState, {
         dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, numberOfGems) }
       })
     }
-    case 'SUBSTRACTION': {
+    case 'SUBSTRACT': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return update(currentState, {
         dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, -numberOfGems) }
       })
     }
-    case 'MULTIPLICATION': {
+    case 'MULTIPLY': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return handleMultiplication(currentState, currentArithmeticOperation.attributes.targetGemColor, numberOfGems)
     }
-    case 'DIVISION': {
+    case 'DIVIDE': {
       const currentArithmeticOperation = currentField as ArithmeticOperation
       const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
       return handleDivision(currentState, currentArithmeticOperation.attributes.targetGemColor, numberOfGems)
+    }
+    case 'SET': {
+      const currentArithmeticOperation = currentField as ArithmeticOperation
+      const numberOfGems = getNumberOfGems(currentState.dragon, currentArithmeticOperation.attributes.numberOfGems)
+      return update(currentState, {
+        dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, currentArithmeticOperation.attributes.targetGemColor, numberOfGems) }
+      })
+    }
+    case 'SWAP': {
+      const currentSwap = currentField as Swap
+      if (currentSwap.attributes.firstGemColor !== currentSwap.attributes.secondGemColor) {
+        return update(currentState, {
+          dragon: { $set: DragonManipulation.swapPocketGems(currentState.dragon, currentSwap.attributes.firstGemColor, currentSwap.attributes.secondGemColor) }
+        })
+      } else return { ...currentState }
+    }
+    case 'IF': {
+      const currentIf = currentField as If
+      return update(currentState, {
+        dragon: { $set: handleIf(currentState.dragon, currentIf.attributes.leftGemColor, currentIf.attributes.rightNumberOfGems, currentIf.attributes.sign) }
+      })
     }
     default:
       return { ...currentState }
@@ -116,6 +137,15 @@ function handleDivision (currentState: EngineState, targetGemColor: GemColors, n
   return update(currentState, {
     dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, targetGemColor, newNumberOfGems) }
   })
+}
+function handleIf (currentDragon: Dragon, leftGemColor: GemColors, rightNumberOfGems: GemColors | number, sign: Signs) : Dragon {
+  const numberOfLeftGems = currentDragon.gemsInPocket[leftGemColor]
+  const numberOfRightGems = getNumberOfGems(currentDragon, rightNumberOfGems)
+  if ((sign === '<' && numberOfLeftGems < numberOfRightGems) || (sign === '=' && numberOfLeftGems === numberOfRightGems) || (sign === '>' && numberOfLeftGems > numberOfRightGems)) {
+    return DragonManipulation.changeDragonDirection(currentDragon, 'R')
+  } else {
+    return DragonManipulation.changeDragonDirection(currentDragon, 'L')
+  }
 }
 
 // Calculates new fieldId based on dragon direction.

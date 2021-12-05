@@ -13,12 +13,15 @@ export const GadgetTypeArray = [
   'ARROWUP',
   'ARROWDOWN',
   'SCALE',
-  'ADDITION',
-  'SUBSTRACTION',
-  'MULTIPLICATION',
-  'DIVISION',
+  'ADD',
+  'SUBSTRACT',
+  'MULTIPLY',
+  'DIVIDE',
+  'SET',
+  'SWAP',
   'TAKE',
-  'STORE'
+  'STORE',
+  'IF'
 ]
 
 export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
@@ -30,7 +33,7 @@ export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.RegisterOperationAttributes
+export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.SwapOperationAttributes | fields.RegisterOperationAttributes | fields.IfAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -42,6 +45,9 @@ export type GadgetOptionDescription = Partial<Record<GadgetOptionKeys, (string |
 type FieldMap = {
   [key: number]: fields.Field
 }
+
+export const SignsArray = ['<', '=', '>']
+export type Signs = typeof SignsArray[number]
 
 // Representation of 20 tree registers
 export interface RegisterData {needed: number, stored: number}
@@ -182,7 +188,7 @@ export const LevelCreation = {
     treeRegisters: TreeRegisters,
     finishId: number
   ): Level {
-    // Flag determining if all ids from 0 to fields.length are assigned to fields.
+    // Flag determining if all ids from 0 to fields.length are asSignsed to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
     // Iterate over array and chceck if every element is at it's place
     fields.forEach((field, index) => {
@@ -241,24 +247,33 @@ export const LevelCreation = {
       case 'FINISH':
         if ('opened' in options) return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: options.opened })
         else throw Error('Wrong options')
-      case 'ADDITION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADDITION', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'ADD':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADD', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'SUBSTRACTION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACTION', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'SUBSTRACT':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACT', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'MULTIPLICATION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLICATION', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'MULTIPLY':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLY', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
         else throw Error('Wrong options')
-      case 'DIVISION':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVISION', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+      case 'DIVIDE':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVIDE', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'SET':
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SET', `SET ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        else throw Error('Wrong options')
+      case 'SWAP':
+        if ('firstGemColor' in options) return fields.createField<fields.Swap>('SWAP', `SWAP ${options.firstGemColor} ${options.secondGemColor}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
         if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for STORE')
       case 'TAKE':
-        if ('registerNumber' in options) return fields.createField<fields.Store>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.Take>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for TAKE')
+      case 'IF':
+        if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
+        else throw Error('Wrong options for IF')
       default:
         return fields.createField<fields.Empty>('EMPTY', 'E', index)
     }
