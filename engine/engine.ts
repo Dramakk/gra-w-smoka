@@ -161,7 +161,7 @@ function handleRegisterOperation (currentState: EngineState, targetGemColor: Gem
     if (store) {
       const numberOfGems = currentState.dragon.gemsInPocket[targetGemColor]
       return update(currentState,
-        { level: { $set: LevelManipulation.addGemsRegister(currentState.level, registerIndex, numberOfGems) } })
+        { level: { $set: LevelManipulation.changeGemsRegister(currentState.level, registerIndex, numberOfGems) } })
     } else {
       const numberOfGems = currentState.level.treeRegisters[registerIndex].stored
       return update(currentState,
