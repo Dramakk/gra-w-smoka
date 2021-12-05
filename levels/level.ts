@@ -266,10 +266,10 @@ export const LevelCreation = {
         if ('firstGemColor' in options) return fields.createField<fields.Swap>('SWAP', `SWAP ${options.firstGemColor} ${options.secondGemColor}`, index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
-        if ('registerNumber' in options) return fields.createField<fields.Store>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for STORE')
       case 'TAKE':
-        if ('registerNumber' in options) return fields.createField<fields.Take>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
         else throw Error('Wrong options for TAKE')
       case 'IF':
         if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
@@ -359,6 +359,13 @@ export const LevelManipulation = {
   changeLevelRegisters: function (level: Level, registerIndex: number, register: RegisterData): Level {
     return update(level, {
       treeRegisters: { [registerIndex]: { $set: register } }
+    })
+  },
+  addGemsRegister: function (level: Level, registerIndex: number, numberOfGems: number): Level {
+    // const register = { needed: level.treeRegisters[registerIndex].needed, stored: level.treeRegisters[registerIndex].stored + numberOfGems }
+    // return LevelManipulation.changeLevelRegisters(level, registerIndex, register)
+    return update(level, {
+      treeRegisters: { [registerIndex]: { $merge: { stored: level.treeRegisters[registerIndex].stored + numberOfGems } } }
     })
   }
 }

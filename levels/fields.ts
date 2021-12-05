@@ -64,13 +64,8 @@ export interface Swap extends Field {
   attributes: SwapOperationAttributes
 }
 
-export interface Take extends Field {
-  typeofField: 'TAKE'
-  attributes: RegisterOperationAttributes
-}
-
-export interface Store extends Field {
-  typeofField: 'STORE'
+export interface RegisterOperation extends Field {
+  typeofField: 'TAKE' | 'STORE'
   attributes: RegisterOperationAttributes
 }
 

@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If } from '../levels/fields'
+import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If, RegisterOperation } from '../levels/fields'
 import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls, Signs } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
@@ -114,6 +114,14 @@ function changeState (currentState: EngineState): EngineState {
         dragon: { $set: handleIf(currentState.dragon, currentIf.attributes.leftGemColor, currentIf.attributes.rightNumberOfGems, currentIf.attributes.sign) }
       })
     }
+    case 'STORE': {
+      const currentRegisterOperation = currentField as RegisterOperation
+      return handleRegisterOperation(currentState, currentRegisterOperation.attributes.targetGemColor, currentRegisterOperation.attributes.registerNumber, true)
+    }
+    case 'TAKE': {
+      const currentRegisterOperation = currentField as RegisterOperation
+      return handleRegisterOperation(currentState, currentRegisterOperation.attributes.targetGemColor, currentRegisterOperation.attributes.registerNumber, false)
+    }
     default:
       return { ...currentState }
   }
@@ -147,7 +155,22 @@ function handleIf (currentDragon: Dragon, leftGemColor: GemColors, rightNumberOf
     return DragonManipulation.changeDragonDirection(currentDragon, 'L')
   }
 }
-
+function handleRegisterOperation (currentState: EngineState, targetGemColor: GemColors, registerNumber: number | GemColors, store: boolean) : EngineState {
+  const registerIndex = getNumberOfGems(currentState.dragon, registerNumber)
+  if (registerIndex >= 0 && registerIndex <= 19) {
+    if (store) {
+      const numberOfGems = currentState.dragon.gemsInPocket[targetGemColor]
+      return update(currentState,
+        { level: { $set: LevelManipulation.addGemsRegister(currentState.level, registerIndex, numberOfGems) } })
+    } else {
+      const numberOfGems = currentState.level.treeRegisters[registerIndex].stored
+      return update(currentState,
+        { dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, targetGemColor, numberOfGems) } })
+    }
+  } else {
+    return update(currentState, { dragon: { $merge: { canMove: false } } })
+  }
+}
 // Calculates new fieldId based on dragon direction.
 function calculateNewField (currentState: EngineState): number {
   let newFieldId: number = currentState.dragon.fieldId
