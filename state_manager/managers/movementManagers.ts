@@ -10,7 +10,7 @@ export function manageStep (state: GameState): GameState {
     return manageStop(update(state, { engineState: { $set: nextState } }))
   }
 
-  return update(state, { engineState: { $set: nextState } })
+  return update(state, { engineState: { $set: nextState }, uiState: { dragonDirections: { $push: [state.engineState.dragon.direction] } } })
 }
 
 export function manageStart (state: GameState, payload: StartPayload): GameState {

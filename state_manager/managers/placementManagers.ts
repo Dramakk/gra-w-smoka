@@ -21,13 +21,13 @@ export function manageDeleteField (state: GameState, payload: FieldClickPayload)
           level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.clearSquare(level, payload.index) }
         }))
       },
-      uiState: { $set: { fieldToAdd: null, option: null, canDelete: false } },
+      uiState: { $merge: { fieldToAdd: null, option: null, canDelete: false } },
       editor: { $set: newEditor }
     })
   }
 
   return update(state, {
-    uiState: { $set: { fieldToAdd: null, canDelete: false, option: null } }
+    uiState: { $merge: { fieldToAdd: null, canDelete: false, option: null } }
   })
 }
 
@@ -47,12 +47,12 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
           level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.option) }
         }))
       },
-      uiState: { $set: { fieldToAdd: null, option: null, canDelete: false } },
+      uiState: { $merge: { fieldToAdd: null, option: null, canDelete: false } },
       editor: { $set: newEditor }
     })
   }
 
   return update(state, {
-    uiState: { $set: { fieldToAdd: null, canDelete: false, option: null } }
+    uiState: { $merge: { fieldToAdd: null, canDelete: false, option: null } }
   })
 }

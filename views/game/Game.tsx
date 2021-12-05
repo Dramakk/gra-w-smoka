@@ -19,12 +19,13 @@ export const DispatchContext = React.createContext(null)
 type GameProps = { engine: EngineState, editorMode: boolean, editor?: Editor};
 
 export default function Game (props: GameProps): React.ReactElement {
+  const dragonDirections = props.engine.dragon.direction ? [props.engine.dragon.direction] : []
   // This is the place where all magic happens. We create state object and dispatch function which is passed down the tree.
   // Using dispatch we can update state in this place and trigger update of every component (if needed)
   const [state, dispatch] = React.useReducer(stateReducer,
     {
       engineState: props.engine,
-      uiState: { fieldToAdd: null, option: null, canDelete: false },
+      uiState: { dragonDirections, fieldToAdd: null, option: null, canDelete: false },
       editor: props.editor,
       loop: null
     })
@@ -48,9 +49,11 @@ export default function Game (props: GameProps): React.ReactElement {
   return (
       // Here we provide desired value of dispatch to every component down in the tree.
       <DispatchContext.Provider value={dispatch}>
+        <div>{state.uiState.dragonDirections}</div>
         <div className='game-container'>
           <BoardComponent
             dragonPosition={dragon.fieldId}
+            dragonDirections={state.uiState.dragonDirections}
             rowCount={LevelGetters.getRowCount(currentLevelState)}
             fieldsPerRow={LevelGetters.getFieldsPerRow(currentLevelState)}
             board={board}

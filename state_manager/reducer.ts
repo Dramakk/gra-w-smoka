@@ -1,6 +1,6 @@
 import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
-import { GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
+import { Directions, GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
 import { manageDeleteMode, manageSelectField } from './managers/uiStateManagers'
@@ -39,7 +39,7 @@ export type PossiblePayloads =
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
-export interface UIState { fieldToAdd: GadgetType, option: GadgetOptionType; canDelete: boolean }
+export interface UIState {dragonDirections: Directions[], fieldToAdd: GadgetType, option: GadgetOptionType; canDelete: boolean }
 
 // Holds state of the whole game (engine + editor + UI)
 export interface GameState { engineState: EngineState, uiState: UIState, editor?: Editor, loop?: ReturnType<typeof setInterval> }
