@@ -11,8 +11,8 @@ interface FieldProps {
 
 export default function FieldComponent (props: FieldProps): React.ReactElement {
   const dispatch = useContext(DispatchContext)
-  let animationClass = 'right-1000'
   const direction = props.dragonDirections.length === 0 ? props.dragonDirections[0] : props.dragonDirections[props.dragonDirections.length - 1]
+  let animationClass
 
   switch (direction) {
     case 'U':
@@ -22,8 +22,13 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
       animationClass = 'down-1000'
       break
     case 'L':
-      animationClass = 'left-100'
+      animationClass = 'left-1000'
       break
+    case 'R':
+      animationClass = 'righ-1000'
+      break
+    default:
+      animationClass = ''
   }
 
   return (
