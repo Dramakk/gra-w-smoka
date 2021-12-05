@@ -1,5 +1,6 @@
 import React from 'react'
 import { TreeRegisters } from '../../levels/level'
+import TreeValue from './TreeValue'
 
 export default function Tree (props: { treeRegisters: TreeRegisters, canEdit: boolean}): React.ReactElement {
   return (
@@ -11,10 +12,12 @@ export default function Tree (props: { treeRegisters: TreeRegisters, canEdit: bo
             <div className="single-register-number">
               {parsedKey}
             </div>
-            <div className="single-register-data">
-              {props.treeRegisters[parsedKey].needed}
-              {props.treeRegisters[parsedKey].stored}
-            </div>
+            <TreeValue
+              canEdit={props.canEdit}
+              registerNumber={parsedKey}
+              needed={props.treeRegisters[parsedKey].needed}
+              stored={props.treeRegisters[parsedKey].stored}
+            />
           </div>
         )
       })}

@@ -5,6 +5,23 @@
   width: 100%;
 }
 
+.single-register-number {
+  text-align: center;
+}
+
+.single-register-data {
+  .value-with-controls {
+    display: flex;
+    justify-content: center;
+
+    .material-icons.value-with-controls-button {
+      color: black;
+      min-width: unset;
+      background: none;
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
     .tree-registers-container {
       grid-template-columns: repeat(5, 1fr);
