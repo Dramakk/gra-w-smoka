@@ -48,7 +48,6 @@ export default function Game (props: GameProps): React.ReactElement {
   return (
       // Here we provide desired value of dispatch to every component down in the tree.
       <DispatchContext.Provider value={dispatch}>
-        <div>{JSON.stringify(dragon.directionHistory)}</div>
         <div className='game-container'>
           <BoardComponent
             dragonPosition={dragon.fieldId}
