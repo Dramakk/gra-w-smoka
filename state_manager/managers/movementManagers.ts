@@ -22,7 +22,7 @@ export function manageStep (state: GameState): GameState {
 
 export function manageStart (state: GameState, payload: StartPayload): GameState {
   const dragon = getDragonFromState(state)
-  if (!dragon.fieldId || !dragon.direction) {
+  if (!dragon.fieldId || !dragon.direction || state.loop) {
     // Just don't start the game
     return { ...state }
   }

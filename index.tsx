@@ -24,3 +24,8 @@ ReactDOM.render(<MainMenu
     ReactDOM.render(<Game engine={game} editorMode={true} editor={editor}
     />, domContainer)
   }} />, domContainer)
+
+// TODO:
+// - Dodać oddzielny komponent dla smoka, który będzie nachodził na pola
+// - Przepiąć animacje na ten koponent
+// - react-router dodać może (?)
