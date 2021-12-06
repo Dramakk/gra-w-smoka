@@ -8,7 +8,7 @@ interface TreeValueProps {
   canEdit: boolean;
 }
 
-export default function TreeValue (props: TreeValueProps) {
+export default function TreeValue (props: TreeValueProps): React.ReactElement {
   const actionType = 'CHANGE_REGISTER'
   const storedPayloadAdd = {
     registerNumber: props.registerNumber,

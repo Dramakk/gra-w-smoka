@@ -1,6 +1,6 @@
 import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
-import { Directions, GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
+import { GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
 import { manageDeleteMode, manageSelectField } from './managers/uiStateManagers'
