@@ -1,32 +1,19 @@
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { GemColors } from '../../levels/level'
-import { DispatchContext } from './Game'
+import ValueWithControls from '../helpers/ValueWithControls'
 import { GemOwner } from './GemPanel'
 
 export default function GemControls (props: {gemColor: GemColors, howMany: Record<GemOwner, number>, canEdit: boolean}): ReactElement {
-  const dispatch = useContext(DispatchContext)
-
   function buildItem (who: GemOwner): ReactElement {
     const addButtons = who === 'SCALE' ? false : props.canEdit
-    const gemQty = <span>{props.howMany[who]}</span>
 
-    return addButtons
-      ? <div className="gem-controls">
-          <button className="gem-controls-button material-icons"
-            onClick={() => dispatch({
-              type: 'CHANGE_GEM_QTY',
-              payload: { who, color: props.gemColor, changeInQty: -1 }
-            })}
-          >remove</button>
-          {gemQty}
-          <button className="gem-controls-button material-icons"
-            onClick={() => dispatch({
-              type: 'CHANGE_GEM_QTY',
-              payload: { who, color: props.gemColor, changeInQty: 1 }
-            })}
-          >add</button>
-        </div>
-      : gemQty
+    return <ValueWithControls
+        current={props.howMany[who]}
+        canEdit={addButtons}
+        actionType='CHANGE_GEM_QTY'
+        actionPayloadAdd={{ who: who as 'TREE' | 'DRAGON', color: props.gemColor, changeInQty: 1 }}
+        actionPayloadSubstract={{ who: who as 'TREE' | 'DRAGON', color: props.gemColor, changeInQty: -1 }}
+      />
   }
 
   return (

@@ -352,9 +352,11 @@ export const LevelManipulation = {
   },
 
   changeLevelRegisters: function (level: Level, registerIndex: number, register: RegisterData): Level {
-    return update(level, {
+    const updatedLevel = update(level, {
       treeRegisters: { [registerIndex]: { $set: register } }
     })
+
+    return LevelManipulation.tryOpenExit(updatedLevel)
   },
 
   changeGemsRegister: function (level: Level, registerIndex: number, numberOfGems: number): Level {
