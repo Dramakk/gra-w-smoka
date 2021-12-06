@@ -20,7 +20,7 @@ export function parseLevel (levelToParse: string): Level {
       gemsInPocket: spicery.fromMap(x, 'gemsInPocket', gemRecordParser),
       canMove: true,
       directionHistory: {
-        previous: dragonDirection,
+        previous: null,
         current: dragonDirection
       }
     }
