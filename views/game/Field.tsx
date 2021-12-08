@@ -43,7 +43,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
         timeout={1000}
         classNames={animationClass}
       >
-        <Dragon displayDragon={props.displayDragon}/>
+        <Dragon className={animationClass} displayDragon={props.displayDragon}/>
       </CSSTransition>
     </div>
   )

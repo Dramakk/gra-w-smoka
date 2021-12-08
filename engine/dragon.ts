@@ -7,8 +7,8 @@ export interface Dragon {
   gemsInPocket: Record<GemColors, number>
   canMove: boolean;
   directionHistory: {
-    previous: Directions;
-    current: Directions;
+    previous: Directions | null;
+    current: Directions | null;
   }
 }
 

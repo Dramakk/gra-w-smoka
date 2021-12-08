@@ -1,68 +1,72 @@
-@mixin moveDown($className, $timeout) {
+@mixin moveDown($className, $duration) {
+  .#{$className} {
+    transition: transform #{$duration}ms linear;
+  }
   .#{$className}-enter {
     transform: translateY(-100%);
   }
   .#{$className}-enter-active {
     transform: translateY(0);
-    transition: all #{$timeout}ms linear;
   }
   .#{$className}-exit {
     opacity: 0;
   }
   .#{$className}-exit-active {
     opacity: 1;
-    transition: all #{$timeout}ms linear;
   }
 }
 
-@mixin moveUp($className, $timeout) {
+@mixin moveUp($className, $duration) {
+  .#{$className} {
+    transition: transform #{$duration}ms linear;
+  }
   .#{$className}-enter {
     transform: translateY(100%);
   }
   .#{$className}-enter-active {
     transform: translateY(0);
-    transition: all #{$timeout}ms linear;
   }
   .#{$className}-exit {
     opacity: 0;
   }
   .#{$className}-exit-active {
     opacity: 1;
-    transition: all #{$timeout}ms linear;
   }
 }
 
-@mixin moveRight($className, $timeout) {
+@mixin moveRight($className, $duration) {
+  .#{$className} {
+    transition: transform #{$duration}ms linear;
+  }
   .#{$className}-enter {
     transform: translateX(-100%);
   }
   .#{$className}-enter-active {
     transform: translateX(0);
-    transition: all #{$timeout}ms linear;
   }
   .#{$className}-exit {
     opacity: 0;
   }
   .#{$className}-exit-active {
     opacity: 1;
-    transition: all #{$timeout}ms linear;
   }
 }
 
-@mixin moveLeft($className, $timeout) {
+@mixin moveLeft($className, $duration) {
+  .#{$className} {
+    transition: transform #{$duration}ms linear;
+  }
   .#{$className}-enter {
     transform: translateX(100%);
   }
   .#{$className}-enter-active {
     transform: translateX(0);
-    transition: all #{$timeout}ms linear;
   }
   .#{$className}-exit {
     opacity: 0;
   }
   .#{$className}-exit-active {
     opacity: 1;
-    transition: all #{$timeout}ms linear;
   }
 }
 
