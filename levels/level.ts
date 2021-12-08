@@ -212,6 +212,26 @@ export const LevelSpeedControls = {
     }
   },
 
+  removeEntrance: function (level: Level, index: number, label: Labels): Level {
+    return update(level, {
+      entrances: { $unset: [label] }
+    })
+  },
+
+  removeExit: function (level: Level, index: number, label: Labels): Level {
+    if (label in level.entrances) {
+      return { ...level }
+    } else {
+      return update(level, {
+        fields: {
+          $set: level.fields.map((item, itemIndex) =>
+            itemIndex === index ? fields.createField<fields.Empty>('EMPTY', 'E', index) : item)
+        },
+        exits: { $unset: [label] }
+      })
+    }
+  },
+
   setExit: function (level: Level, index: number, label: Labels): Level {
     if (label in level.exits) {
       return { ...level }

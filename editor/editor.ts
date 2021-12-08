@@ -1,7 +1,7 @@
 import update from 'immutability-helper'
 import { Dragon } from '../engine/dragon'
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
-import { Field, createField, Wall, Empty } from '../levels/fields'
+import { Field, createField, Wall, Empty, Entrance, Exit } from '../levels/fields'
 import {
   LevelGetters, LevelPredicates, LevelSpeedControls, LevelCreation,
   GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters, Labels
@@ -146,6 +146,16 @@ export const EditorManipulation = {
 
     if (currentlyPlacedField.typeOfField === 'FINISH') {
       newLevel = LevelSpeedControls.removeFinish(newLevel)
+    }
+
+    if (currentlyPlacedField.typeOfField === 'ENTRANCE') {
+      const tmp = currentlyPlacedField as Entrance
+      newLevel = LevelSpeedControls.removeEntrance(level, index, tmp.attributes.label)
+    }
+
+    if (currentlyPlacedField.typeOfField === 'EXIT') {
+      const tmp = currentlyPlacedField as Exit
+      return LevelSpeedControls.removeExit(level, index, tmp.attributes.label)
     }
 
     return update(newLevel, {
