@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If, RegisterOperation } from '../levels/fields'
+import { Field, Scale, Finish, ArithmeticOperation, Arrow, Swap, If, RegisterOperation, Entrance } from '../levels/fields'
 import { GemColors, Level, LevelGetters, LevelManipulation, LevelSpeedControls, Signs } from '../levels/level'
 import { Dragon, DragonManipulation } from './dragon'
 
@@ -121,6 +121,11 @@ function changeState (currentState: EngineState): EngineState {
     case 'TAKE': {
       const currentRegisterOperation = currentField as RegisterOperation
       return handleRegisterOperation(currentState, currentRegisterOperation.attributes.targetGemColor, currentRegisterOperation.attributes.registerNumber, false)
+    }
+    case 'ENTRANCE': {
+      const currentEntrance = currentField as Entrance
+      const newDragon = DragonManipulation.moveDragon(currentState.dragon, currentEntrance.attributes.exit)
+      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(newDragon, 'U') } })
     }
     default:
       return { ...currentState }

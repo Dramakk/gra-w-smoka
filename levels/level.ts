@@ -21,7 +21,9 @@ export const GadgetTypeArray = [
   'SWAP',
   'TAKE',
   'STORE',
-  'IF'
+  'IF',
+  'ENTRANCE',
+  'EXIT'
 ]
 
 export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
@@ -33,7 +35,16 @@ export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.SwapOperationAttributes | fields.RegisterOperationAttributes | fields.IfAttributes
+export type GadgetOptionType =
+  | fields.FinishAttributes
+  | fields.ArrowAttributes
+  | fields.ScaleAttributes
+  | fields.ArithmeticOperationAttributes
+  | fields.SwapOperationAttributes
+  | fields.RegisterOperationAttributes
+  | fields.IfAttributes
+  | fields.EntranceAttributes
+  | fields.ExitAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -48,6 +59,9 @@ type FieldMap = {
 
 export const SignsArray = ['<', '=', '>']
 export type Signs = typeof SignsArray[number]
+
+export const LabelsArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
+export type Labels = typeof LabelsArray[number]
 
 // Representation of 20 tree registers
 export interface RegisterData {needed: number, stored: number}
@@ -278,6 +292,12 @@ export const LevelCreation = {
       case 'IF':
         if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
         else throw Error('Wrong options for IF')
+      case 'ENTRANCE':
+        if ('label' in options) return fields.createField<fields.Entrance>('ENTRANCE', `O ${options.label}`, index, { ...options })
+        else throw Error('Wrong options for ENTRANCE')
+      case 'EXIT':
+        if ('label' in options) return fields.createField<fields.Exit>('EXIT', `# ${options.label}`, index, { ...options })
+        else throw Error('Wrong options for EXIT')
       default:
         return fields.createField<fields.Empty>('EMPTY', 'E', index)
     }
