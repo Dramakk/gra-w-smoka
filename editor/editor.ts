@@ -4,7 +4,7 @@ import { Counter, add, setInfinity, createCounter, setZero, items } from '../hel
 import { Field, createField, Wall, Empty } from '../levels/fields'
 import {
   LevelGetters, LevelPredicates, LevelSpeedControls, LevelCreation,
-  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters
+  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters, Labels
 } from '../levels/level'
 
 export interface Editor {
@@ -105,6 +105,8 @@ export const EditorCreation = {
 
       return acc
     }, {} as TreeRegisters)
+    const entrances : Record<Labels, number> = {}
+    const exits : Record<Labels, number> = {}
 
     return {
       fields,
@@ -115,7 +117,9 @@ export const EditorCreation = {
       scalesGems,
       treeGems,
       treeRegisters,
-      finishId
+      finishId,
+      entrances,
+      exits
     }
   }
 }
@@ -166,6 +170,14 @@ export const EditorManipulation = {
 
     if (gadgetType === 'FINISH') {
       return LevelSpeedControls.setFinish(level, index)
+    }
+
+    if (gadgetType === 'ENTRANCE' && 'label' in options) {
+      return LevelSpeedControls.setEntrance(level, index, options.label)
+    }
+
+    if (gadgetType === 'EXIT' && 'label' in options) {
+      return LevelSpeedControls.setExit(level, index, options.label)
     }
 
     const newGadget = LevelCreation.newFieldFromType(index, gadgetType, options)

@@ -124,8 +124,13 @@ function changeState (currentState: EngineState): EngineState {
     }
     case 'ENTRANCE': {
       const currentEntrance = currentField as Entrance
-      const newDragon = DragonManipulation.moveDragon(currentState.dragon, currentEntrance.attributes.exit)
-      return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(newDragon, 'U') } })
+      // Stop dragon if there is no exit set
+      if (currentEntrance.attributes.exit === null) {
+        return update(currentState, { dragon: { $merge: { canMove: false } } })
+      } else {
+        const newDragon = DragonManipulation.moveDragon(currentState.dragon, currentEntrance.attributes.exit)
+        return update(currentState, { dragon: { $set: DragonManipulation.changeDragonDirection(newDragon, 'U') } })
+      }
     }
     default:
       return { ...currentState }
