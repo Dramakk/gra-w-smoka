@@ -21,7 +21,9 @@ export const GadgetTypeArray = [
   'SWAP',
   'TAKE',
   'STORE',
-  'IF'
+  'IF',
+  'ENTRANCE',
+  'EXIT'
 ]
 
 export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
@@ -33,7 +35,16 @@ export type Directions = 'U' | 'L' | 'D' | 'R'
 export type GemColors = typeof GemColorsArray[number]
 
 // Type for dropdown options of fields to place by user.
-export type GadgetOptionType = fields.FinishAttributes | fields.ArrowAttributes | fields.ScaleAttributes | fields.ArithmeticOperationAttributes | fields.SwapOperationAttributes | fields.RegisterOperationAttributes | fields.IfAttributes
+export type GadgetOptionType =
+  | fields.FinishAttributes
+  | fields.ArrowAttributes
+  | fields.ScaleAttributes
+  | fields.ArithmeticOperationAttributes
+  | fields.SwapOperationAttributes
+  | fields.RegisterOperationAttributes
+  | fields.IfAttributes
+  | fields.EntranceAttributes
+  | fields.ExitAttributes
 
 // Utility type to extract keys from given union of objects
 type Keys<T> = T extends {[key: string]: any} ? keyof T : never
@@ -49,6 +60,9 @@ type FieldMap = {
 export const SignsArray = ['<', '=', '>']
 export type Signs = typeof SignsArray[number]
 
+export const LabelsArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K']
+export type Labels = typeof LabelsArray[number]
+
 // Representation of 20 tree registers
 export interface RegisterData {needed: number, stored: number}
 export interface TreeRegisters {[key: number]: RegisterData}
@@ -63,6 +77,8 @@ export interface Level {
   treeGems: Record<GemColors, number>
   treeRegisters: TreeRegisters
   finishId: number
+  entrances: Record<Labels, number>
+  exits: Record<Labels, number>
 }
 
 export const LevelPredicates = {
@@ -179,6 +195,55 @@ export const LevelSpeedControls = {
       },
       finishId: { $set: index }
     })
+  },
+
+  setEntrance: function (level: Level, index: number, label: Labels): Level {
+    // checks if entrance with that lebel is already placed
+    if (label in level.entrances || !(label in level.exits)) {
+      return { ...level }
+    } else {
+      return update(level, {
+        fields: {
+          $set: level.fields.map((field, idx) =>
+            index === idx ? fields.createField('ENTRANCE', `O ${label}`, index, { label: label, exit: level.exits[label] }) : field)
+        },
+        entrances: { $merge: { [label]: index } }
+      })
+    }
+  },
+
+  removeEntrance: function (level: Level, index: number, label: Labels): Level {
+    return update(level, {
+      entrances: { $unset: [label] }
+    })
+  },
+
+  removeExit: function (level: Level, index: number, label: Labels): Level {
+    if (label in level.entrances) {
+      return { ...level }
+    } else {
+      return update(level, {
+        fields: {
+          $set: level.fields.map((item, itemIndex) =>
+            itemIndex === index ? fields.createField<fields.Empty>('EMPTY', 'E', index) : item)
+        },
+        exits: { $unset: [label] }
+      })
+    }
+  },
+
+  setExit: function (level: Level, index: number, label: Labels): Level {
+    if (label in level.exits) {
+      return { ...level }
+    } else {
+      return update(level, {
+        fields: {
+          $set: level.fields.map((field, idx) =>
+            index === idx ? fields.createField('EXIT', `# ${label}`, index, { label: label }) : field)
+        },
+        exits: { $merge: { [label]: index } }
+      })
+    }
   }
 }
 
@@ -216,7 +281,9 @@ export const LevelCreation = {
       RED: 0,
       GREEN: 0
     }
-
+    // TODO: remove, add to parser
+    const entrances : Record<Labels, number> = {}
+    const exits : Record<Labels, number> = {}
     return {
       fields,
       fieldsPerRow,
@@ -226,7 +293,9 @@ export const LevelCreation = {
       scalesGems,
       treeGems,
       treeRegisters,
-      finishId
+      finishId,
+      entrances,
+      exits
     }
   },
 
@@ -278,6 +347,12 @@ export const LevelCreation = {
       case 'IF':
         if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
         else throw Error('Wrong options for IF')
+      case 'ENTRANCE':
+        if ('label' in options) return fields.createField<fields.Entrance>('ENTRANCE', `O '${options.label}''`, index, { ...options })
+        else throw Error('Wrong options for ENTRANCE')
+      case 'EXIT':
+        if ('label' in options) return fields.createField<fields.Exit>('EXIT', `# '${options.label}'`, index, { ...options })
+        else throw Error('Wrong options for EXIT')
       default:
         return fields.createField<fields.Empty>('EMPTY', 'E', index)
     }

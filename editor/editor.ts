@@ -1,10 +1,10 @@
 import update from 'immutability-helper'
 import { Dragon } from '../engine/dragon'
 import { Counter, add, setInfinity, createCounter, setZero, items } from '../helpers/counter'
-import { Field, createField, Wall, Empty } from '../levels/fields'
+import { Field, createField, Wall, Empty, Entrance, Exit } from '../levels/fields'
 import {
   LevelGetters, LevelPredicates, LevelSpeedControls, LevelCreation,
-  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters
+  GadgetOptionType, GadgetType, GadgetTypeArray, GemColors, Level, TreeRegisters, Labels
 } from '../levels/level'
 
 export interface Editor {
@@ -105,6 +105,8 @@ export const EditorCreation = {
 
       return acc
     }, {} as TreeRegisters)
+    const entrances : Record<Labels, number> = {}
+    const exits : Record<Labels, number> = {}
 
     return {
       fields,
@@ -115,7 +117,9 @@ export const EditorCreation = {
       scalesGems,
       treeGems,
       treeRegisters,
-      finishId
+      finishId,
+      entrances,
+      exits
     }
   }
 }
@@ -144,6 +148,16 @@ export const EditorManipulation = {
       newLevel = LevelSpeedControls.removeFinish(newLevel)
     }
 
+    if (currentlyPlacedField.typeOfField === 'ENTRANCE') {
+      const tmp = currentlyPlacedField as Entrance
+      newLevel = LevelSpeedControls.removeEntrance(level, index, tmp.attributes.label)
+    }
+
+    if (currentlyPlacedField.typeOfField === 'EXIT') {
+      const tmp = currentlyPlacedField as Exit
+      return LevelSpeedControls.removeExit(level, index, tmp.attributes.label)
+    }
+
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((item, itemIndex) =>
@@ -166,6 +180,14 @@ export const EditorManipulation = {
 
     if (gadgetType === 'FINISH') {
       return LevelSpeedControls.setFinish(level, index)
+    }
+
+    if (gadgetType === 'ENTRANCE' && 'label' in options) {
+      return LevelSpeedControls.setEntrance(level, index, options.label)
+    }
+
+    if (gadgetType === 'EXIT' && 'label' in options) {
+      return LevelSpeedControls.setExit(level, index, options.label)
     }
 
     const newGadget = LevelCreation.newFieldFromType(index, gadgetType, options)
