@@ -51,6 +51,7 @@ export default function Game (props: GameProps): React.ReactElement {
         <div className='game-container'>
           <BoardComponent
             dragonPosition={dragon.fieldId}
+            dragonDirectionHistory={dragon.directionHistory}
             rowCount={LevelGetters.getRowCount(currentLevelState)}
             fieldsPerRow={LevelGetters.getFieldsPerRow(currentLevelState)}
             board={board}

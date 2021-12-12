@@ -6,16 +6,23 @@ import update from 'immutability-helper'
 export function manageStep (state: GameState): GameState {
   const nextState = step(state.engineState)
 
+  const directionHistory = update(state.engineState.dragon.directionHistory, {
+    $set: {
+      previous: state.engineState.dragon.directionHistory.current,
+      current: nextState.dragon.direction
+    }
+  })
+  const nextStateWithUpdatedHistory = update(nextState, { dragon: { $merge: { directionHistory } } })
   if (!state.engineState.dragon.canMove) {
-    return manageStop(update(state, { engineState: { $set: nextState } }))
+    return manageStop(update(state, { engineState: { $set: nextStateWithUpdatedHistory } }))
   }
 
-  return update(state, { engineState: { $set: nextState } })
+  return update(state, { engineState: { $set: nextStateWithUpdatedHistory } })
 }
 
 export function manageStart (state: GameState, payload: StartPayload): GameState {
   const dragon = getDragonFromState(state)
-  if (!dragon.fieldId || !dragon.direction) {
+  if (!dragon.fieldId || !dragon.direction || state.loop) {
     // Just don't start the game
     return { ...state }
   }

@@ -6,12 +6,16 @@ export interface Dragon {
   direction: Directions;
   gemsInPocket: Record<GemColors, number>
   canMove: boolean;
+  directionHistory: {
+    previous: Directions | null;
+    current: Directions | null;
+  }
 }
 
 export const DragonManipulation = {
   changeDragonDirection: function (dragon: Dragon, direction: Directions): Dragon {
     return update(dragon, {
-      $merge: { direction: direction }
+      $merge: { direction }
     })
   },
 
