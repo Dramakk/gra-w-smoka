@@ -8,6 +8,7 @@ export default function GemControls (props: {gemColor: GemColors, howMany: Recor
     const addButtons = who === 'SCALE' ? false : props.canEdit
 
     return <ValueWithControls
+        key={`${props.gemColor}${who}`}
         current={props.howMany[who]}
         canEdit={addButtons}
         actionType='CHANGE_GEM_QTY'

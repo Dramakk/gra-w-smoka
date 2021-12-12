@@ -59,7 +59,7 @@ export default function Game (props: GameProps): React.ReactElement {
             canEdit={canEdit}
           />
           <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
-          <BottomTooltip fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
+          <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           {state.editor
             ? <div>

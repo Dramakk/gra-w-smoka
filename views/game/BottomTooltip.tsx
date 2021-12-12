@@ -5,7 +5,17 @@ import { ButtonDescription } from '../helpers/Modal'
 import GadgetEdit, { SelectedOptions } from './GadgetEdit'
 import { DispatchContext } from './Game'
 
-function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
+interface BottomTooltipItemProps {
+  gadgetToPlace: GadgetInfo
+  isSelected: boolean
+}
+
+interface BottomTooltipProps {
+  fieldsToPlace: GadgetInfo[]
+  selectedField: string
+}
+
+function BottomTooltipItem (props: BottomTooltipItemProps): ReactElement {
   const dispatch = useContext(DispatchContext)
   const [showModal, updateShowModal] = useState(false)
   const options = generateGadgetDescription(props.gadgetToPlace[0])
@@ -42,15 +52,18 @@ function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
 
   return (
       <span>
-        <button onClick={onClick}>{props.gadgetToPlace[0]} {props.gadgetToPlace[1]}</button>
+        <button className={props.isSelected ? 'item-selected' : ''} onClick={onClick}>
+          {props.gadgetToPlace[0]}
+          {props.gadgetToPlace[1] !== Infinity && props.gadgetToPlace[1]}
+        </button>
         <GadgetEdit buttons={modalButtons} changeSelectedOptions={changeSelectedOptions} selectedOptions={selectedOptions} options={options} showModal={showModal} ></GadgetEdit>
       </span>
   )
 }
 
-export default function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
+export default function BottomTooltip (props: BottomTooltipProps): ReactElement {
   function buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {
-    return <BottomTooltipItem key={gadgetToPlaceInfo[0]} gadgetToPlace={gadgetToPlaceInfo} />
+    return <BottomTooltipItem key={gadgetToPlaceInfo[0]} isSelected={gadgetToPlaceInfo[0] === props.selectedField} gadgetToPlace={gadgetToPlaceInfo} />
   }
 
   return (
