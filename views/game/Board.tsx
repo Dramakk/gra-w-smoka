@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactElement } from 'react'
 import FieldComponent from './Field'
-import { Directions, Level, LevelGetters, LevelPredicates } from '../../levels/level'
+import { Directions, Level, LevelGetters } from '../../levels/level'
 
 interface BoardProps {
   dragonPosition: number;
@@ -26,7 +26,7 @@ export default function BoardComponent (props:BoardProps): ReactElement {
     <div className='board-container' style={calculatedStyles}>
         {[...Array(fieldsPerRow * rowCount).keys()].map((fieldIndex: number) => {
           const field = board[fieldIndex]
-          return <FieldComponent editorMode={props.editorMode} isPlacedByUser={LevelPredicates.isPlacedByUser(props.level, field.id)} displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
+          return <FieldComponent displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
         })}
       </div>
   )

@@ -5,6 +5,7 @@
 }
 
 .board-field {
+  text-align: center;
   position: relative;
 
   .dragon-field {
@@ -13,9 +14,4 @@
     height: 100%;
     top: 0;
   }
-}
-
-.item-selected {
-  // TODO: Przenieść i zmienić kolorek
-  outline: 2px solid black;
 }

@@ -1,8 +1,5 @@
-import React, { ReactElement, useContext, useState } from 'react'
-import { generateGadgetDescription } from '../../levels/fields'
-import { GadgetInfo, GadgetOptionKeys } from '../../levels/level'
-import { ButtonDescription } from '../helpers/Modal'
-import GadgetEdit, { SelectedOptions } from './GadgetEdit'
+import React, { ReactElement, useContext } from 'react'
+import { GadgetInfo } from '../../levels/level'
 import { DispatchContext } from './Game'
 
 interface BottomTooltipItemProps {
@@ -17,46 +14,17 @@ interface BottomTooltipProps {
 
 function BottomTooltipItem (props: BottomTooltipItemProps): ReactElement {
   const dispatch = useContext(DispatchContext)
-  const [showModal, updateShowModal] = useState(false)
-  const options = generateGadgetDescription(props.gadgetToPlace[0])
-  // We can choose at most two options for given field
-  const [selectedOptions, changeSelectedOptions] = useState(Object
-    .keys(options)
-    .reduce((prev, optionKey: GadgetOptionKeys) => {
-      prev[optionKey] = options[optionKey][0]
-      return { ...prev }
-    }, {} as SelectedOptions))
-  const modalButtons: ButtonDescription[] = [
-    {
-      buttonText: 'Wróć',
-      buttonType: 'primary',
-      onClick: () => updateShowModal(false)
-    },
-    {
-      buttonText: 'Wybierz',
-      buttonType: 'success',
-      onClick: () => {
-        dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.gadgetToPlace[0], option: selectedOptions } })
-        updateShowModal(false)
-      }
-    }
-  ]
 
   function onClick () {
-    if (Object.keys(options).length === 0) {
-      dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.gadgetToPlace[0], option: {} } })
-    } else if (props.gadgetToPlace[1] > 0) {
-      updateShowModal(true)
-    }
+    dispatch({ type: 'SELECT_GADGET', payload: { fieldType: props.gadgetToPlace[0] } })
   }
 
   return (
       <span>
-        <button className={props.isSelected ? 'item-selected' : ''} onClick={onClick}>
+        <button className={`bottom-tooltip-item ${props.isSelected ? 'item-selected' : ''}`} onClick={onClick}>
           {props.gadgetToPlace[0]}
           {props.gadgetToPlace[1] !== Infinity && props.gadgetToPlace[1]}
         </button>
-        <GadgetEdit buttons={modalButtons} changeSelectedOptions={changeSelectedOptions} selectedOptions={selectedOptions} options={options} showModal={showModal} ></GadgetEdit>
       </span>
   )
 }

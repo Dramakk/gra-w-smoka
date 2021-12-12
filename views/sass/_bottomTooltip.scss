@@ -1,0 +1,11 @@
+.bottom-tooltip {
+  .bottom-tooltip-item {
+    margin: 5px;
+    transition: background-color 0.5s ease;
+
+    &.item-selected {
+      // TODO: Przenieść i zmienić kolorek
+      background-color: $successColor;
+    }
+  }
+}

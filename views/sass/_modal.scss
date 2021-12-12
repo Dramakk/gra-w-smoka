@@ -3,15 +3,20 @@
   border-radius: 20px;
 
   background-color: $backgroundLight;
-  box-shadow: $shadow; 
+  box-shadow: $shadow;
+
+  @media screen and (max-width: $tabletWidth) {
+    padding: 20px;
+  }
 
   .modal-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
+
     h2 {
       text-align: center;
+      letter-spacing: 2px;
       margin: 5px 0;
     }
 
@@ -45,4 +50,3 @@
     opacity: 1;
   }
 }
-

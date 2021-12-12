@@ -11,6 +11,7 @@ import Tree from './Tree'
 import BottomTooltip from './BottomTooltip'
 import SpeedControls from './SpeedControls'
 import GadgetsSelection from './GadgetsSelection'
+import GadgetEdit, { SelectedOptions } from './GadgetEdit'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
@@ -23,7 +24,16 @@ export default function Game (props: GameProps): React.ReactElement {
   const [state, dispatch] = React.useReducer(stateReducer,
     {
       engineState: props.engine,
-      uiState: { fieldToAdd: null, option: null, canDelete: false },
+      uiState: {
+        fieldToAdd: null,
+        selectedOptions: null,
+        gadgetEditState: {
+          fieldId: null,
+          showModal: false,
+          canEdit: false,
+          availableOptions: {}
+        }
+      },
       editor: props.editor,
       loop: null
     })
@@ -31,8 +41,8 @@ export default function Game (props: GameProps): React.ReactElement {
   const dragon = getDragonFromState(state)
   const currentLevelState = getLevelFromState(state)
   const canExport = !!(dragon.fieldId && dragon.direction) &&
-  state.engineState.level.fields
-    .filter(field => field.typeOfField === 'FINISH').length !== 0
+    state.engineState.level.fields
+      .filter(field => field.typeOfField === 'FINISH').length !== 0
   const canEdit = state.editor && !state.loop
 
   // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
@@ -68,6 +78,11 @@ export default function Game (props: GameProps): React.ReactElement {
             </div>
             : null
           }
+          <GadgetEdit
+            state={state.uiState.gadgetEditState}
+            selectedGadget={state.uiState.fieldToAdd}
+            selectedOptions={state.uiState.selectedOptions as SelectedOptions}
+          />
         </div>
       </DispatchContext.Provider>
   )
