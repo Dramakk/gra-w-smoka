@@ -39,7 +39,7 @@ export type PossiblePayloads =
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
-export interface UIState { fieldToAdd: GadgetType, option: GadgetOptionType; canDelete: boolean }
+export interface UIState { fieldToAdd: GadgetType, option: GadgetOptionType, canDelete: boolean }
 
 // Holds state of the whole game (engine + editor + UI)
 export interface GameState { engineState: EngineState, uiState: UIState, editor?: Editor, loop?: ReturnType<typeof setInterval> }

@@ -71,7 +71,7 @@ export default function Game (props: GameProps): React.ReactElement {
             </div>
             : null
           }
-      </div>
-    </DispatchContext.Provider>
+        </div>
+      </DispatchContext.Provider>
   )
 }
