@@ -8,8 +8,10 @@ import { Directions } from '../../levels/level'
 import Dragon from './Dragon'
 
 interface FieldProps {
-  field: Field
+  field: Field;
+  isPlacedByUser: boolean;
   displayDragon: boolean;
+  editorMode: boolean;
   dragonDirectionHistory: {
     previous: Directions;
     current: Directions;
@@ -19,14 +21,15 @@ interface FieldProps {
 export default function FieldComponent (props: FieldProps): React.ReactElement {
   const [showModal, updateShowModal] = useState(false)
   const options = generateGadgetDescription(props.field.typeOfField)
-  // We can choose at most two options for given field
-  const [selectedOptions, changeSelectedOptions] = useState(props.field.attributes as SelectedOptions)
+  const [selectedOptions, changeSelectedOptions] = useState(getSelectedOptions())
   const dispatch = useContext(DispatchContext)
   const modalButtons: ButtonDescription[] = [
     {
       buttonText: 'Usuń',
       buttonType: 'danger',
       onClick: () => {
+        dispatch({ type: 'DELETE_MODE' })
+        dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
         updateShowModal(false)
       }
     },
@@ -34,18 +37,24 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
       buttonText: 'Wróć',
       buttonType: 'primary',
       onClick: () => updateShowModal(false)
-    },
-    {
+    }
+  ]
+
+  if (Object.keys(options).length !== 0) {
+    modalButtons.push({
       buttonText: 'Edytuj',
       buttonType: 'success',
       onClick: () => {
+        dispatch({ type: 'DELETE_MODE' })
+        dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
         dispatch({ type: 'SELECT_FIELD', payload: { fieldType: props.field.typeOfField, option: selectedOptions } })
         dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
         updateShowModal(false)
       }
-    }
-  ]
-  let animationClass
+    })
+  }
+
+  let animationClass: string
 
   switch (props.dragonDirectionHistory.previous) {
     case 'U':
@@ -64,25 +73,34 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
       animationClass = ''
   }
 
+  function getSelectedOptions () {
+    if (props.field.typeOfField === 'EMPTY' || props.field.typeOfField === 'START' || props.field.typeOfField === 'FINISH') {
+      return {} as SelectedOptions
+    }
+    return props.field.attributes as SelectedOptions
+  }
+
   function onClick () {
-    console.log(options)
-    if (Object.keys(options).length === 0) {
+    if (props.field.typeOfField === 'EMPTY') {
       dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
-    } else if (props.field.typeOfField !== 'EMPTY') {
+    } else if (props.isPlacedByUser || props.editorMode) {
       updateShowModal(true)
     }
   }
+
   return (
-    <div onClick={onClick} className='board-field'>
-      <div className="board-content">{props.field.image}</div>
-      <CSSTransition
-        in={props.displayDragon}
-        timeout={1000}
-        classNames={animationClass}
-      >
-        <Dragon className={animationClass} displayDragon={props.displayDragon}/>
-      </CSSTransition>
+    <>
+      <div onClick={onClick} className='board-field'>
+        <div className="board-content">{props.field.image}</div>
+        <CSSTransition
+          in={props.displayDragon}
+          timeout={1000}
+          classNames={animationClass}
+        >
+          <Dragon className={animationClass} displayDragon={props.displayDragon}/>
+        </CSSTransition>
+      </div>
       <GadgetEdit options={options} showModal={showModal} buttons={modalButtons} selectedOptions={selectedOptions} changeSelectedOptions={changeSelectedOptions}></GadgetEdit>
-    </div>
+    </>
   )
 }

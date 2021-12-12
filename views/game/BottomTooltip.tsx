@@ -6,6 +6,7 @@ import GadgetEdit, { SelectedOptions } from './GadgetEdit'
 import { DispatchContext } from './Game'
 
 function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
+  const dispatch = useContext(DispatchContext)
   const [showModal, updateShowModal] = useState(false)
   const options = generateGadgetDescription(props.gadgetToPlace[0])
   // We can choose at most two options for given field
@@ -15,7 +16,6 @@ function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
       prev[optionKey] = options[optionKey][0]
       return { ...prev }
     }, {} as SelectedOptions))
-  const dispatch = useContext(DispatchContext)
   const modalButtons: ButtonDescription[] = [
     {
       buttonText: 'Wróć',
@@ -49,8 +49,6 @@ function BottomTooltipItem (props: { gadgetToPlace: GadgetInfo}): ReactElement {
 }
 
 export default function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): ReactElement {
-  const dispatch = useContext(DispatchContext)
-
   function buildTooltipItem (gadgetToPlaceInfo: GadgetInfo): ReactElement {
     return <BottomTooltipItem key={gadgetToPlaceInfo[0]} gadgetToPlace={gadgetToPlaceInfo} />
   }
@@ -60,7 +58,6 @@ export default function BottomTooltip (props: {fieldsToPlace: GadgetInfo[] }): R
       {props.fieldsToPlace.map(
         gadgetToPlaceInfo => buildTooltipItem(gadgetToPlaceInfo))
       }
-      <button onClick={() => dispatch({ type: 'DELETE_MODE' })}>DELETE PLACED FIELD</button>
     </div>
   )
 }

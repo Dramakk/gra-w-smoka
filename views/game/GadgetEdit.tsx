@@ -11,7 +11,12 @@ interface GadgetEditProps {
   changeSelectedOptions: (arg: SelectedOptions) => void
   selectedOptions: SelectedOptions
 }
-
+/*
+  This component is used as edit window for all gadgets. Possible options and option selection handle
+  must be provided in props. Currently it's used in two cases:
+  - user selects gadget to place on board and has to select options
+  - user clicks gadget that's already on the board and can decide to delete it or change it's options
+*/
 export default function GadgetEdit (props: GadgetEditProps): React.ReactElement {
   let dropdown = null
 
@@ -23,6 +28,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
     }
   }
 
+  // Generate dropdown for options
   if (Object.keys(props.options).length) {
     dropdown = Object.keys(props.options).reduce((previousDropdown: React.ReactElement, optionKey: GadgetOptionKeys) => {
       return (

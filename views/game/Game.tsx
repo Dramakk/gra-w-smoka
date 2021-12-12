@@ -4,7 +4,6 @@ import { items } from '../../helpers/counter'
 import { stateReducer } from '../../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../../state_manager/accessors'
 import ReactDOM from 'react-dom'
-import { LevelGetters } from '../../levels/level'
 import { Editor, EditorCreation } from '../../editor/editor'
 import BoardComponent from './Board'
 import GemPanel from './GemPanel'
@@ -31,8 +30,6 @@ export default function Game (props: GameProps): React.ReactElement {
 
   const dragon = getDragonFromState(state)
   const currentLevelState = getLevelFromState(state)
-  const board = [...Array(LevelGetters.getLevelSize(currentLevelState)).keys()]
-    .map(index => { return LevelGetters.getField(currentLevelState, index) })
   const canExport = !!(dragon.fieldId && dragon.direction) &&
   state.engineState.level.fields
     .filter(field => field.typeOfField === 'FINISH').length !== 0
@@ -52,9 +49,8 @@ export default function Game (props: GameProps): React.ReactElement {
           <BoardComponent
             dragonPosition={dragon.fieldId}
             dragonDirectionHistory={dragon.directionHistory}
-            rowCount={LevelGetters.getRowCount(currentLevelState)}
-            fieldsPerRow={LevelGetters.getFieldsPerRow(currentLevelState)}
-            board={board}
+            editorMode={canEdit}
+            level={state.engineState.level}
           />
           <GemPanel
             treeGems={state.engineState.level.treeGems}

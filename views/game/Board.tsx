@@ -1,13 +1,11 @@
-import * as fields from '../../levels/fields'
 import React, { CSSProperties, ReactElement } from 'react'
 import FieldComponent from './Field'
-import { Directions } from '../../levels/level'
+import { Directions, Level, LevelGetters, LevelPredicates } from '../../levels/level'
 
 interface BoardProps {
   dragonPosition: number;
-  board: fields.Field[];
-  rowCount: number;
-  fieldsPerRow: number;
+  level: Level;
+  editorMode: boolean;
   dragonDirectionHistory: {
     previous: Directions;
     current: Directions;
@@ -15,16 +13,20 @@ interface BoardProps {
 }
 
 export default function BoardComponent (props:BoardProps): ReactElement {
+  const rowCount = LevelGetters.getRowCount(props.level)
+  const fieldsPerRow = LevelGetters.getFieldsPerRow(props.level)
   const calculatedStyles: CSSProperties = {
-    gridTemplateColumns: `repeat(${props.fieldsPerRow}, 1fr)`,
-    gridTemplateRows: `repeat(${props.rowCount}, 1fr)`
+    gridTemplateColumns: `repeat(${fieldsPerRow}, 1fr)`,
+    gridTemplateRows: `repeat(${rowCount}, 1fr)`
   }
+  const board = [...Array(LevelGetters.getLevelSize(props.level)).keys()]
+    .map(index => { return LevelGetters.getField(props.level, index) })
 
   return (
     <div className='board-container' style={calculatedStyles}>
-        {[...Array(props.fieldsPerRow * props.rowCount).keys()].map((fieldIndex: number) => {
-          const field = props.board[fieldIndex]
-          return <FieldComponent displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
+        {[...Array(fieldsPerRow * rowCount).keys()].map((fieldIndex: number) => {
+          const field = board[fieldIndex]
+          return <FieldComponent editorMode={props.editorMode} isPlacedByUser={LevelPredicates.isPlacedByUser(props.level, field.id)} displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
         })}
       </div>
   )
