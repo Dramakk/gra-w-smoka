@@ -71,7 +71,11 @@ export const EditorCreation = {
         RED: 0,
         GREEN: 0
       },
-      canMove: true
+      canMove: true,
+      directionHistory: {
+        previous: null,
+        current: null
+      }
     }
 
     const treeGems: Record<GemColors, number> = {

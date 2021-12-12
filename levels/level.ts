@@ -175,7 +175,7 @@ export const LevelSpeedControls = {
 
   setStart: function (level: Level, index: number, direction: Directions) : Level {
     return update(level, {
-      baseDragon: { $merge: { fieldId: index, direction: direction } },
+      baseDragon: { $merge: { fieldId: index, direction: direction, directionHistory: { previous: null, current: direction } } },
       gadgets: { $set: counterDelete(level.gadgets, 'START') }
     })
   },
