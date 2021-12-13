@@ -13,6 +13,7 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
   const level = getLevelFromState(state)
   const field = LevelGetters.getField(level, fieldId)
 
+  // If field is not empty and we can edit the gadget then open edit modal and populate options.
   if (field.typeOfField !== 'EMPTY' && (LevelPredicates.isPlacedByUser(level, fieldId) || state.editor)) {
     return update(state, {
       uiState: {
@@ -30,6 +31,7 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
     })
   }
 
+  // If there field is empty, try to place gadget on board
   return managePlaceField(state, payload)
 }
 

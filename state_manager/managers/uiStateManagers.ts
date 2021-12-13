@@ -7,6 +7,7 @@ import { manageDeleteField, managePlaceField } from './placementManagers'
 
 export function manageSelectGadget (state: GameState, payload: SelectGadgetPayload): GameState {
   const availableOptions = generateGadgetDescription(payload.fieldType)
+  // Select first option in every dropdown menu
   const selectedOptions = Object
     .keys(availableOptions)
     .reduce((prev, optionKey: GadgetOptionKeys) => {
@@ -15,6 +16,7 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
     }, {} as SelectedOptions)
 
   if (state.uiState.fieldToAdd === payload.fieldType) {
+    // User clicked on already selected gadget - deselect
     return update(state, {
       uiState: {
         $merge: manageClearUIState(state).uiState
@@ -23,9 +25,11 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
   }
 
   if (Object.keys(availableOptions).length === 0) {
+    // There are no options for this gaget - don't open modal
     return update(state, { uiState: { $merge: { fieldToAdd: payload.fieldType } } })
   }
 
+  // Gadget has options so open modal and populate options
   return update(state, {
     uiState: {
       $merge: {
@@ -50,6 +54,8 @@ export function manageCommitEdit (state: GameState): GameState {
     const newState = update(manageDeleteField(state, { index: uiStateCopy.gadgetEditState.fieldId }), { uiState: { $set: uiStateCopy } })
     return managePlaceField(newState, { index: state.uiState.gadgetEditState.fieldId })
   }
+
+  // Otherwise just close modal and clean up
   return update(state, { uiState: { gadgetEditState: { $set: manageClearUIState(state).uiState.gadgetEditState } } })
 }
 

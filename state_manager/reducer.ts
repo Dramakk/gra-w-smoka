@@ -11,8 +11,8 @@ import { SelectedOptions } from '../views/game/GadgetEdit'
 export type PossibleActions =
   | 'START' // Start the game action
   | 'PAUSE' // Pause the game action
-  | 'STOP' // Stop the game action and return dragon to start
-  | 'RESET' // Reset game action - return dragon to start and clear board
+  | 'STOP' // Stop the game action like reset but don't clear placed gadgets
+  | 'RESET' // Reset the game - reset game to state after import
   | 'STEP' // Invoked at each step
   | 'SELECT_GADGET' // Invoked when user selects field to place
   | 'SELECT_OPTIONS' // Invoked when user selects options for gadget
