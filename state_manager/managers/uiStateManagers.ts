@@ -72,7 +72,7 @@ export function manageClearUIState (state: GameState): GameState {
           availableOptions: {},
           canEdit: false
         },
-        selectedOptions: null
+        selectedOptions: {}
       }
     }
   })

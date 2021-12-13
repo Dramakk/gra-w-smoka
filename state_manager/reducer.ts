@@ -46,14 +46,14 @@ export type PossiblePayloads =
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
 export interface GadgetEditState {
-  fieldId: number,
+  fieldId: number | null,
   showModal: boolean,
   canEdit: boolean
   availableOptions: GadgetOptionDescription
 }
 
 export interface UIState {
-  fieldToAdd: GadgetType,
+  fieldToAdd: GadgetType | null,
   selectedOptions: SelectedOptions,
   gadgetEditState: GadgetEditState
 }

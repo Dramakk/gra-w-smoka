@@ -1,4 +1,5 @@
 import { resetDragon, resetEngineState, step } from '../../engine/engine'
+import { LevelSpeedControls } from '../../levels/level'
 import { getDragonFromState } from '../accessors'
 import { GameState, StartPayload } from '../reducer'
 import update from 'immutability-helper'
@@ -14,7 +15,7 @@ export function manageStep (state: GameState): GameState {
   })
   const nextStateWithUpdatedHistory = update(nextState, { dragon: { $merge: { directionHistory } } })
   if (!state.engineState.dragon.canMove) {
-    return manageStop(update(state, { engineState: { $set: nextStateWithUpdatedHistory } }))
+    return managePause(update(state, { engineState: { $set: nextStateWithUpdatedHistory } }))
   }
 
   return update(state, { engineState: { $set: nextStateWithUpdatedHistory } })
@@ -44,8 +45,11 @@ export function managePause (state: GameState): GameState {
 
 export function manageStop (state: GameState): GameState {
   const newState = state.loop ? managePause(state) : state
+  const afterDragonReset = resetDragon(newState.engineState)
+  const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(afterDragonReset.level))
+  const engineStateAfterReset = update(afterDragonReset, { level: { $set: levelAfterReset } })
 
-  return update(state, { engineState: { $set: resetDragon(newState.engineState) } })
+  return update(newState, { engineState: { $set: engineStateAfterReset } })
 }
 
 export function manageReset (state: GameState): GameState {
