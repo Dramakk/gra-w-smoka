@@ -1,0 +1,25 @@
+.gadget-edit-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .gadget-edit-picture {
+    width: 64px;
+    height: 64px;
+    // TODO: Usunąć po dodaniu ikon
+    background: red;
+    margin: auto;
+  }
+
+  .gadget-edit-options {
+    display: grid;
+    grid-template-columns: auto;
+
+    select {
+      margin: 10px 0;
+      text-align: center;
+      width: 100%;
+      @include fontSize(30px);
+      font-family: "Mouse Memoirs", sans-serif;
+    }
+  }
+}

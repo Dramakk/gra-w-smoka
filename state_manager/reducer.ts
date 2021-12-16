@@ -1,21 +1,25 @@
 import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
-import { GadgetOptionType, GadgetType, GemColors, RegisterData } from '../levels/level'
+import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
-import { manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
-import { manageDeleteMode, manageSelectField } from './managers/uiStateManagers'
-import { manageDeleteField, managePlaceField } from './managers/placementManagers'
+import { managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
+import { manageClearUIState, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
+import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
+import { SelectedOptions } from '../views/game/GadgetEdit'
 
 export type PossibleActions =
   | 'START' // Start the game action
-  | 'STOP' // Stop the game action
-  | 'RESET' // Reset gamem action
+  | 'PAUSE' // Pause the game action
+  | 'STOP' // Stop the game action like reset but don't clear placed gadgets
+  | 'RESET' // Reset the game - reset game to state after import
   | 'STEP' // Invoked at each step
-  | 'SELECT_FIELD' // Invoked when user selects field to place
-  | 'DESELECT_FIELD' // Invoked after user places the field
+  | 'SELECT_GADGET' // Invoked when user selects field to place
+  | 'SELECT_OPTIONS' // Invoked when user selects options for gadget
+  | 'CLEAR_UI_STATE' // Invoked when user closes gadget edit modal
+  | 'COMMIT_EDIT' // Invoked when user clicks 'Zatwierdź' button in edit modal
+  | 'DELETE_FIELD' // Invoked when user clicks 'Usuń' button in edit modal
   | 'FIELD_CLICK' // Invoked when user clicks field on the map
-  | 'DELETE_MODE' // Invoked when user switches to/from delete mode
   | 'CHANGE_GADGET_QTY' // Invoked in editor mode, when user changes quantity of gadgets available to be placed on the map
   | 'CHANGE_GEM_QTY' // Invoked in editor mode, when user changes quantity gems held by the dragon or needed by the tree
   | 'CHANGE_REGISTER' // Invoked in editor mode, when user changes register description
@@ -23,23 +27,36 @@ export type PossibleActions =
 // Here are types describing possible payloads of actions
 // Naming convention ActionTypePayload
 export interface StartPayload {timeout: number, dispatch: React.Dispatch<Action>}
-export interface SelectFieldPayload {fieldType: GadgetType, option?: GadgetOptionType }
+export interface SelectGadgetPayload {fieldType: GadgetType }
 export interface FieldClickPayload { index: number }
 export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: number}
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
 export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
+export interface SelectOptionsPayload { selectedOptions: SelectedOptions }
 
 export type PossiblePayloads =
   | StartPayload
-  | SelectFieldPayload
+  | SelectGadgetPayload
   | FieldClickPayload
   | ChangeGadgetQtyPayload
   | ChangeGemQtyPayload
   | ChangeRegisterPayload
+  | SelectOptionsPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
-export interface UIState { fieldToAdd: GadgetType, option: GadgetOptionType; canDelete: boolean }
+export interface GadgetEditState {
+  fieldId: number | null,
+  showModal: boolean,
+  canEdit: boolean
+  availableOptions: GadgetOptionDescription
+}
+
+export interface UIState {
+  fieldToAdd: GadgetType | null,
+  selectedOptions: SelectedOptions,
+  gadgetEditState: GadgetEditState
+}
 
 // Holds state of the whole game (engine + editor + UI)
 export interface GameState { engineState: EngineState, uiState: UIState, editor?: Editor, loop?: ReturnType<typeof setInterval> }
@@ -56,22 +73,24 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageStep(state)
     case 'START':
       return manageStart(state, action.payload as StartPayload)
+    case 'PAUSE':
+      return managePause(state)
     case 'STOP':
       return manageStop(state)
     case 'RESET':
       return manageReset(state)
-    case 'SELECT_FIELD':
-      return manageSelectField(state, action.payload as SelectFieldPayload)
-    case 'DESELECT_FIELD':
-      return state
-    case 'DELETE_MODE':
-      return manageDeleteMode(state)
+    case 'SELECT_GADGET':
+      return manageSelectGadget(state, action.payload as SelectGadgetPayload)
+    case 'SELECT_OPTIONS':
+      return manageSelectOptions(state, action.payload as SelectOptionsPayload)
+    case 'CLEAR_UI_STATE':
+      return manageClearUIState(state)
+    case 'COMMIT_EDIT':
+      return manageCommitEdit(state)
+    case 'DELETE_FIELD':
+      return manageDeleteField(state, action.payload as FieldClickPayload)
     case 'FIELD_CLICK':
-      if (state.uiState.canDelete) {
-        return manageDeleteField(state, action.payload as FieldClickPayload)
-      }
-
-      return managePlaceField(state, action.payload as FieldClickPayload)
+      return manageFieldClick(state, action.payload as FieldClickPayload)
     case 'CHANGE_GADGET_QTY':
       return manageChangeGadgetQty(state, action.payload as ChangeGadgetQtyPayload)
     case 'CHANGE_GEM_QTY':

@@ -1,9 +1,39 @@
 import update from 'immutability-helper'
 import { EditorManipulation } from '../../editor/editor'
 import { resetDragon } from '../../engine/engine'
-import { LevelGetters, LevelManipulation, LevelPredicates } from '../../levels/level'
+import { generateGadgetDescription } from '../../levels/fields'
+import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates } from '../../levels/level'
+import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { getLevelFromState } from '../accessors'
 import { FieldClickPayload, GameState } from '../reducer'
+import { manageClearUIState } from './uiStateManagers'
+
+export function manageFieldClick (state: GameState, payload: FieldClickPayload): GameState {
+  const fieldId = payload.index
+  const level = getLevelFromState(state)
+  const field = LevelGetters.getField(level, fieldId)
+
+  // If field is not empty and we can edit the gadget then open edit modal and populate options.
+  if (field.typeOfField !== 'EMPTY' && (LevelPredicates.isPlacedByUser(level, fieldId) || state.editor)) {
+    return update(state, {
+      uiState: {
+        $merge: {
+          fieldToAdd: field.typeOfField,
+          selectedOptions: field.attributes as SelectedOptions,
+          gadgetEditState: {
+            showModal: true,
+            canEdit: true,
+            fieldId,
+            availableOptions: generateGadgetDescription(field.typeOfField)
+          }
+        }
+      }
+    })
+  }
+
+  // If there field is empty, try to place gadget on board
+  return managePlaceField(state, payload)
+}
 
 export function manageDeleteField (state: GameState, payload: FieldClickPayload): GameState {
   const level = getLevelFromState(state)
@@ -21,13 +51,13 @@ export function manageDeleteField (state: GameState, payload: FieldClickPayload)
           level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.clearSquare(level, payload.index) }
         }))
       },
-      uiState: { $merge: { fieldToAdd: null, option: null, canDelete: false } },
+      uiState: { $merge: manageClearUIState(state).uiState },
       editor: { $set: newEditor }
     })
   }
 
   return update(state, {
-    uiState: { $merge: { fieldToAdd: null, canDelete: false, option: null } }
+    uiState: { $merge: manageClearUIState(state).uiState }
   })
 }
 
@@ -38,21 +68,21 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
   if (uiState.fieldToAdd && LevelGetters.getField(level, payload.index).typeOfField === 'EMPTY') {
     // Same as above.
     const newEditor = state.editor
-      ? update(state.editor, { level: { $set: EditorManipulation.fillSquare(state.editor.level, payload.index, uiState.fieldToAdd, uiState.option) } })
+      ? update(state.editor, { level: { $set: EditorManipulation.fillSquare(state.editor.level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) } })
       : null
 
     return update(state, {
       engineState: {
         $set: resetDragon(update(state.engineState, {
-          level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.option) }
+          level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) }
         }))
       },
-      uiState: { $merge: { fieldToAdd: null, option: null, canDelete: false } },
+      uiState: { $merge: manageClearUIState(state).uiState },
       editor: { $set: newEditor }
     })
   }
 
   return update(state, {
-    uiState: { $merge: { fieldToAdd: null, canDelete: false, option: null } }
+    uiState: { $merge: manageClearUIState(state).uiState }
   })
 }

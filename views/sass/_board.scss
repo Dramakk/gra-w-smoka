@@ -5,6 +5,7 @@
 }
 
 .board-field {
+  text-align: center;
   position: relative;
   background-image: url("../../assets/images/grass.png");
   .dragon-field {
@@ -14,4 +15,3 @@
     top: 0;
   }
 }
-

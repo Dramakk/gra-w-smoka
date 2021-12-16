@@ -1,0 +1,24 @@
+.speed-controls {
+  grid-row: 2;
+  grid-column: 2;
+
+  @media screen and (max-width: $desktopWidth) {
+    position: fixed;
+    bottom: 0;
+    background: $backgroundPrimary;
+    box-shadow: $shadow;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px 0;
+    left: 0;
+  }
+
+  @media screen and (min-width: $tabletWidth) {
+    button {
+      width: 120px;
+      margin: 10px;
+    }
+  }
+}

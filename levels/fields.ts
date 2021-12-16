@@ -1,4 +1,4 @@
-import { Directions, GadgetType, GemColors, Labels, Signs } from './level'
+import { Directions, GadgetOptionDescription, GadgetType, GemColors, GemColorsArray, Labels, LabelsArray, Signs, SignsArray } from './level'
 
 type FieldType = GadgetType | 'EMPTY'
 
@@ -90,4 +90,52 @@ export interface Exit extends Field {
 
 export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
   return { typeOfField, image, id, attributes } as T
+}
+
+// This function generates options record for given gadget.
+// These informations are used to render options to choose from in editor mode.
+export function generateGadgetDescription (gadgetType: GadgetType): GadgetOptionDescription {
+  switch (gadgetType) {
+    case 'START':
+      return {
+        direction: ['D', 'U', 'L', 'R']
+      }
+    case 'SCALE':
+      return {
+        gemColor: [...GemColorsArray]
+      }
+    case 'ADD':
+    case 'SUBSTRACT':
+    case 'DIVIDE':
+    case 'MULTIPLY':
+    case 'SET':
+      return {
+        targetGemColor: [...GemColorsArray],
+        numberOfGems: [...GemColorsArray, ...new Array(20).keys()]
+      }
+    case 'SWAP':
+      return {
+        firstGemColor: [...GemColorsArray],
+        secondGemColor: [...GemColorsArray]
+      }
+    case 'TAKE':
+    case 'STORE':
+      return {
+        targetGemColor: [...GemColorsArray],
+        registerNumber: [...GemColorsArray, ...new Array(20).keys()]
+      }
+    case 'IF':
+      return {
+        leftGemColor: [...GemColorsArray],
+        sign: [...SignsArray],
+        rightNumberOfGems: [...GemColorsArray, ...new Array(20).keys()]
+      }
+    case 'ENTRANCE':
+    case 'EXIT':
+      return {
+        label: [...LabelsArray]
+      }
+    default:
+      return {}
+  }
 }
