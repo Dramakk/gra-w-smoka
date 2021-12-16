@@ -57,9 +57,9 @@ button {
   padding: 0 20px;
   margin: auto;
 
-  @media screen and (max-width: $tabletWidth) {
+  @media screen and (max-width: $desktopWidth) {
     padding: 0 10px;
-    padding-bottom: 90px;
+    padding-bottom: 120px;
   }
 }
 
