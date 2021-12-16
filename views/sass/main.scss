@@ -8,9 +8,13 @@
 @import "gemPanel";
 @import "treeRegisters";
 @import "levelImport";
+@import "gadgetEdit";
+@import "bottomTooltip";
+@import "speedControls";
 
-html, body {
-  font-family: 'Mouse Memoirs', sans-serif;
+html,
+body {
+  font-family: "Mouse Memoirs", sans-serif;
   @include fontSize(20px);
   background-color: $backgroundPrimary;
 }
@@ -20,8 +24,9 @@ h1 {
   letter-spacing: 3px;
 }
 
-button, textarea {
-  font-family: 'Mouse Memoirs';
+button,
+textarea {
+  font-family: "Mouse Memoirs";
 }
 
 textarea {
@@ -38,7 +43,7 @@ button {
   background-color: $primaryColor;
 
   &.button-danger {
-    background-color: $dangerColor; 
+    background-color: $dangerColor;
   }
 
   &.button-success {
@@ -47,11 +52,14 @@ button {
 }
 
 #app-container {
+  max-width: 1170px;
   position: relative;
   padding: 0 20px;
+  margin: auto;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: $tabletWidth) {
     padding: 0 10px;
+    padding-bottom: 90px;
   }
 }
 
@@ -67,22 +75,16 @@ button {
   }
 }
 
-.bottom-tooltip {
-  border: 1px solid black;
-}
-
 .game-container {
   display: grid;
   grid-template-columns: 65% 35%;
   padding: 0 50px;
-  @media screen and (max-width: 992px) {
+  @media screen and (max-width: $desktopWidth) {
     display: flex;
     flex-wrap: wrap;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: $tabletWidth) {
     padding: 0;
   }
 }
-
-

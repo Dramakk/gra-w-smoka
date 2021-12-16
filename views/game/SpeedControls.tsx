@@ -7,8 +7,9 @@ export default function SpeedControls (): React.ReactElement {
   return (
     <div className='speed-controls'>
       <button onClick={() => dispatch({ type: 'START', payload: { timeout: 1000, dispatch: dispatch } })}>START</button>
-      <button onClick={() => dispatch({ type: 'STOP', payload: { timeout: 1000, dispatch: dispatch } })}>STOP</button>
-      <button onClick={() => dispatch({ type: 'RESET', payload: { timeout: 1000, dispatch: dispatch } })}>RESET</button>
+      <button onClick={() => dispatch({ type: 'PAUSE' })}>PAUSE</button>
+      <button onClick={() => dispatch({ type: 'STOP' })}>STOP</button>
+      <button onClick={() => dispatch({ type: 'RESET' })}>RESET</button>
     </div>
   )
 }

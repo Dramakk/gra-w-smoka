@@ -1,4 +1,5 @@
-.gem-panel-header, .gem-panel-row {
+.gem-panel-header,
+.gem-panel-row {
   display: grid;
   grid-template-columns: 70px 1fr 0.5fr 1fr;
   text-align: center;
@@ -14,11 +15,11 @@
       color: black;
       min-width: unset;
       background: none;
-      @include fontSize(16px)
+      @include fontSize(16px);
     }
   }
 }
-@media screen and (max-width: 992px) {
+@media screen and (max-width: $desktopWidth) {
   .gem-panel {
     width: 100%;
   }
