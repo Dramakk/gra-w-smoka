@@ -15,11 +15,17 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
 
   // If field is not empty and we can edit the gadget then open edit modal and populate options.
   if (field.typeOfField !== 'EMPTY' && (LevelPredicates.isPlacedByUser(level, fieldId) || state.editor)) {
+    let attributes = field.attributes as SelectedOptions
+
+    if (field.typeOfField === 'START') {
+      attributes = { direction: state.engineState.dragon.direction }
+    }
+
     return update(state, {
       uiState: {
         $merge: {
           fieldToAdd: field.typeOfField,
-          selectedOptions: field.attributes as SelectedOptions,
+          selectedOptions: attributes,
           gadgetEditState: {
             showModal: true,
             canEdit: true,
