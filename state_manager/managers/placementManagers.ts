@@ -75,13 +75,16 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
       ? update(state.editor, { level: { $set: EditorManipulation.fillSquare(state.editor.level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) } })
       : null
 
+    const levelWithGadget = state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType)
     return update(state, {
       engineState: {
         $set: resetDragon(update(state.engineState, {
-          level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) }
+          level: { $set: levelWithGadget }
         }))
       },
-      uiState: { $merge: manageClearUIState(state).uiState },
+      uiState: LevelPredicates.canPlaceField(levelWithGadget, state.uiState.fieldToAdd)
+        ? { $merge: {} }
+        : { $merge: manageClearUIState(state).uiState },
       editor: { $set: newEditor }
     })
   }

@@ -172,14 +172,14 @@ export const EditorManipulation = {
 
   // Invoked when user places object on the board.
   fillSquare: function (level: Level, index: number, gadgetType : GadgetType, options: GadgetOptionType) : Level {
-    let newLevel = { ...level }
+    const newLevel = { ...level }
 
     if (!LevelPredicates.canPlaceField(newLevel, gadgetType)) {
       return { ...newLevel }
     }
 
     if (gadgetType === 'START' && 'direction' in options) {
-      newLevel = LevelSpeedControls.setStart(level, index, options.direction)
+      return LevelSpeedControls.setStart(level, index, options.direction)
     }
 
     if (gadgetType === 'FINISH') {
