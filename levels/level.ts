@@ -267,7 +267,9 @@ export const LevelCreation = {
     baseDragon: Dragon,
     treeGems: Record<GemColors, number>,
     treeRegisters: TreeRegisters,
-    finishId: number
+    finishId: number,
+    exits: Record<Labels, number>,
+    entrances: Record<Labels, number>
   ): Level {
     // Flag determining if all ids from 0 to fields.length are asSignsed to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
@@ -293,9 +295,6 @@ export const LevelCreation = {
       RED: 0,
       GREEN: 0
     }
-    // TODO: remove, add to parser
-    const entrances : Record<Labels, number> = {}
-    const exits : Record<Labels, number> = {}
     return {
       fields,
       fieldsPerRow,

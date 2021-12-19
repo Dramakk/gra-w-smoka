@@ -82,9 +82,12 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
           level: { $set: levelWithGadget }
         }))
       },
-      uiState: LevelPredicates.canPlaceField(levelWithGadget, state.uiState.fieldToAdd)
-        ? { $merge: {} }
-        : { $merge: manageClearUIState(state).uiState },
+      uiState:
+        state.uiState.fieldToAdd === 'START' ||
+        state.uiState.fieldToAdd === 'FINISH' ||
+        !LevelPredicates.canPlaceField(levelWithGadget, state.uiState.fieldToAdd)
+          ? { $merge: manageClearUIState(state).uiState }
+          : { $merge: {} },
       editor: { $set: newEditor }
     })
   }
