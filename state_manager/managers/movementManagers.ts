@@ -1,11 +1,22 @@
-import { resetDragon, resetEngineState, step } from '../../engine/engine'
-import { LevelSpeedControls } from '../../levels/level'
+import { changeState, move, resetDragon, resetEngineState } from '../../engine/engine'
+import { LevelGetters, LevelSpeedControls } from '../../levels/level'
 import { getDragonFromState } from '../accessors'
 import { GameState, StartPayload } from '../reducer'
 import update from 'immutability-helper'
 
 export function manageStep (state: GameState): GameState {
-  const nextState = step(state.engineState)
+  const currentField = LevelGetters.getField(state.engineState.level, state.engineState.dragon.fieldId)
+  let nextState = { ...state.engineState }
+
+  // This if makes dragon to interfact with field, which means dragon will wait for loop timeout
+  // after entering field with gadget.
+  if (currentField.typeOfField === 'EMPTY' || currentField.typeOfField === 'START' || !nextState.shouldInteract) {
+    nextState = move(nextState)
+    nextState.shouldInteract = true
+  } else if (nextState.shouldInteract) {
+    nextState = changeState(nextState)
+    nextState.shouldInteract = false
+  }
 
   const directionHistory = update(state.engineState.dragon.directionHistory, {
     $set: {

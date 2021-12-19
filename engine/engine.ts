@@ -6,6 +6,7 @@ import { Dragon, DragonManipulation } from './dragon'
 export type EngineState = {
   level: Level,
   dragon: Dragon
+  shouldInteract: boolean
 }
 
 export function resetDragon (currentState: EngineState): EngineState {
@@ -30,7 +31,7 @@ export function resetEngineState (currentState: EngineState): EngineState {
 
 // Private function definitions
 // Moves dragon to new field (returns false if dragon cant move)
-function move (currentState: EngineState): EngineState {
+export function move (currentState: EngineState): EngineState {
   const newFieldId: number = calculateNewField(currentState)
 
   if (LevelGetters.getField(currentState.level, newFieldId).typeOfField === 'WALL' || !currentState.dragon.canMove) {
@@ -41,7 +42,7 @@ function move (currentState: EngineState): EngineState {
 }
 
 // Changes dragon state based on field dragon is on.
-function changeState (currentState: EngineState): EngineState {
+export function changeState (currentState: EngineState): EngineState {
   const currentField: Field = LevelGetters.getField(currentState.level, currentState.dragon.fieldId)
   switch (currentField.typeOfField) {
     // Again we have to handle all arrows separetly because of typeOfField definition.
