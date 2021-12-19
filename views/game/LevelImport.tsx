@@ -94,10 +94,14 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
 
   return (
     <div className="import-level-container">
-      <label htmlFor="level-input">Wpisz poziom</label>
-      <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
-      </textarea>
-      <button onClick={onSubmit}>Graj</button>
+      <div className="import-level-wrapper">
+        <label htmlFor="level-input">Wpisz poziom</label>
+        <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
+        </textarea>
+      </div>
+      <div className="import-level-buttons">
+        <button onClick={onSubmit}>Graj</button>
+      </div>
       <Modal show={showModal} buttons={modalButtons}>
         <div>Definicja poziomu zawiera błędy. Popraw je i spróbuj ponownie.</div>
       </Modal>

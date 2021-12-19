@@ -1,6 +1,6 @@
 @mixin moveDown($className, $duration) {
   .#{$className} {
-    transition: transition #{$duration}ms linear;
+    transition: transform #{$duration}ms linear;
   }
   .#{$className}-enter {
     transform: translateY(-100%);

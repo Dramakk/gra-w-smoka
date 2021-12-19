@@ -33,6 +33,10 @@ export function parseLevel (levelToParse: string): Level {
   const gadgetsParser: ParseFn<Counter<GadgetType>> = (x: [string, number][]) => {
     let counterToReturn = createCounter<GadgetType>()
 
+    if (!Array.isArray(x)) {
+      return counterToReturn
+    }
+
     x.forEach(gadgetDescription => {
       const gadgetToAdd = gadgetTypeParser(gadgetDescription[0])
       const howManyAvailable = aNumber(gadgetDescription[1])
