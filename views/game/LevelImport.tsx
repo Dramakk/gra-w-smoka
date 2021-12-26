@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { resetDragon } from '../../engine/engine'
+import { parseLevel } from '../../levels/levelParser'
 import Modal, { ButtonDescription } from '../helpers/Modal'
 
-export default function LevelImport (props: {createGameView : (importedLevelString: string) => void}): React.ReactElement {
-  // TODO: Dodać obsługę błędu przy wklejeniu nieprawidłowego JSONa
+export default function LevelImport (): React.ReactElement {
+  const history = useHistory()
   const [showModal, updateShowModal] = useState(false)
   const [importedLevel, updateImportedLevel] = useState(`{
     "fields":[
@@ -72,7 +75,12 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
 
   function onSubmit () : void {
     try {
-      props.createGameView(importedLevel)
+      const level = parseLevel(JSON.parse(importedLevel))
+      const game = resetDragon({ level, dragon: null, shouldInteract: true })
+      history.push('/levels', {
+        editor: null,
+        game
+      })
     } catch (e) {
       updateShowModal(true)
     }

@@ -1,31 +1,27 @@
 import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
-import LevelImport from './LevelImport'
+import { useHistory } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
+import EditorForm from './EditorForm'
 
-interface MainMenuProps {createGameView: (importedLevelString: string) => void, createEditorView: (howManyRows: number, howManyPerRow: number) => void}
-
-export default function MainMenu (props: MainMenuProps): React.ReactElement {
-  const [howManyRows, changeHowManyRows] = useState(5)
-  const [howManyPerRow, changeHowManyPerRow] = useState(5)
-  const [editorFormDisplay, changeEditorFormDisplay] = useState('none')
-
-  function renderImportView () : void {
-    ReactDOM.render(<LevelImport createGameView={props.createGameView}/>, document.querySelector('#app-container'))
-  }
+export default function MainMenu (): React.ReactElement {
+  const [editorFormDisplay, changeEditorFormDisplay] = useState(false)
+  const history = useHistory()
 
   return (
     <>
-        <div className='menu'>
-            <div className='menu-item' onClick={() => renderImportView() }>Graj!</div>
-            <div className='menu-item' onClick={() => changeEditorFormDisplay('block')}>Twórz poziom</div>
-            <div style={{ display: editorFormDisplay }}>
-              <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
-              <input name='howManyRows' type='number' value={howManyRows} onChange={(e) => changeHowManyRows(Number(e.target.value))}></input>
-              <label htmlFor='howManyPerRow'>Ile pól ma posiadać jeden rząd?</label>
-              <input name='howManyPerRow' type='number' value={howManyPerRow} onChange={(e) => changeHowManyPerRow(Number(e.target.value))}></input>
-              <button onClick={() => props.createEditorView(howManyRows, howManyPerRow)}>Rozpocznij edycję</button>
-            </div>
-        </div>
+      <div className='menu'>
+        <div className='menu-item' onClick={() => history.push('/levels') }>Graj!</div>
+        <div className='menu-item' onClick={() => changeEditorFormDisplay(!editorFormDisplay)}>Twórz poziom</div>
+        <CSSTransition
+            in={editorFormDisplay}
+            classNames="slide-down"
+            timeout={1000}
+            unmountOnExit={true}
+            mountOnEnter={true}
+        >
+          <EditorForm />
+        </CSSTransition>
+      </div>
     </>
   )
 }

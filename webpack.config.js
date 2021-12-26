@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {LoaderOptionsPlugin} = require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -20,7 +21,7 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
         exclude: '/node_modules/'
       },
       {
@@ -51,7 +52,8 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   plugins: [
     new HtmlWebpackPlugin({
