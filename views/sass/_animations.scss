@@ -70,7 +70,113 @@
   }
 }
 
+@mixin leaveHole($className, $duration) {
+  .#{$className} {
+    transition: all #{$duration}ms linear;
+  }
+  .#{$className}-enter {
+    transform: translateY(25%);
+    opacity: 0;
+  }
+  .#{$className}-enter-active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .#{$className}-exit {
+    opacity: 0;
+  }
+  .#{$className}-exit-active {
+    opacity: 1;
+  }
+}
+
+@mixin enterDown($className, $duration) {
+  .#{$className} {
+    transition: all #{$duration}ms linear;
+  }
+  .#{$className}-enter {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  .#{$className}-enter-active {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  .#{$className}-exit {
+    opacity: 0;
+  }
+  .#{$className}-exit-active {
+    opacity: 1;
+  }
+}
+
+@mixin enterUp($className, $duration) {
+  .#{$className} {
+    transition: all #{$duration}ms linear;
+  }
+  .#{$className}-enter {
+    opacity: 1;
+    transform: translateY(100%);
+  }
+  .#{$className}-enter-active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .#{$className}-exit {
+    opacity: 0;
+  }
+  .#{$className}-exit-active {
+    opacity: 1;
+  }
+}
+
+@mixin enterRight($className, $duration) {
+  .#{$className} {
+    transition: all #{$duration}ms linear;
+  }
+  .#{$className}-enter {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+  .#{$className}-enter-active {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  .#{$className}-exit {
+    opacity: 0;
+  }
+  .#{$className}-exit-active {
+    opacity: 1;
+  }
+}
+
+@mixin enterLeft($className, $duration) {
+  .#{$className} {
+    transition: all #{$duration}ms linear;
+  }
+  .#{$className}-enter {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+  .#{$className}-enter-active {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  .#{$className}-exit {
+    opacity: 0;
+  }
+  .#{$className}-exit-active {
+    opacity: 1;
+  }
+}
+
 @include moveLeft(left-1000, 1000);
 @include moveRight(right-1000, 1000);
 @include moveUp(up-1000, 1000);
 @include moveDown(down-1000, 1000);
+
+@include enterLeft(left-1000-enter, 1000);
+@include enterRight(right-1000-enter, 1000);
+@include enterUp(up-1000-enter, 1000);
+@include enterDown(down-1000-enter, 1000);
+@include leaveHole(exit-1000, 1000);

@@ -43,6 +43,15 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
       animationClass = ''
   }
 
+  // Adding modifier to selected animation class
+  if (props.field.typeOfField === 'ENTRANCE') {
+    animationClass += '-enter'
+  }
+
+  if (props.field.typeOfField === 'EXIT') {
+    animationClass = 'exit-1000'
+  }
+
   function onClick () {
     dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
   }

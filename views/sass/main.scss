@@ -7,10 +7,10 @@
 @import "board";
 @import "gemPanel";
 @import "treeRegisters";
-@import "levelImport";
 @import "gadgetEdit";
 @import "bottomTooltip";
 @import "speedControls";
+@import "exportImport";
 
 html,
 body {
@@ -57,9 +57,9 @@ button {
   padding: 0 20px;
   margin: auto;
 
+
   @media screen and (max-width: $tabletWidth) {
     padding: 0 10px;
-    padding-bottom: 90px;
   }
 }
 
@@ -78,13 +78,14 @@ button {
 .game-container {
   display: grid;
   grid-template-columns: 65% 35%;
-  padding: 0 50px;
+
   @media screen and (max-width: $desktopWidth) {
     display: flex;
     flex-wrap: wrap;
+    padding-bottom: 150px;
   }
 
   @media screen and (max-width: $tabletWidth) {
-    padding: 0;
+    padding-bottom: 90px;
   }
 }

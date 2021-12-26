@@ -15,12 +15,12 @@ const domContainer = document.querySelector('#app-container')
 ReactDOM.render(<MainMenu
   createGameView={(importedLevel: string) => {
     const level = parseLevel(JSON.parse(importedLevel))
-    const game: EngineState = resetDragon({ level, dragon: null })
+    const game: EngineState = resetDragon({ level, dragon: null, shouldInteract: true })
     ReactDOM.render(<Game engine={game} editorMode={false}/>, domContainer)
   }}
   createEditorView={(howManyRows: number, howManyPerRow: number) => {
     const editor = EditorCreation.createEditor(howManyRows, howManyPerRow)
-    const game = resetDragon({ level: editor.level, dragon: null })
+    const game = resetDragon({ level: editor.level, dragon: null, shouldInteract: true })
     ReactDOM.render(<Game engine={game} editorMode={true} editor={editor}
     />, domContainer)
   }} />, domContainer)
