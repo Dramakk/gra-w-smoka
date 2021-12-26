@@ -15,11 +15,15 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
 
   // If field is not empty and we can edit the gadget then open edit modal and populate options.
   if (field.typeOfField !== 'EMPTY' && (LevelPredicates.isPlacedByUser(level, fieldId) || state.editor)) {
+    const attributes = field.typeOfField === 'START'
+      ? { direction: state.engineState.dragon.direction }
+      : field.attributes
+
     return update(state, {
       uiState: {
         $merge: {
           fieldToAdd: field.typeOfField,
-          selectedOptions: field.attributes as SelectedOptions,
+          selectedOptions: attributes as SelectedOptions,
           gadgetEditState: {
             showModal: true,
             canEdit: true,
@@ -71,13 +75,19 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
       ? update(state.editor, { level: { $set: EditorManipulation.fillSquare(state.editor.level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) } })
       : null
 
+    const levelWithGadget = state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType)
     return update(state, {
       engineState: {
         $set: resetDragon(update(state.engineState, {
-          level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) }
+          level: { $set: levelWithGadget }
         }))
       },
-      uiState: { $merge: manageClearUIState(state).uiState },
+      uiState:
+        state.uiState.fieldToAdd === 'START' ||
+        state.uiState.fieldToAdd === 'FINISH' ||
+        !LevelPredicates.canPlaceField(levelWithGadget, state.uiState.fieldToAdd)
+          ? { $merge: manageClearUIState(state).uiState }
+          : { $merge: {} },
       editor: { $set: newEditor }
     })
   }

@@ -4,7 +4,7 @@ import { items } from '../../helpers/counter'
 import { stateReducer } from '../../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../../state_manager/accessors'
 import ReactDOM from 'react-dom'
-import { Editor, EditorCreation } from '../../editor/editor'
+import { Editor } from '../../editor/editor'
 import BoardComponent from './Board'
 import GemPanel from './GemPanel'
 import Tree from './Tree'
@@ -12,6 +12,7 @@ import BottomTooltip from './BottomTooltip'
 import SpeedControls from './SpeedControls'
 import GadgetsSelection from './GadgetsSelection'
 import GadgetEdit, { SelectedOptions } from './GadgetEdit'
+import Export from './Export'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
@@ -45,10 +46,9 @@ export default function Game (props: GameProps): React.ReactElement {
       .filter(field => field.typeOfField === 'FINISH').length !== 0
   const canEdit = state.editor && !state.loop
 
-  // TODO: Stworzyć oddzielny komponent z ładnym wyświetlaniem tego JSONa
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
-    ReactDOM.render((<div>{EditorCreation.exportLevel(editorState)}</div>),
+    ReactDOM.render(<Export levelToExport={editorState.level} />,
       document.querySelector('#app-container'))
   }
 

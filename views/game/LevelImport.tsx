@@ -58,6 +58,8 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
         "RED":0,
         "GREEN":3
       },
+      "entrances": {},
+      "exits": {},
       "treeRegisters": {"0":{"stored":0,"needed":0},"1":{"stored":0,"needed":0},"2":{"stored":0,"needed":0},"3":{"stored":0,"needed":0},"4":{"stored":0,"needed":0},"5":{"stored":0,"needed":0},"6":{"stored":0,"needed":0},"7":{"stored":0,"needed":0},"8":{"stored":0,"needed":0},"9":{"stored":0,"needed":0},"10":{"stored":0,"needed":0},"11":{"stored":0,"needed":0},"12":{"stored":0,"needed":0},"13":{"stored":0,"needed":0},"14":{"stored":0,"needed":0},"15":{"stored":0,"needed":0},"16":{"stored":0,"needed":0},"17":{"stored":0,"needed":0},"18":{"stored":0,"needed":0},"19":{"stored":0,"needed":0}},
       "finishId":18}`)
   const modalButtons: ButtonDescription[] = [
@@ -92,10 +94,14 @@ export default function LevelImport (props: {createGameView : (importedLevelStri
 
   return (
     <div className="import-level-container">
-      <label htmlFor="level-input">Wpisz poziom</label>
-      <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
-      </textarea>
-      <button onClick={onSubmit}>Graj</button>
+      <div className="import-level-wrapper">
+        <label htmlFor="level-input">Wpisz poziom</label>
+        <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
+        </textarea>
+      </div>
+      <div className="import-level-buttons">
+        <button onClick={onSubmit}>Graj</button>
+      </div>
       <Modal show={showModal} buttons={modalButtons}>
         <div>Definicja poziomu zawiera błędy. Popraw je i spróbuj ponownie.</div>
       </Modal>

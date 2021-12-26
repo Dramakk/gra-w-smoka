@@ -1,0 +1,58 @@
+.import-level-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  label {
+    text-align: center;
+    width: 100%;
+  }
+
+  @media screen and (max-width: $tabletWidth) {
+    height: calc(100vh - 200px);
+  }
+
+  @media screen and (max-width: $smallPhoneWidth) {
+    height: calc(100vh - 250px);      
+  }
+}
+.level-export-wrapper, .import-level-wrapper {
+  display: flex;
+  justify-content: center;
+
+  textarea {
+    min-width: 50%;
+    min-height: 400px;
+
+    @media screen and (max-width: $tabletWidth) {
+      width: 100%;
+      min-height: unset;
+      height: calc(100vh - 300px);
+    }
+
+    @media screen and (max-width: $smallPhoneWidth) {
+      height: calc(100vh - 350px);      
+    }
+  }
+}
+
+.level-export-buttons, .import-level-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+
+  @media screen and (max-width: $tabletWidth) {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: $backgroundPrimary;
+    box-shadow: $shadow;
+    width: 100%;
+    
+    button {
+      width: 100%;
+      margin: 10px;
+    }
+  }
+}
+

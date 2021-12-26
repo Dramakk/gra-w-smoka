@@ -174,9 +174,21 @@ export const LevelSpeedControls = {
   },
 
   setStart: function (level: Level, index: number, direction: Directions) : Level {
-    return update(level, {
+    const newLevel = update(level, {
+      fields: {
+        $set: level.fields.map((field, index) =>
+          field.typeOfField === 'START' ? fields.createField('EMPTY', 'E', index) : field)
+      }
+    })
+
+    return update(newLevel, {
       baseDragon: { $merge: { fieldId: index, direction: direction, directionHistory: { previous: null, current: direction } } },
-      gadgets: { $set: counterDelete(level.gadgets, 'START') }
+      gadgets: { $set: counterDelete(level.gadgets, 'START') },
+      fields: {
+        $set: newLevel.fields.map((field, mapIdx) =>
+          index === mapIdx ? fields.createField('START', 'E', index) : field
+        )
+      }
     })
   },
 
@@ -255,7 +267,9 @@ export const LevelCreation = {
     baseDragon: Dragon,
     treeGems: Record<GemColors, number>,
     treeRegisters: TreeRegisters,
-    finishId: number
+    finishId: number,
+    exits: Record<Labels, number>,
+    entrances: Record<Labels, number>
   ): Level {
     // Flag determining if all ids from 0 to fields.length are asSignsed to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
@@ -281,9 +295,6 @@ export const LevelCreation = {
       RED: 0,
       GREEN: 0
     }
-    // TODO: remove, add to parser
-    const entrances : Record<Labels, number> = {}
-    const exits : Record<Labels, number> = {}
     return {
       fields,
       fieldsPerRow,
