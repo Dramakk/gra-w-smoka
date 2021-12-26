@@ -10,6 +10,7 @@ Pliki tworzymy w odpowiadających im folderach, wszystkie pliki poza tymi do wid
 2. Prosty serwer http (np. serve lub live-server) do lokalnego hostowania strony
 
 ### Jak uruchomić
+0. Przed uruchomieniem skopiować plik serve.json do katalogu dist
 1. npm install
 2. npm run compile
 3. npm run start
