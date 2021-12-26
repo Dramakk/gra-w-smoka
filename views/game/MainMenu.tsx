@@ -15,7 +15,7 @@ export default function MainMenu (): React.ReactElement {
         <CSSTransition
             in={editorFormDisplay}
             classNames="slide-down"
-            timeout={1000}
+            timeout={500}
             unmountOnExit={true}
             mountOnEnter={true}
         >
