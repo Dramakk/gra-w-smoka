@@ -1,0 +1,15 @@
+.category-container {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    background: none;
+    color: unset;
+    display: flex;
+    align-items: center;
+
+    .category-name {
+      margin-right: 10px;
+    }
+  }
+}

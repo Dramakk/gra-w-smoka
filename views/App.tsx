@@ -10,6 +10,7 @@ import Export from './game/Export'
 import NavigationError from './game/NavigationError'
 import LevelImport from './game/LevelImport'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import LevelSelect from './game/LevelSelect'
 
 export default function App (): React.ReactElement {
   const location = useLocation()
@@ -25,8 +26,11 @@ export default function App (): React.ReactElement {
           <Route exact path="/">
             <MainMenu />
           </Route>
-          <Route exact path="/levels">
+          <Route exact path="/game">
             <Game />
+          </Route>
+          <Route exact path="/levels">
+            <LevelSelect />
           </Route>
           <Route exact path="/levels/import">
             <LevelImport />

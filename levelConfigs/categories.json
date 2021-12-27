@@ -1,0 +1,48 @@
+[
+  {
+    "categoryName": "Poziomy dla początkujących",
+    "categoryLevels": [
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      }
+    ]
+  },
+  {
+    "categoryName": "Poziomy dla zaawansowanych",
+    "categoryLevels": [
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      },
+      {
+        "displayName": "Poziom 1",
+        "levelFileName": "testLevel.json"
+      }
+    ]
+  }
+]

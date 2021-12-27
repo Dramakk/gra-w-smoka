@@ -39,7 +39,7 @@ export default function Export (): React.ReactElement {
       </div>
       <div className="level-export-buttons">
         <button onClick={copyToClipboard}>Skopiuj do schowka</button>
-        <button onClick={() => history.push('/')}>Powróć do menu głównego</button>
+        <button onClick={() => history.push('/')}>Wróć do głównego menu</button>
       </div>
       <Modal show={showModal} buttons={modalButtons} title="Sukces!">
         <div>Skopiowano poziom do schowka.</div>
