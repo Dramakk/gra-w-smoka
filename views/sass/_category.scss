@@ -1,6 +1,11 @@
 .category-container {
-  display: flex;
+  display: grid;
   justify-content: flex-end;
+
+  .category-level {
+    display: grid;
+    justify-content: center;
+  }
 
   button {
     background: none;
@@ -8,8 +13,13 @@
     display: flex;
     align-items: center;
 
+    &.category-button {
+      justify-content: center;
+    }
+
     .category-name {
       margin-right: 10px;
     }
   }
 }
+

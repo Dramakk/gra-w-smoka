@@ -3,46 +3,15 @@
     "categoryName": "Poziomy dla początkujących",
     "categoryLevels": [
       {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
+        "displayName": "Testowy poziom (DO USUNIĘCIA)",
+        "levelFileName": "testLevel.json",
+        "levelDescription": "Ten poziom służy do testowania logiki gry oraz UI. Posiada prostą trasę dla smoka sprawdzającą rejestry oraz wagi."
       }
     ]
   },
   {
     "categoryName": "Poziomy dla zaawansowanych",
     "categoryLevels": [
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      },
-      {
-        "displayName": "Poziom 1",
-        "levelFileName": "testLevel.json"
-      }
     ]
   }
 ]

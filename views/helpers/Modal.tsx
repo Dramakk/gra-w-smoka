@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, useEffect } from 'react'
 
 export interface ButtonDescription {
-  buttonType: 'danger' | 'primary' | 'success'
+  buttonType: 'danger' | 'primary' | 'success' | 'disabled'
   buttonText: string
   onClick: MouseEventHandler
 }
@@ -36,7 +36,7 @@ export default function Modal (props: ModalProps): React.ReactElement {
         <div className="modal-buttons">
           {props.buttons.map((buttonDescription, index) => {
             return (
-              <button key={index} className={`button-${buttonDescription.buttonType}`} onClick={buttonDescription.onClick}>
+              <button key={index} className={`button-${buttonDescription.buttonType}`} onClick={buttonDescription.onClick} disabled={buttonDescription.buttonType === 'disabled'}>
                 {buttonDescription.buttonText}
               </button>
             )

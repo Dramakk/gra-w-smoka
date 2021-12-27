@@ -10,7 +10,7 @@ export default function MainMenu (): React.ReactElement {
   return (
     <>
       <div className='menu'>
-        <div className='menu-item' onClick={() => history.push('/levels') }>Graj!</div>
+        <div className='menu-item' onClick={() => history.push('/levels') }>Wybierz poziom</div>
         <div className='menu-item' onClick={() => changeEditorFormDisplay(!editorFormDisplay)}>Twórz poziom</div>
         <CSSTransition
             in={editorFormDisplay}

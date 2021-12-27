@@ -4,6 +4,7 @@ import Category from './Category'
 
 export interface CategoryLevelDescription {
   displayName: string;
+  levelDescription?: string;
   levelFileName: string;
 }
 
@@ -41,6 +42,7 @@ export default function LevelSelect (): React.ReactElement {
       <div className='level-select'>
         {
           categories.map((category, index) => {
+            if (category.categoryLevels.length === 0) return <></>
             return (
               <Category key={index} category={category}/>
             )
@@ -48,7 +50,7 @@ export default function LevelSelect (): React.ReactElement {
         }
       </div>
       <div className='level-select-buttons'>
-        <button className='button-success' onClick={() => history.push('/levels/import')}>Użyj poziomu z edytora</button>
+        <button onClick={() => history.push('/levels/import')}>Użyj poziomu z edytora</button>
         <button onClick={() => history.push('/')}>Wróć do głównego menu</button>
       </div>
     </div>
