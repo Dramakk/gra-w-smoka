@@ -16,4 +16,22 @@
     height: 100%;
     top: 0;
   }
+  .board-content {
+    position: relative;
+    .image-detail {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+    }
+    .image-right-corner {
+      top: 0px;
+      right: 0px;
+    }
+    .image-left-corner {
+      top: 0px;
+      left: 0px;
+    }
+  }
 }
+
+
