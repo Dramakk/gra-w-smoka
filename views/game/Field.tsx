@@ -7,6 +7,7 @@ import Dragon from './Dragon'
 
 import empty from '../../assets/images/empty.png'
 import hole from '../../assets/images/hole.png'
+import exit from '../../assets/images/hole_exit.png'
 import arrow from '../../assets/images/arrow.png'
 import rock from '../../assets/images/rock.png'
 import closed from '../../assets/images/closed.png'
@@ -75,6 +76,10 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
         return <img src={rock} alt="W" />
       case 'SCALE':
         return <img src={scale} alt="AD" />
+      case 'ENTRANCE':
+        return <img src={hole} alt="O" />
+      case 'EXIT':
+        return <img src={exit} alt="OX" />
       default:
         return <img src={empty} alt="AR" />
     }
