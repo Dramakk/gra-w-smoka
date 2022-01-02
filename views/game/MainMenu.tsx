@@ -10,8 +10,8 @@ export default function MainMenu (): React.ReactElement {
   return (
     <>
       <div className='menu'>
-        <div className='menu-item' onClick={() => history.push('/levels') }>Wybierz poziom</div>
-        <div className='menu-item' onClick={() => changeEditorFormDisplay(!editorFormDisplay)}>Twórz poziom</div>
+        <button className='menu-item' onClick={() => history.push('/levels') }>Wybierz poziom</button>
+        <button className='menu-item' onClick={() => changeEditorFormDisplay(!editorFormDisplay)}>Twórz poziom</button>
         <SlideDown opened={editorFormDisplay}>
           <EditorForm />
         </SlideDown>

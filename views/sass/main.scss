@@ -15,6 +15,8 @@
 @import "editorForm";
 @import "levelSelect";
 @import "category";
+@import "loading";
+@import "gadgetsSelection";
 
 html,
 body {
@@ -61,6 +63,18 @@ button {
   }
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 #app-container {
   max-width: 1170px;
   position: relative;
@@ -80,8 +94,10 @@ button {
   justify-items: center;
   width: auto;
   flex-direction: column;
+
   .menu-item {
     min-width: 250px;
+    margin-bottom: 10px;
   }
 }
 
@@ -99,3 +115,4 @@ button {
     padding-bottom: 90px;
   }
 }
+

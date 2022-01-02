@@ -77,9 +77,9 @@ export default function Game (): React.ReactElement {
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           {state.editor
-            ? <div>
+            ? <div className='gadgets-selection-container'>
               <GadgetsSelection editor={state.editor} />
-              <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
+              <button className={`${!canExport && 'button-disabled'}`} disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
             </div>
             : null
           }
