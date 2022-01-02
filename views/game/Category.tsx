@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 import { resetDragon } from '../../engine/engine'
 import { parseLevel } from '../../levels/levelParser'
 import Modal, { ButtonDescription } from '../helpers/Modal'
+import SlideDown from '../helpers/SlideDown'
 import { CategoryDescription, CategoryLevelDescription } from './LevelSelect'
 
 interface CategoryProps {
@@ -74,18 +74,12 @@ export default function Category (props: CategoryProps): React.ReactElement {
           <div className='category-name'>
             {props.category.categoryName}
           </div>
-          <div className='material-icons category-fold'>
-            { opened ? 'expand_less' : 'expand_more' }
+          <div className={`material-icons category-fold ${opened ? 'opened' : ''}`}>
+            expand_more
           </div>
         </button>
-        <CSSTransition
-          in={opened}
-          classNames='slide-down'
-          mountOnEnter={true}
-          unmountOnExit={true}
-          timeout={500}
-        >
-          <div className="slide-down category-level">
+        <SlideDown opened={opened}>
+          <div className="category-level">
             {
               props.category.categoryLevels.map((level, index) => {
                 return (
@@ -94,7 +88,7 @@ export default function Category (props: CategoryProps): React.ReactElement {
               })
             }
           </div>
-        </CSSTransition>
+        </SlideDown>
       </div>
       <Modal show={modalOpen} buttons={modalButtons} title={selectedLevel?.displayName}>
         {

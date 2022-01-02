@@ -41,8 +41,7 @@ export default function LevelSelect (): React.ReactElement {
     <div className='level-select-container'>
       <div className='level-select'>
         {
-          categories.map((category, index) => {
-            if (category.categoryLevels.length === 0) return <></>
+          categories.filter(category => category.categoryLevels.length > 0).map((category, index) => {
             return (
               <Category key={index} category={category}/>
             )

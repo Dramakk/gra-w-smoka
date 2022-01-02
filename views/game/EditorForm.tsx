@@ -18,7 +18,7 @@ export default function EditorForm (): React.ReactElement {
   }
 
   return (
-    <div className='editor-form slide-down'>
+    <div className='editor-form'>
       <div className='editor-form-row'>
         <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
         <input name='howManyRows' type='number' value={howManyRows} onChange={(e) => changeHowManyRows(Number(e.target.value))}></input>

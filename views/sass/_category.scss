@@ -15,6 +15,13 @@
 
     &.category-button {
       justify-content: center;
+
+      .category-fold {
+        transition: transform 0.3s ease-out;
+        &.opened {
+          transform: rotate(180deg);
+        }
+      }
     }
 
     .category-name {

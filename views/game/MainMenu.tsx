@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
+import SlideDown from '../helpers/SlideDown'
 import EditorForm from './EditorForm'
 
 export default function MainMenu (): React.ReactElement {
@@ -12,15 +12,9 @@ export default function MainMenu (): React.ReactElement {
       <div className='menu'>
         <div className='menu-item' onClick={() => history.push('/levels') }>Wybierz poziom</div>
         <div className='menu-item' onClick={() => changeEditorFormDisplay(!editorFormDisplay)}>Twórz poziom</div>
-        <CSSTransition
-            in={editorFormDisplay}
-            classNames="slide-down"
-            timeout={500}
-            unmountOnExit={true}
-            mountOnEnter={true}
-        >
+        <SlideDown opened={editorFormDisplay}>
           <EditorForm />
-        </CSSTransition>
+        </SlideDown>
       </div>
     </>
   )
