@@ -12,9 +12,13 @@ interface FieldProp {
 export default function renderFieldWithOptions (props: FieldProp) : React.ReactElement {
   switch (props.typeOfField) {
     case 'FINISH': {
-      const finishAttr = props.attributes as FinishAttributes
-      if (finishAttr.opened === 1) return <img src="/images/finish.png" alt="O" />
-      else return <img src="/images/closed.png" alt="#" />
+      try {
+        const finishAttr = props.attributes as FinishAttributes
+        if (finishAttr.opened === 1) return <img src="/images/finish_open.png" alt="O" />
+        else return <img src="/images/finish.png" alt="#" />
+      } catch {
+        return <img src="/images/finish.png" alt="#" />
+      }
     }
     case 'ARROWRIGHT':
       return <img src="/images/arrow.png" alt="AR" />
