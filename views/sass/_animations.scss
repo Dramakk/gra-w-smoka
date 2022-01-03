@@ -180,3 +180,30 @@
 @include enterUp(up-1000-enter, 1000);
 @include enterDown(down-1000-enter, 1000);
 @include leaveHole(exit-1000, 1000);
+
+// Fade animation
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+.fade-exit {
+  opacity: 0;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+// Slide down animation
+.slide-down {
+    overflow:hidden;
+    transition: all 0.3s ease-out;
+    height: 0;
+    opacity: 0;
+}
+

@@ -1,13 +1,23 @@
 import React, { useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Level } from '../../levels/level'
 import Modal, { ButtonDescription } from '../helpers/Modal'
+import NavigationError from './NavigationError'
 
 interface ExportProps {
   levelToExport: Level
 }
 
-export default function Export (props: ExportProps): React.ReactElement {
-  const levelAfterFormat = JSON.stringify(props.levelToExport, null, 4)
+export default function Export (): React.ReactElement {
+  const history = useHistory()
+  const location = useLocation()
+  const locationState = location.state as ExportProps
+
+  if (!locationState) {
+    return <NavigationError />
+  }
+
+  const levelAfterFormat = JSON.stringify(locationState.levelToExport, null, 4)
   const [showModal, updateShowModal] = useState(false)
   const modalButtons: ButtonDescription[] = [
     {
@@ -29,7 +39,7 @@ export default function Export (props: ExportProps): React.ReactElement {
       </div>
       <div className="level-export-buttons">
         <button onClick={copyToClipboard}>Skopiuj do schowka</button>
-        <button>Powróć do menu głównego</button>
+        <button onClick={() => history.push('/')}>Wróć do głównego menu</button>
       </div>
       <Modal show={showModal} buttons={modalButtons} title="Sukces!">
         <div>Skopiowano poziom do schowka.</div>
