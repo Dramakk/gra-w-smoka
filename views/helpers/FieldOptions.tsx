@@ -1,5 +1,4 @@
 import React from 'react'
-// import { FinishAttributes, Scale, Exit, Entrance, ArithmeticOperation, Swap, If, RegisterOperation } from '../../levels/fields'
 import { FinishAttributes, ScaleAttributes, ArithmeticOperationAttributes, SwapOperationAttributes, RegisterOperationAttributes, IfAttributes, EntranceAttributes, ExitAttributes } from '../../levels/fields'
 import { GadgetType } from '../../levels/level'
 import { SelectedOptions } from '../game/GadgetEdit'
@@ -9,7 +8,7 @@ interface FieldProp {
   attributes?: SelectedOptions
 }
 
-export default function renderFieldWithOptions (props: FieldProp) : React.ReactElement {
+export default function FieldOptions (props: FieldProp) : React.ReactElement {
   switch (props.typeOfField) {
     case 'FINISH': {
       try {

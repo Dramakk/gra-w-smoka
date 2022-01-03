@@ -3,7 +3,7 @@ import { EngineState } from '../engine/engine'
 import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
-import { manageClearUIState, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
+import { manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
 import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 import { SelectedOptions } from '../views/game/GadgetEdit'
@@ -16,7 +16,8 @@ export type PossibleActions =
   | 'STEP' // Invoked at each step
   | 'SELECT_GADGET' // Invoked when user selects field to place
   | 'SELECT_OPTIONS' // Invoked when user selects options for gadget
-  | 'CLEAR_UI_STATE' // Invoked when user closes gadget edit modal
+  | 'CLEAR_UI_STATE' // Used to clear edit modal state
+  | 'CLOSE_MODAL' // Invoked when we user close gadget edit modal to prevent UI clipping
   | 'COMMIT_EDIT' // Invoked when user clicks 'Zatwierdź' button in edit modal
   | 'DELETE_FIELD' // Invoked when user clicks 'Usuń' button in edit modal
   | 'FIELD_CLICK' // Invoked when user clicks field on the map
@@ -33,6 +34,7 @@ export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: n
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
 export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
 export interface SelectOptionsPayload { selectedOptions: SelectedOptions }
+export interface CloseModalPayload { nextAction: Action, dispatch: React.Dispatch<Action> }
 
 export type PossiblePayloads =
   | StartPayload
@@ -42,6 +44,7 @@ export type PossiblePayloads =
   | ChangeGemQtyPayload
   | ChangeRegisterPayload
   | SelectOptionsPayload
+  | CloseModalPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
@@ -87,6 +90,8 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageClearUIState(state)
     case 'COMMIT_EDIT':
       return manageCommitEdit(state)
+    case 'CLOSE_MODAL':
+      return manageCloseModal(state, action.payload as CloseModalPayload)
     case 'DELETE_FIELD':
       return manageDeleteField(state, action.payload as FieldClickPayload)
     case 'FIELD_CLICK':

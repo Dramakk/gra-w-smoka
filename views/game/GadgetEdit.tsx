@@ -25,7 +25,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
     {
       buttonText: 'Zamknij',
       buttonType: 'primary',
-      onClick: () => dispatch({ type: 'CLEAR_UI_STATE' })
+      onClick: () => dispatch({ type: 'CLOSE_MODAL', payload: { nextAction: { type: 'CLEAR_UI_STATE' }, dispatch } })
 
     }
   ]
@@ -37,7 +37,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       buttonText: 'Zatwierdź',
       buttonType: 'success',
       onClick: () => {
-        dispatch({ type: 'COMMIT_EDIT' })
+        dispatch({ type: 'CLOSE_MODAL', payload: { nextAction: { type: 'COMMIT_EDIT' }, dispatch } })
       }
     })
   }
@@ -52,7 +52,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       buttonText: 'Usuń',
       buttonType: 'danger',
       onClick: () => {
-        dispatch({ type: 'DELETE_FIELD', payload: { index: props.state.fieldId } })
+        dispatch({ type: 'CLOSE_MODAL', payload: { nextAction: { type: 'DELETE_FIELD', payload: { index: props.state.fieldId } }, dispatch } })
       }
     })
   }
