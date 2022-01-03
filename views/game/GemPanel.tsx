@@ -12,7 +12,7 @@ export default function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemI
     <div className="gem-panel">
       <div className="gem-panel-header">
         <div>DRAGON</div>
-        <div>SCALE</div>
+        <div><img src='/images/scale_.png' alt='SCALE'/></div>
         <div>TREE</div>
       </div>
       {gemColors.map((gemColor, index) => {

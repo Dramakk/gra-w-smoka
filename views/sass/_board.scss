@@ -20,16 +20,35 @@
     position: relative;
     .image-detail {
       position: absolute;
-      width: 25px;
-      height: 25px;
+      width: 20px;
+      height: 20px;
     }
-    .image-right-corner {
-      top: 0px;
-      right: 0px;
+    .image-right {
+      right: 3px;
     }
-    .image-left-corner {
-      top: 0px;
-      left: 0px;
+    .image-bottom {
+      bottom: 8px;
+    }
+    .image-left {
+      left: 3px;
+    }
+    .image-top {
+      top: 3px;
+    }
+    .image-sign {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      top: 10px;
+    }
+    .image-sign-right {
+      right: 9px;
+    }
+    .image-sign-left {
+      left: 9px;
+    }
+    .image-sign-middle {
+      left: 25px;
     }
   }
 }

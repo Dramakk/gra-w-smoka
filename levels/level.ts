@@ -201,7 +201,7 @@ export const LevelSpeedControls = {
           field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
       }
     })
-    const isFinishOpened = LevelPredicates.checkLevelGemQty(level)
+    const isFinishOpened = LevelPredicates.checkLevelGemQty(level) ? 1 : 0
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
@@ -431,7 +431,7 @@ export const LevelManipulation = {
   tryOpenExit: function (level : Level) : Level {
     // Guard because used in editor too
     if (level.finishId != null) {
-      const isFinishOpened = LevelPredicates.checkLevelGemQty(level) && LevelPredicates.checkRegisters(level)
+      const isFinishOpened = LevelPredicates.checkLevelGemQty(level) && LevelPredicates.checkRegisters(level) ? 1 : 0
       return update(level, {
         fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
       })
