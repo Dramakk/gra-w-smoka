@@ -4,6 +4,7 @@ import { DispatchContext } from './Game'
 import { CSSTransition } from 'react-transition-group'
 import { Directions } from '../../levels/level'
 import Dragon from './Dragon'
+import FieldOptions from '../helpers/FieldOptions'
 
 interface FieldProps {
   field: Field;
@@ -52,7 +53,12 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
   return (
     <>
       <div onClick={onClick} className='board-field'>
-        <div className="board-content">{props.field.image}</div>
+        <div className="board-content">
+          <FieldOptions
+            typeOfField={props.field.typeOfField}
+            attributes={props.field.attributes}
+          />
+        </div>
         <CSSTransition
           in={props.displayDragon}
           timeout={1000}

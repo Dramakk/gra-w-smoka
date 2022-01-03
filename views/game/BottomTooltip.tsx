@@ -22,7 +22,7 @@ function BottomTooltipItem (props: BottomTooltipItemProps): ReactElement {
   return (
       <span>
         <button className={`bottom-tooltip-item ${props.isSelected ? 'item-selected' : ''}`} onClick={onClick}>
-          {props.gadgetToPlace[0]}
+          <img src={`/images/${props.gadgetToPlace[0].toLowerCase()}.png`} alt={props.gadgetToPlace[0]}/>
           {props.gadgetToPlace[1] !== Infinity && props.gadgetToPlace[1]}
         </button>
       </span>

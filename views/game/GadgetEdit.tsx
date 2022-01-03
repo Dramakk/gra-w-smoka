@@ -3,8 +3,9 @@ import { GadgetOptionKeys, GadgetType } from '../../levels/level'
 import { GadgetEditState } from '../../state_manager/reducer'
 import Modal, { ButtonDescription } from '../helpers/Modal'
 import { DispatchContext } from './Game'
+import FieldOptions from '../helpers/FieldOptions'
 
-export type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number>>
+export type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number >>
 
 interface GadgetEditProps {
   state: GadgetEditState
@@ -76,7 +77,10 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
     <Modal title='Wybierz opcje dla gadżetu' show={props.state.showModal} buttons={modalButtons}>
       <div className='gadget-edit-container'>
         <div className='gadget-edit-picture'>
-          Placeholder
+        <FieldOptions
+          typeOfField={props.selectedGadget}
+          attributes={props.selectedOptions}
+        />
         </div>
         <div className='gadget-edit-options'>
           {dropdown || <div className='gadget-edit-options-empty'>Brak opcji dla tego gadżetu</div>}
