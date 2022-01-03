@@ -7,38 +7,7 @@
     height: 64px;
     margin: auto;
     position: relative;
-    .image-detail {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-    }
-    .image-right {
-      right: 3px;
-    }
-    .image-bottom {
-      bottom: 8px;
-    }
-    .image-left {
-      left: 3px;
-    }
-    .image-top {
-      top: 3px;
-    }
-    .image-sign {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      top: 10px;
-    }
-    .image-sign-right {
-      right: 9px;
-    }
-    .image-sign-left {
-      left: 9px;
-    }
-    .image-sign-middle {
-      left: 25px;
-    }
+    @include fieldDetails;
   }
 
   .gadget-edit-options {

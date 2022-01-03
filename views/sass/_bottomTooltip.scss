@@ -4,7 +4,7 @@
   .bottom-tooltip-item {
     margin: 5px;
     //transition: background-color 0.5s ease;
-    transition: border 0.5s ease;
+    transition: box-shadow 0.5s ease;
     background-image: url("../../assets/images/grass.png");
     background-size: 64px 64px;
     &.item-selected {

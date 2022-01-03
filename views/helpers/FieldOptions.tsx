@@ -43,7 +43,7 @@ export default function renderFieldWithOptions (props: FieldProp) : React.ReactE
       const entranceAttr = props.attributes as EntranceAttributes
       return (
         <>
-          <img className="image-detail image-left image-top" src={`/images/${entranceAttr.label}.png`} alt={entranceAttr.label}/>
+          <img className="image-detail image-right image-top" src={`/images/${entranceAttr.label}.png`} alt={entranceAttr.label}/>
           <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt={props.typeOfField} />
         </>
       )
@@ -52,7 +52,7 @@ export default function renderFieldWithOptions (props: FieldProp) : React.ReactE
       const exitAttr = props.attributes as ExitAttributes
       return (
         <>
-          <img className="image-detail image-right-corner" src={`/images/${exitAttr.label}.png`} alt={exitAttr.label}/>
+          <img className="image-detail image-left image-top" src={`/images/${exitAttr.label}.png`} alt={exitAttr.label}/>
           <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt={props.typeOfField} />
         </>
       )
