@@ -3,6 +3,8 @@ import { add, Counter, counterDelete, get } from '../helpers/counter'
 import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
+// import hole from '../assets/images/hole.png'
+
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
 export const GadgetTypeArray = [
   'START',
@@ -174,9 +176,21 @@ export const LevelSpeedControls = {
   },
 
   setStart: function (level: Level, index: number, direction: Directions) : Level {
-    return update(level, {
+    const newLevel = update(level, {
+      fields: {
+        $set: level.fields.map((field, index) =>
+          field.typeOfField === 'START' ? fields.createField('EMPTY', 'E', index) : field)
+      }
+    })
+
+    return update(newLevel, {
       baseDragon: { $merge: { fieldId: index, direction: direction, directionHistory: { previous: null, current: direction } } },
-      gadgets: { $set: counterDelete(level.gadgets, 'START') }
+      gadgets: { $set: counterDelete(level.gadgets, 'START') },
+      fields: {
+        $set: newLevel.fields.map((field, mapIdx) =>
+          index === mapIdx ? fields.createField('START', 'E', index) : field
+        )
+      }
     })
   },
 
@@ -187,7 +201,7 @@ export const LevelSpeedControls = {
           field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
       }
     })
-    const isFinishOpened = LevelPredicates.checkLevelGemQty(level)
+    const isFinishOpened = LevelPredicates.checkLevelGemQty(level) ? 1 : 0
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
@@ -255,7 +269,9 @@ export const LevelCreation = {
     baseDragon: Dragon,
     treeGems: Record<GemColors, number>,
     treeRegisters: TreeRegisters,
-    finishId: number
+    finishId: number,
+    exits: Record<Labels, number>,
+    entrances: Record<Labels, number>
   ): Level {
     // Flag determining if all ids from 0 to fields.length are asSignsed to fields.
     fields.sort((firstElem, secondElem) => { return firstElem.id - secondElem.id })
@@ -281,9 +297,6 @@ export const LevelCreation = {
       RED: 0,
       GREEN: 0
     }
-    // TODO: remove, add to parser
-    const entrances : Record<Labels, number> = {}
-    const exits : Record<Labels, number> = {}
     return {
       fields,
       fieldsPerRow,
@@ -418,7 +431,7 @@ export const LevelManipulation = {
   tryOpenExit: function (level : Level) : Level {
     // Guard because used in editor too
     if (level.finishId != null) {
-      const isFinishOpened = LevelPredicates.checkLevelGemQty(level) && LevelPredicates.checkRegisters(level)
+      const isFinishOpened = LevelPredicates.checkLevelGemQty(level) && LevelPredicates.checkRegisters(level) ? 1 : 0
       return update(level, {
         fields: { [level.finishId]: { attributes: { $merge: { opened: isFinishOpened } } } }
       })

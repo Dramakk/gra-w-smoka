@@ -5,9 +5,11 @@
   .gadget-edit-picture {
     width: 64px;
     height: 64px;
-    // TODO: Usunąć po dodaniu ikon
-    background: red;
     margin: auto;
+    position: relative;
+    background-image: url("../../assets/images/grass.png");
+    border-radius: 15px;
+    @include fieldDetails;
   }
 
   .gadget-edit-options {

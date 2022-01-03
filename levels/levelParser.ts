@@ -4,7 +4,7 @@ import * as spicery from '../node_modules/spicery/build/index'
 import { aNumber } from '../node_modules/spicery/build/index'
 import { ParseFn, parse } from '../node_modules/spicery/build/parsers/index'
 import * as fields from './fields'
-import { Directions, GadgetType, GemColors, Level, LevelCreation, TreeRegisters } from './level'
+import { Directions, GadgetType, GemColors, Labels, LabelsArray, Level, LevelCreation, TreeRegisters } from './level'
 
 // Level parser using Spicery package from NPM.
 export function parseLevel (levelToParse: string): Level {
@@ -33,6 +33,10 @@ export function parseLevel (levelToParse: string): Level {
   const gadgetsParser: ParseFn<Counter<GadgetType>> = (x: [string, number][]) => {
     let counterToReturn = createCounter<GadgetType>()
 
+    if (!Array.isArray(x)) {
+      return counterToReturn
+    }
+
     x.forEach(gadgetDescription => {
       const gadgetToAdd = gadgetTypeParser(gadgetDescription[0])
       const howManyAvailable = aNumber(gadgetDescription[1])
@@ -50,7 +54,8 @@ export function parseLevel (levelToParse: string): Level {
       throw Error(`Parser error parsing ${x}`)
     }
 
-    return fields.createField(x.typeOfField, x.image, x.id, x.attributes)
+    return LevelCreation.newFieldFromType(x.id, x.typeOfField, x.attributes)
+    // return fields.createField(x.typeOfField, x.image, x.id, x.attributes)
   }
 
   const gemRecordParser: ParseFn<Record<GemColors, number>> = (x: Record<GemColors, number>) => {
@@ -79,6 +84,17 @@ export function parseLevel (levelToParse: string): Level {
     return x
   }
 
+  const jumpParser: ParseFn<Record<Labels, number>> = (x: Record<Labels, number>) => {
+    const keys = [...new Set(Object.keys(x))]
+    const keyConstraintCheck = keys.every(key => LabelsArray.includes(key))
+
+    if (!keyConstraintCheck) {
+      throw Error(`Parse error parsing ${x}`)
+    }
+
+    return x
+  }
+
   const levelParser: ParseFn<Level> = (x: any) => {
     const fields = spicery.fromMap(x, 'fields', spicery.anArrayContaining(fieldsParser))
     const fieldsPerRow = spicery.fromMap(x, 'fieldsPerRow', spicery.aNumber)
@@ -87,8 +103,19 @@ export function parseLevel (levelToParse: string): Level {
     const treeGems: Record<GemColors, number> = spicery.fromMap(x, 'treeGems', gemRecordParser)
     const finishId: number = spicery.fromMap(x, 'finishId', aNumber)
     const treeRegisters: TreeRegisters = spicery.fromMap(x, 'treeRegisters', treeRegistersParser)
+    const entrances: Record<Labels, number> = spicery.fromMap(x, 'entrances', jumpParser)
+    const exits: Record<Labels, number> = spicery.fromMap(x, 'exits', jumpParser)
 
-    return LevelCreation.createLevel(fields, fieldsPerRow, gadgets, baseDragon, treeGems, treeRegisters, finishId)
+    return LevelCreation.createLevel(fields,
+      fieldsPerRow,
+      gadgets,
+      baseDragon,
+      treeGems,
+      treeRegisters,
+      finishId,
+      exits,
+      entrances
+    )
   }
 
   return parse(levelParser)(levelToParse)

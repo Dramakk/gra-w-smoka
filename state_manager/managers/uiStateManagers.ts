@@ -1,6 +1,6 @@
 import update from 'immutability-helper'
 import { generateGadgetDescription } from '../../levels/fields'
-import { GadgetOptionKeys } from '../../levels/level'
+import { GadgetOptionKeys, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
 import { manageDeleteField, managePlaceField } from './placementManagers'
@@ -15,8 +15,9 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
       return { ...prev }
     }, {} as SelectedOptions)
 
-  if (state.uiState.fieldToAdd === payload.fieldType) {
+  if (state.uiState.fieldToAdd === payload.fieldType || !LevelPredicates.canPlaceField(state.engineState.level, payload.fieldType)) {
     // User clicked on already selected gadget - deselect
+    // Or placed all of given field
     return update(state, {
       uiState: {
         $merge: manageClearUIState(state).uiState
@@ -25,7 +26,7 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
   }
 
   if (Object.keys(availableOptions).length === 0) {
-    // There are no options for this gaget - don't open modal
+    // There are no options for this gadget - don't open modal
     return update(state, { uiState: { $merge: { fieldToAdd: payload.fieldType } } })
   }
 
@@ -75,7 +76,7 @@ export function manageClearUIState (state: GameState): GameState {
         gadgetEditState: {
           fieldId: null,
           showModal: false,
-          availableOptions: {},
+          availableOptions: state.uiState.gadgetEditState.availableOptions,
           canEdit: false
         },
         selectedOptions: {}
