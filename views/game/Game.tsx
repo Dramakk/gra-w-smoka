@@ -61,12 +61,14 @@ export default function Game (): React.ReactElement {
       // Here we provide desired value of dispatch to every component down in the tree.
       <DispatchContext.Provider value={dispatch}>
         <div className='game-container'>
-          <BoardComponent
-            dragonPosition={dragon.fieldId}
-            dragonDirectionHistory={dragon.directionHistory}
-            editorMode={canEdit}
-            level={state.engineState.level}
-          />
+          <div className="board-wrapper">
+            <BoardComponent
+              dragonPosition={dragon.fieldId}
+              dragonDirectionHistory={dragon.directionHistory}
+              editorMode={canEdit}
+              level={state.engineState.level}
+            />
+          </div>
           <GemPanel
             treeGems={state.engineState.level.treeGems}
             gemsInPocket={state.engineState.dragon.gemsInPocket}
@@ -79,7 +81,7 @@ export default function Game (): React.ReactElement {
           {state.editor
             ? <div className='gadgets-selection-container'>
               <GadgetsSelection editor={state.editor} />
-              <button className={`${!canExport && 'button-disabled'}`} disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
+              <button className={`${!canExport && 'button-disabled'}`} disabled={!canExport} onClick={() => exportLevel(state.editor)}>Udostępnij swój poziom</button>
             </div>
             : null
           }

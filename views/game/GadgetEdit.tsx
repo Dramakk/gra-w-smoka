@@ -21,7 +21,7 @@ interface GadgetEditProps {
 export default function GadgetEdit (props: GadgetEditProps): React.ReactElement {
   const dispatch = useContext(DispatchContext)
   let dropdown = null
-  const modalButtons: ButtonDescription[] = [
+  let modalButtons: ButtonDescription[] = [
     {
       buttonText: 'Zamknij',
       buttonType: 'primary',
@@ -29,6 +29,8 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
 
     }
   ]
+  // We don't allow users to edit placed exits/entrances
+  const readOnly = props.state.canEdit && (props.selectedGadget === 'EXIT' || props.selectedGadget === 'ENTRANCE')
 
   if (Object.keys(props.state.availableOptions).length !== 0) {
     modalButtons.push({
@@ -41,6 +43,11 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
   }
 
   if (props.state.canEdit) {
+    // We want to disable ability to edit entrances and exits on the board
+    if (props.selectedGadget === 'ENTRANCE' || props.selectedGadget === 'EXIT') {
+      modalButtons = modalButtons.filter(button => button.buttonText !== 'Zatwierdź')
+    }
+
     modalButtons.unshift({
       buttonText: 'Usuń',
       buttonType: 'danger',
@@ -63,7 +70,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       return (
         <>
           {previousDropdown}
-          <select onChange={updateSelectedOption(optionKey).bind(this)} value={props.selectedOptions[optionKey]}>
+          <select disabled={readOnly} onChange={updateSelectedOption(optionKey).bind(this)} value={props.selectedOptions[optionKey]}>
             {props.state.availableOptions[optionKey].map((value, index) => {
               return <option key={index} value={value}>{value}</option>
             })}

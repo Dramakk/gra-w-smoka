@@ -1,6 +1,10 @@
 .bottom-tooltip {
   grid-column: 1/3;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  
   .bottom-tooltip-item {
     margin: 5px;
     //transition: background-color 0.5s ease;

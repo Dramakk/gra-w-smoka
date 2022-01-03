@@ -61,7 +61,8 @@ module.exports = {
     }),
     new CopyPlugin({
       patterns: [
-        {from: path.resolve(__dirname, 'levelConfigs')}
+        {from: path.resolve(__dirname, 'levelConfigs')},
+        {from: path.resolve(__dirname, 'assets')}
       ],
     }),
   ]

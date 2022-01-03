@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import { EditorManipulation } from '../../editor/editor'
+import { EditorManipulation, EditorPredicates } from '../../editor/editor'
 import { resetDragon } from '../../engine/engine'
 import { generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates } from '../../levels/level'
@@ -12,9 +12,14 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
   const fieldId = payload.index
   const level = getLevelFromState(state)
   const field = LevelGetters.getField(level, fieldId)
+  // Exclude rocks on board edges and fields that are not placed by player from editing
+  const canEdit =
+    LevelPredicates.isPlacedByUser(level, fieldId) ||
+      (state.editor &&
+          !EditorPredicates.isBorder(fieldId, LevelGetters.getFieldsPerRow(level), LevelGetters.getRowCount(level)))
 
   // If field is not empty and we can edit the gadget then open edit modal and populate options.
-  if (field.typeOfField !== 'EMPTY' && (LevelPredicates.isPlacedByUser(level, fieldId) || state.editor)) {
+  if (field.typeOfField !== 'EMPTY' && canEdit) {
     const attributes = field.typeOfField === 'START'
       ? { direction: state.engineState.dragon.direction }
       : field.attributes

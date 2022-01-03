@@ -1,26 +1,36 @@
-.board-container {
+.board-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 20px 0;
   overflow: auto;
-  width: 100%;
-  display: grid;
-}
 
-.board-field {
-  text-align: center;
-  position: relative;
-  background-image: url("../../assets/images/grass.png");
-  width: 64px;
-  height: 64px;
-  border: 1px solid #33691e;
-  .dragon-field {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    z-index: 100;
+  .board-container {
+    overflow: auto;
+    display: grid;
+    margin: auto;
+    padding: 10px 0;
+    max-width: calc(64px * 10);
+    max-height: calc(64px * 6);
   }
-  .board-content {
+
+  .board-field {
+    text-align: center;
     position: relative;
-    @include fieldDetails;
+    background-image: url("../../assets/images/grass.png");
+    width: 64px;
+    height: 64px;
+    border: 1px solid #33691e;
+    .dragon-field {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      z-index: 100;
+    }
+    .board-content {
+      position: relative;
+      @include fieldDetails;
+    }
   }
 }
 
