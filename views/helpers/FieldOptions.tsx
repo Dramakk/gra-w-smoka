@@ -31,7 +31,7 @@ export default function renderFieldWithOptions (props: FieldProp) : React.ReactE
       return (
       <>
         <img className="image-detail image-right image-top" src={`/images/${scaleAttr.gemColor.toLowerCase()}.png`} alt={scaleAttr.gemColor}/>
-        {`/images/${props.typeOfField.toLowerCase()}.png`}
+        <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt={props.typeOfField} />
       </>
       )
     }
@@ -40,7 +40,7 @@ export default function renderFieldWithOptions (props: FieldProp) : React.ReactE
       return (
         <>
           <img className="image-detail image-left image-top" src={`/images/${entranceAttr.label}.png`} alt={entranceAttr.label}/>
-          <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt="O" />
+          <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt={props.typeOfField} />
         </>
       )
     }
@@ -49,7 +49,7 @@ export default function renderFieldWithOptions (props: FieldProp) : React.ReactE
       return (
         <>
           <img className="image-detail image-right-corner" src={`/images/${exitAttr.label}.png`} alt={exitAttr.label}/>
-          <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt="O" />
+          <img src={`/images/${props.typeOfField.toLowerCase()}.png`} alt={props.typeOfField} />
         </>
       )
     }
