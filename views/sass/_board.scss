@@ -19,7 +19,7 @@
   }
   .board-content {
     position: relative;
-    @include fieldDetails();
+    @include fieldDetails;
   }
 }
 

@@ -17,10 +17,8 @@ export default function GadgetsSelection (props: {editor: Editor}): ReactElement
     }
 
     return (
-      <div key={index}>
-        {
-          gadgetInfo[0] // TODO: ZAMIENIĆ NA OBRAZEK
-        }
+      <div className='gadget-picture' key={index}>
+        <img src={`/images/${gadgetInfo[0].toLowerCase()}.png`} alt={gadgetInfo[0]}/>
         <ValueWithControls
           actionType={'CHANGE_GADGET_QTY'}
           actionPayloadSubstract={actionPayloadSubstract}
