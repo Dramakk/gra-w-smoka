@@ -8,13 +8,6 @@
     width: 100%;
   }
 
-  @media screen and (max-width: $tabletWidth) {
-    height: calc(100vh - 200px);
-  }
-
-  @media screen and (max-width: $smallPhoneWidth) {
-    height: calc(100vh - 250px);      
-  }
 }
 .level-export-wrapper, .import-level-wrapper {
   display: flex;
@@ -31,7 +24,7 @@
     }
 
     @media screen and (max-width: $smallPhoneWidth) {
-      height: calc(100vh - 350px);      
+      height: calc(100vh - 280px);      
     }
   }
 }

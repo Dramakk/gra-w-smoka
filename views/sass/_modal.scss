@@ -1,6 +1,9 @@
 .modal-container {
   padding: 20px 50px;
   border-radius: 20px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
 
   background-color: $backgroundLight;
   box-shadow: $shadow;
@@ -26,6 +29,10 @@
       margin-top: 10px;
     }
   }
+
+  .modal-text {
+    text-align: center;
+  }
 }
 
 .modal-background {
@@ -37,7 +44,7 @@
   z-index: 1;
   visibility: hidden;
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in;
 
   background-color: rgba(0, 0, 0, 0.5);
 

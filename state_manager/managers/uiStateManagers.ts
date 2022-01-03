@@ -76,7 +76,7 @@ export function manageClearUIState (state: GameState): GameState {
         gadgetEditState: {
           fieldId: null,
           showModal: false,
-          availableOptions: {},
+          availableOptions: state.uiState.gadgetEditState.availableOptions,
           canEdit: false
         },
         selectedOptions: {}

@@ -1,0 +1,32 @@
+.category-container {
+  display: grid;
+  justify-content: flex-end;
+
+  .category-level {
+    display: grid;
+    justify-content: center;
+  }
+
+  button {
+    background: none;
+    color: unset;
+    display: flex;
+    align-items: center;
+
+    &.category-button {
+      justify-content: center;
+
+      .category-fold {
+        transition: transform 0.3s ease-out;
+        &.opened {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .category-name {
+      margin-right: 10px;
+    }
+  }
+}
+

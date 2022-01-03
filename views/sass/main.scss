@@ -11,6 +11,12 @@
 @import "bottomTooltip";
 @import "speedControls";
 @import "exportImport";
+@import "navigationError";
+@import "editorForm";
+@import "levelSelect";
+@import "category";
+@import "loading";
+@import "gadgetsSelection";
 
 html,
 body {
@@ -20,6 +26,7 @@ body {
 }
 
 h1 {
+  font-size: 2rem;
   text-align: center;
   letter-spacing: 3px;
 }
@@ -49,6 +56,29 @@ button {
   &.button-success {
     background-color: $successColor;
   }
+
+  &.button-disabled {
+    background-color: $disabledColor;
+    color: $disabledText;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#title {
+  width: calc(100% - 40px);
+  margin: 20px;
+  max-height: 100px;
 }
 
 #app-container {
@@ -70,8 +100,12 @@ button {
   justify-items: center;
   width: auto;
   flex-direction: column;
+
   .menu-item {
-    width: 100%;
+    min-width: 250px;
+    margin-bottom: 10px;
+    color: black;
+    background: none;
   }
 }
 
@@ -83,9 +117,18 @@ button {
     display: flex;
     flex-wrap: wrap;
     padding-bottom: 150px;
+
+    .bottom-tooltip {
+      order: -1;
+    }
+
+    .board-container {
+      order: -2;
+    }
   }
 
   @media screen and (max-width: $tabletWidth) {
     padding-bottom: 90px;
   }
 }
+

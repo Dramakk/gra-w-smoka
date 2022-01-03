@@ -1,9 +1,9 @@
 import React from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { EngineState } from '../../engine/engine'
 import { items } from '../../helpers/counter'
 import { stateReducer } from '../../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../../state_manager/accessors'
-import ReactDOM from 'react-dom'
 import { Editor } from '../../editor/editor'
 import BoardComponent from './Board'
 import GemPanel from './GemPanel'
@@ -12,19 +12,25 @@ import BottomTooltip from './BottomTooltip'
 import SpeedControls from './SpeedControls'
 import GadgetsSelection from './GadgetsSelection'
 import GadgetEdit, { SelectedOptions } from './GadgetEdit'
-import Export from './Export'
+import NavigationError from './NavigationError'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
 
-type GameProps = { engine: EngineState, editorMode: boolean, editor?: Editor};
-
-export default function Game (props: GameProps): React.ReactElement {
+export default function Game (): React.ReactElement {
   // This is the place where all magic happens. We create state object and dispatch function which is passed down the tree.
   // Using dispatch we can update state in this place and trigger update of every component (if needed)
+  const location = useLocation()
+  const history = useHistory()
+  const locationState: { game: EngineState, editor: Editor} = location.state as { game: EngineState, editor: Editor}
+
+  if (!locationState) {
+    return <NavigationError />
+  }
+
   const [state, dispatch] = React.useReducer(stateReducer,
     {
-      engineState: props.engine,
+      engineState: locationState.game,
       uiState: {
         fieldToAdd: null,
         selectedOptions: null,
@@ -35,7 +41,7 @@ export default function Game (props: GameProps): React.ReactElement {
           availableOptions: {}
         }
       },
-      editor: props.editor,
+      editor: locationState.editor,
       loop: null
     })
 
@@ -48,8 +54,7 @@ export default function Game (props: GameProps): React.ReactElement {
 
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
-    ReactDOM.render(<Export levelToExport={editorState.level} />,
-      document.querySelector('#app-container'))
+    history.push('/editor/export', { levelToExport: editorState.level })
   }
 
   return (
@@ -72,9 +77,9 @@ export default function Game (props: GameProps): React.ReactElement {
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
           <SpeedControls />
           {state.editor
-            ? <div>
+            ? <div className='gadgets-selection-container'>
               <GadgetsSelection editor={state.editor} />
-              <button disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
+              <button className={`${!canExport && 'button-disabled'}`} disabled={!canExport} onClick={() => exportLevel(state.editor)}>EXPORT LEVEL</button>
             </div>
             : null
           }
