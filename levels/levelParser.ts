@@ -50,12 +50,11 @@ export function parseLevel (levelToParse: string): Level {
   }
 
   const fieldsParser: ParseFn<fields.Field> = (x: fields.Field) => {
-    if (!x.typeOfField || x.id == null || !x.image) {
+    if (!x.typeOfField || x.id == null) {
       throw Error(`Parser error parsing ${x}`)
     }
 
     return LevelCreation.newFieldFromType(x.id, x.typeOfField, x.attributes)
-    // return fields.createField(x.typeOfField, x.image, x.id, x.attributes)
   }
 
   const gemRecordParser: ParseFn<Record<GemColors, number>> = (x: Record<GemColors, number>) => {

@@ -11,12 +11,14 @@ export default function SlideDown (props: SlideDownProps): React.ReactElement {
   function collapseSection (element: HTMLElement) {
     const sectionHeight = element.scrollHeight
     const elementTransition = element.style.transition
+    const elementDisplay = element.style.display
     element.style.transition = ''
 
     requestAnimationFrame(function () {
       element.style.height = sectionHeight + 'px'
       element.style.opacity = '1'
       element.style.transition = elementTransition
+      element.style.display = elementDisplay
 
       requestAnimationFrame(function () {
         element.style.height = 0 + 'px'
@@ -49,7 +51,7 @@ export default function SlideDown (props: SlideDownProps): React.ReactElement {
   }, [props.opened])
 
   return (
-    <div ref={slideDownRef} className='slide-down' onTransitionEnd={() => onTransitionEnd(slideDownRef.current)}>
+    <div ref={slideDownRef} className={`slide-down ${props.opened ? 'visible' : ''}`} onTransitionEnd={() => onTransitionEnd(slideDownRef.current)}>
       {props.children}
     </div>
   )

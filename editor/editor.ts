@@ -56,10 +56,10 @@ export const EditorCreation = {
     const fields: Field[] = [...Array(howManyRows * fieldsPerRow).keys()].map((index: number) => {
     // Insert walls at boundaries of board
       if (EditorPredicates.isBorder(index, fieldsPerRow, howManyRows)) {
-        return createField<Wall>('WALL', 'W', index)
+        return createField<Wall>('WALL', index)
       }
 
-      return createField<Empty>('EMPTY', 'E', index)
+      return createField<Empty>('EMPTY', index)
     })
     const baseDragon: Dragon = {
       fieldId: null,
@@ -165,7 +165,7 @@ export const EditorManipulation = {
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((item, itemIndex) =>
-          itemIndex === index ? createField<Empty>('EMPTY', 'E', index) : item)
+          itemIndex === index ? createField<Empty>('EMPTY', index) : item)
       }
     })
   },

@@ -17,6 +17,7 @@
 @import "category";
 @import "loading";
 @import "gadgetsSelection";
+@import "imageDropdown";
 
 html,
 body {
@@ -124,6 +125,7 @@ input[type=number] {
 
     .board-wrapper {
       order: -2;
+      width: 100%;
     }
   }
 

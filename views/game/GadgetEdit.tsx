@@ -4,6 +4,8 @@ import { GadgetEditState } from '../../state_manager/reducer'
 import Modal, { ButtonDescription } from '../helpers/Modal'
 import { DispatchContext } from './Game'
 import FieldOptions from '../helpers/FieldOptions'
+import ImageDropdown from '../helpers/ImageDropdown'
+import { getGadgetDesription } from '../../levels/fields'
 
 export type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number >>
 
@@ -57,24 +59,45 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
     })
   }
   // Update state to currently selected options.
-  function updateSelectedOption (optionKey: string): (event: React.ChangeEvent<HTMLSelectElement>) => void {
-    return (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const parsedValue = parseInt(event.target.value)
-      dispatch({ type: 'SELECT_OPTIONS', payload: { selectedOptions: { ...props.selectedOptions, [optionKey]: isNaN(parsedValue) ? event.target.value : parsedValue } } })
+  function updateSelectedOption (optionKey: string): (option: string) => void {
+    return (option: string) => {
+      const parsedValue = parseInt(option)
+      dispatch({ type: 'SELECT_OPTIONS', payload: { selectedOptions: { ...props.selectedOptions, [optionKey]: isNaN(parsedValue) ? option : parsedValue } } })
     }
   }
 
-  // Generate dropdown for options
-  if (Object.keys(props.state.availableOptions).length) {
-    dropdown = Object.keys(props.state.availableOptions).reduce((previousDropdown: React.ReactElement, optionKey: GadgetOptionKeys) => {
+  // Generate dropdowns
+  const availableOptions = Object.keys(props.state.availableOptions)
+  if (availableOptions.length) {
+    dropdown = availableOptions.reduce((previousDropdown: React.ReactElement, optionKey: GadgetOptionKeys) => {
+      const options = props.state.availableOptions[optionKey]
+      const mappedOptions = options.map(option => {
+        const mappedOption = { text: option.toString(), image: `/images/${option}.png` }
+
+        if (props.selectedGadget === 'START') {
+          switch (option) {
+            case 'U':
+              mappedOption.image = '/images/ARROWUP.png'
+              break
+            case 'D':
+              mappedOption.image = '/images/ARROWDOWN.png'
+              break
+            case 'R':
+              mappedOption.image = '/images/ARROWRIGHT.png'
+              break
+            case 'L':
+              mappedOption.image = '/images/ARROWLEFT.png'
+              break
+          }
+        }
+
+        return mappedOption
+      })
+
       return (
         <>
-          {previousDropdown}
-          <select disabled={readOnly} onChange={updateSelectedOption(optionKey).bind(this)} value={props.selectedOptions[optionKey]}>
-            {props.state.availableOptions[optionKey].map((value, index) => {
-              return <option key={index} value={value}>{value}</option>
-            })}
-          </select>
+          { previousDropdown }
+          <ImageDropdown disabled={readOnly} options={mappedOptions} selectCallback={updateSelectedOption(optionKey).bind(this)}/>
         </>
       )
     }, null)
@@ -83,6 +106,9 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
   return (
     <Modal title='Wybierz opcje dla gadżetu' show={props.state.showModal} buttons={modalButtons}>
       <div className='gadget-edit-container'>
+        <div className='gadget-edit-description'>
+          { getGadgetDesription(props.selectedGadget) }
+        </div>
         <div className='gadget-edit-picture'>
         <FieldOptions
           typeOfField={props.selectedGadget}

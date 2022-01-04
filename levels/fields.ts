@@ -27,7 +27,6 @@ type FieldAttributes =
 export interface Field {
     typeOfField: FieldType
     id: number
-    image: string
     attributes?: FieldAttributes
 }
 
@@ -88,8 +87,8 @@ export interface Exit extends Field {
   attributes: ExitAttributes
 }
 
-export function createField<T extends Field> (typeOfField: FieldType, image: string, id: number, attributes?: FieldAttributes): T {
-  return { typeOfField, image, id, attributes } as T
+export function createField<T extends Field> (typeOfField: FieldType, id: number, attributes?: FieldAttributes): T {
+  return { typeOfField, id, attributes } as T
 }
 
 // This function generates options record for given gadget.
@@ -137,5 +136,50 @@ export function generateGadgetDescription (gadgetType: GadgetType): GadgetOption
       }
     default:
       return {}
+  }
+}
+
+export function getGadgetDesription (gadgetType: GadgetType): string {
+  switch (gadgetType) {
+    case 'ARROWUP':
+      return 'Sprawia, że smok skręca do góry'
+    case 'ARROWDOWN':
+      return 'Sprawia, że smok skręca w dół'
+    case 'ARROWLEFT':
+      return 'Sprawia, że smok skręca w lewo'
+    case 'ARROWRIGHT':
+      return 'Sprawia, że smok skręca w prawo'
+    case 'SCALE':
+      return 'Sprawia, że smok zostawia kryształy określonego koloru'
+    case 'WALL':
+      return 'Smok nie może przez nią przejść'
+    case 'START':
+      return 'Smok będzie zaczynał podróż z tego miejsca'
+    case 'FINISH':
+      return 'Tutaj smok kończy swoją podróż'
+    case 'ADD':
+      return 'Smok może z niej zabrać pewną liczbę kryształów'
+    case 'SUBSTRACT':
+      return 'Odejmuje smokowi kryształy'
+    case 'MULTIPLY':
+      return 'Mnoży kryształy smoka'
+    case 'DIVIDE':
+      return 'Dzieli kryształy smoka'
+    case 'SET':
+      return 'Pozwala zmienić liczbę kryształów, które smok ma w kieszące'
+    case 'SWAP':
+      return 'Pozwala zmienić kolor kryształów'
+    case 'STORE':
+      return 'Smok może tutaj schować kryształy w drzewie'
+    case 'TAKE':
+      return 'Smok może tutaj wyjąć kryształy z drzewa'
+    case 'IF':
+      return 'Pozwala smokowi zadecyować czy skręcić w lewo, czy w prawo'
+    case 'ENTRANCE':
+      return 'Wejście do podziemnego tunelu'
+    case 'EXIT':
+      return 'Wyjście z podziemnego tunelu'
+    default:
+      return ''
   }
 }

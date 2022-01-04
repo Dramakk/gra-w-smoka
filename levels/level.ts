@@ -179,7 +179,7 @@ export const LevelSpeedControls = {
     const newLevel = update(level, {
       fields: {
         $set: level.fields.map((field, index) =>
-          field.typeOfField === 'START' ? fields.createField('EMPTY', 'E', index) : field)
+          field.typeOfField === 'START' ? fields.createField('EMPTY', index) : field)
       }
     })
 
@@ -188,7 +188,7 @@ export const LevelSpeedControls = {
       gadgets: { $set: counterDelete(level.gadgets, 'START') },
       fields: {
         $set: newLevel.fields.map((field, mapIdx) =>
-          index === mapIdx ? fields.createField('START', 'E', index) : field
+          index === mapIdx ? fields.createField('START', index) : field
         )
       }
     })
@@ -198,14 +198,14 @@ export const LevelSpeedControls = {
     const newLevel = update(level, {
       fields: {
         $set: level.fields.map((field, index) =>
-          field.typeOfField === 'FINISH' ? fields.createField('EMPTY', 'E', index) : field)
+          field.typeOfField === 'FINISH' ? fields.createField('EMPTY', index) : field)
       }
     })
     const isFinishOpened = LevelPredicates.checkLevelGemQty(level) ? 1 : 0
     return update(newLevel, {
       fields: {
         $set: newLevel.fields.map((field, idx) =>
-          index === idx ? fields.createField('FINISH', 'F', index, { opened: isFinishOpened }) : field)
+          index === idx ? fields.createField('FINISH', index, { opened: isFinishOpened }) : field)
       },
       finishId: { $set: index }
     })
@@ -219,7 +219,7 @@ export const LevelSpeedControls = {
       return update(level, {
         fields: {
           $set: level.fields.map((field, idx) =>
-            index === idx ? fields.createField('ENTRANCE', `O ${label}`, index, { label: label, exit: level.exits[label] }) : field)
+            index === idx ? fields.createField('ENTRANCE', index, { label: label, exit: level.exits[label] }) : field)
         },
         entrances: { $merge: { [label]: index } }
       })
@@ -239,7 +239,7 @@ export const LevelSpeedControls = {
       return update(level, {
         fields: {
           $set: level.fields.map((item, itemIndex) =>
-            itemIndex === index ? fields.createField<fields.Empty>('EMPTY', 'E', index) : item)
+            itemIndex === index ? fields.createField<fields.Empty>('EMPTY', index) : item)
         },
         exits: { $unset: [label] }
       })
@@ -253,7 +253,7 @@ export const LevelSpeedControls = {
       return update(level, {
         fields: {
           $set: level.fields.map((field, idx) =>
-            index === idx ? fields.createField('EXIT', `# ${label}`, index, { label: label }) : field)
+            index === idx ? fields.createField('EXIT', index, { label: label }) : field)
         },
         exits: { $merge: { [label]: index } }
       })
@@ -316,58 +316,58 @@ export const LevelCreation = {
   newFieldFromType: function (index: number, fieldType: GadgetType, options: GadgetOptionType) : fields.Field {
     switch (fieldType) {
       case 'ARROWUP':
-        return fields.createField<fields.Arrow>('ARROWUP', 'AU', index, { direction: 'U' })
+        return fields.createField<fields.Arrow>('ARROWUP', index, { direction: 'U' })
       case 'ARROWDOWN':
-        return fields.createField<fields.Arrow>('ARROWDOWN', 'AD', index, { direction: 'D' })
+        return fields.createField<fields.Arrow>('ARROWDOWN', index, { direction: 'D' })
       case 'ARROWLEFT':
-        return fields.createField<fields.Arrow>('ARROWLEFT', 'AL', index, { direction: 'L' })
+        return fields.createField<fields.Arrow>('ARROWLEFT', index, { direction: 'L' })
       case 'ARROWRIGHT':
-        return fields.createField<fields.Arrow>('ARROWRIGHT', 'AR', index, { direction: 'R' })
+        return fields.createField<fields.Arrow>('ARROWRIGHT', index, { direction: 'R' })
       case 'SCALE':
-        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', `S ${options.gemColor}`, index, { gemColor: options.gemColor })
+        if ('gemColor' in options) return fields.createField<fields.Scale>('SCALE', index, { gemColor: options.gemColor })
         else throw Error('Wrong options')
       case 'WALL':
-        return fields.createField<fields.Wall>('WALL', 'W', index)
+        return fields.createField<fields.Wall>('WALL', index)
       case 'START':
-        return fields.createField<fields.Start>('START', 'E', index)
+        return fields.createField<fields.Start>('START', index)
       case 'FINISH':
-        if ('opened' in options) return fields.createField<fields.Finish>('FINISH', 'F', index, { opened: options.opened })
+        if ('opened' in options) return fields.createField<fields.Finish>('FINISH', index, { opened: options.opened })
         else throw Error('Wrong options')
       case 'ADD':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADD', `ADD ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('ADD', index, { ...options })
         else throw Error('Wrong options')
       case 'SUBSTRACT':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACT', `SUB ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SUBSTRACT', index, { ...options })
         else throw Error('Wrong options')
       case 'MULTIPLY':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLY', `MULT ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('MULTIPLY', index, { ...options })
         else throw Error('Wrong options')
       case 'DIVIDE':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVIDE', `DIV ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('DIVIDE', index, { ...options })
         else throw Error('Wrong options')
       case 'SET':
-        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SET', `SET ${options.targetGemColor} ${options.numberOfGems}`, index, { ...options })
+        if ('numberOfGems' in options) return fields.createField<fields.ArithmeticOperation>('SET', index, { ...options })
         else throw Error('Wrong options')
       case 'SWAP':
-        if ('firstGemColor' in options) return fields.createField<fields.Swap>('SWAP', `SWAP ${options.firstGemColor} ${options.secondGemColor}`, index, { ...options })
+        if ('firstGemColor' in options) return fields.createField<fields.Swap>('SWAP', index, { ...options })
         else throw Error('Wrong options')
       case 'STORE':
-        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('STORE', `STORE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('STORE', index, { ...options })
         else throw Error('Wrong options for STORE')
       case 'TAKE':
-        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('TAKE', `TAKE ${options.targetGemColor} ${options.registerNumber}`, index, { ...options })
+        if ('registerNumber' in options) return fields.createField<fields.RegisterOperation>('TAKE', index, { ...options })
         else throw Error('Wrong options for TAKE')
       case 'IF':
-        if ('sign' in options) return fields.createField<fields.If>('IF', `IF ${options.leftGemColor} ${options.sign} ${options.rightNumberOfGems}`, index, { ...options })
+        if ('sign' in options) return fields.createField<fields.If>('IF', index, { ...options })
         else throw Error('Wrong options for IF')
       case 'ENTRANCE':
-        if ('label' in options) return fields.createField<fields.Entrance>('ENTRANCE', `O '${options.label}''`, index, { ...options })
+        if ('label' in options) return fields.createField<fields.Entrance>('ENTRANCE', index, { ...options })
         else throw Error('Wrong options for ENTRANCE')
       case 'EXIT':
-        if ('label' in options) return fields.createField<fields.Exit>('EXIT', `# '${options.label}'`, index, { ...options })
+        if ('label' in options) return fields.createField<fields.Exit>('EXIT', index, { ...options })
         else throw Error('Wrong options for EXIT')
       default:
-        return fields.createField<fields.Empty>('EMPTY', 'E', index)
+        return fields.createField<fields.Empty>('EMPTY', index)
     }
   }
 }
