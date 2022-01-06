@@ -65,7 +65,6 @@ export function changeState (currentState: EngineState): EngineState {
     case 'FINISH': {
       const currentFinish = currentField as Finish
       if (currentFinish.attributes.opened) {
-        console.log('game finished')
         return update(currentState, { dragon: { $merge: { canMove: false } } })
       }
       return { ...currentState }
