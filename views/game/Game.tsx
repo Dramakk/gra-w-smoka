@@ -66,6 +66,7 @@ export default function Game (): React.ReactElement {
               dragonPosition={dragon.fieldId}
               dragonDirectionHistory={dragon.directionHistory}
               editorMode={canEdit}
+              isMoving={!!state.loop}
               level={state.engineState.level}
             />
           </div>

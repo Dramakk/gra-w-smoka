@@ -2,24 +2,29 @@ import React, { useState, useEffect } from 'react'
 
 interface DragonProps {
   displayDragon: boolean;
+  isMoving: boolean;
   className: string;
   timeout: number;
 }
 
 export default function Dragon (props: DragonProps): React.ReactElement {
-  const [padding, setPadding] = useState(64)
+  const [padding, setPadding] = useState(0)
+
   useEffect(() => {
-    if (props.displayDragon) {
+    if (props.displayDragon && props.isMoving) {
+      let padding = 0
       const timer = setInterval(() => {
-        setPadding((padding + 64) % 193)
-      }, props.timeout / 2)
+        padding = (padding + 64) % 192
+        setPadding(padding)
+      }, props.timeout / 3)
 
       return () => {
         clearInterval(timer)
         setPadding(0)
       }
     }
-  }, [props.displayDragon, props.timeout])
+  }, [props.displayDragon, props.timeout, props.isMoving])
+
   return (
     <>
       { props.displayDragon &&

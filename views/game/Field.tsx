@@ -9,6 +9,7 @@ import FieldOptions from '../helpers/FieldOptions'
 interface FieldProps {
   field: Field;
   displayDragon: boolean;
+  isMoving: boolean;
   dragonDirectionHistory: {
     previous: Directions;
     current: Directions;
@@ -64,7 +65,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
           timeout={1000}
           classNames={animationClass}
         >
-          <Dragon className={animationClass} displayDragon={props.displayDragon} timeout={1000}/>
+          <Dragon className={animationClass} isMoving={props.isMoving} displayDragon={props.displayDragon} timeout={1000}/>
         </CSSTransition>
       </div>
     </>
