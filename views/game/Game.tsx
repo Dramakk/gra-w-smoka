@@ -69,15 +69,17 @@ export default function Game (): React.ReactElement {
               level={state.engineState.level}
             />
           </div>
-          <GemPanel
-            treeGems={state.engineState.level.treeGems}
-            gemsInPocket={state.engineState.dragon.gemsInPocket}
-            scaleGems={state.engineState.level.scalesGems}
-            canEdit={canEdit}
-          />
+          <div className="right-panel-wrapper">
+            <GemPanel
+              treeGems={state.engineState.level.treeGems}
+              gemsInPocket={state.engineState.dragon.gemsInPocket}
+              scaleGems={state.engineState.level.scalesGems}
+              canEdit={canEdit}
+            />
+            <SpeedControls />
+          </div>
           <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
-          <SpeedControls />
           {state.editor
             ? <div className='gadgets-selection-container'>
               <GadgetsSelection editor={state.editor} />
