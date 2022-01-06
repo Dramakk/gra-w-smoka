@@ -11,9 +11,9 @@ export default function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemI
   return (
     <div className="gem-panel">
       <div className="gem-panel-header">
-        <div><img src='/images/gem_panel_dragon.png' alt='DRAGON'/></div>
-        <div><img src='/images/gem_panel_scale.png' alt='SCALE'/></div>
-        <div><img src='/images/gem_panel_tree.png' alt='TREE'/></div>
+        <div><img src='/images/GEM_PANEL_DRAGON.png' alt='DRAGON'/></div>
+        <div><img src='/images/GEM_PANEL_SCALE.png' alt='SCALE'/></div>
+        <div><img src='/images/GEM_PANEL_TREE.png' alt='TREE'/></div>
       </div>
       {gemColors.map((gemColor, index) => {
         const howMany: Record<GemOwner, number> = { DRAGON: props.gemsInPocket[gemColor], SCALE: props.scaleGems[gemColor], TREE: props.treeGems[gemColor] }

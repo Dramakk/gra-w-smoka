@@ -19,7 +19,7 @@ export default function GemControls (props: {gemColor: GemColors, howMany: Recor
 
   return (
     <div className="gem-panel-row">
-      <img src={`/images/${props.gemColor.toLowerCase()}.png`} alt={props.gemColor}/>
+      <img src={`/images/${props.gemColor}.png`} alt={props.gemColor}/>
       {Object.keys(props.howMany).map((key: GemOwner) => buildItem(key))}
     </div>
   )
