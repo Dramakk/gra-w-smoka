@@ -13,7 +13,7 @@
     height: 64px;
     margin: auto;
     position: relative;
-    background-image: url("/images/GRASS.png");
+    background-image: url("../../assets/images/GRASS.png");
     border-radius: 15px;
     @include fieldDetails;
   }
