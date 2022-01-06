@@ -1,8 +1,8 @@
 import update from 'immutability-helper'
 import { EditorManipulation, EditorPredicates } from '../../editor/editor'
-import { resetDragon } from '../../engine/engine'
+import { resetDragon, resetEngineState } from '../../engine/engine'
 import { generateGadgetDescription } from '../../levels/fields'
-import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates } from '../../levels/level'
+import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates, LevelSpeedControls } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { getLevelFromState } from '../accessors'
 import { FieldClickPayload, GameState } from '../reducer'
@@ -53,11 +53,12 @@ export function manageDeleteField (state: GameState, payload: FieldClickPayload)
     const newEditor = state.editor
       ? update(state.editor, { level: { $set: EditorManipulation.clearSquare(state.editor.level, payload.index) } })
       : null
-
+    const levelAfterDelete = state.editor ? { ...newEditor.level } : LevelManipulation.clearSquare(level, payload.index)
+    const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(levelAfterDelete))
     return update(state, {
       engineState: {
         $set: resetDragon(update(state.engineState, {
-          level: { $set: state.editor ? { ...newEditor.level } : LevelManipulation.clearSquare(level, payload.index) }
+          level: { $set: levelAfterReset }
         }))
       },
       uiState: { $merge: manageClearUIState(state).uiState },
@@ -81,10 +82,11 @@ export function managePlaceField (state: GameState, payload: FieldClickPayload):
       : null
 
     const levelWithGadget = state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType)
+    const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(levelWithGadget))
     return update(state, {
       engineState: {
         $set: resetDragon(update(state.engineState, {
-          level: { $set: levelWithGadget }
+          level: { $set: levelAfterReset }
         }))
       },
       uiState:
