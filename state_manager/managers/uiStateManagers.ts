@@ -2,7 +2,7 @@ import update from 'immutability-helper'
 import { generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionKeys, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
-import { GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
+import { CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
 import { manageDeleteField, managePlaceField } from './placementManagers'
 
 export function manageSelectGadget (state: GameState, payload: SelectGadgetPayload): GameState {
@@ -68,6 +68,22 @@ export function manageSelectOptions (state: GameState, payload: SelectOptionsPay
   })
 }
 
+export function manageCloseModal (state: GameState, payload: CloseModalPayload): GameState {
+  setTimeout(() => {
+    payload.dispatch(payload.nextAction)
+  }, 400)
+
+  return update(state, {
+    uiState: {
+      gadgetEditState: {
+        $merge: {
+          showModal: false
+        }
+      }
+    }
+  })
+}
+
 export function manageClearUIState (state: GameState): GameState {
   return update(state, {
     uiState: {
@@ -76,7 +92,7 @@ export function manageClearUIState (state: GameState): GameState {
         gadgetEditState: {
           fieldId: null,
           showModal: false,
-          availableOptions: state.uiState.gadgetEditState.availableOptions,
+          availableOptions: {},
           canEdit: false
         },
         selectedOptions: {}

@@ -15,13 +15,15 @@
     align-items: center;
     gap: 10px;
     margin: 20px 0;
+
     .gadget-picture {
-      width: 80px;
+      padding-top: 10px;
       height: 120px;
+      min-width: 145px;
       background-image: url("../../assets/images/grass.png");
-      margin: auto;
       border-radius: 15px;
     }
+
     .value-with-controls {
       display: flex;
       justify-content: center;

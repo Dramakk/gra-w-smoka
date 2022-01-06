@@ -5,8 +5,8 @@ import { EditorCreation } from '../../editor/editor'
 import { resetDragon } from '../../engine/engine'
 
 export default function EditorForm (): React.ReactElement {
-  const [howManyRows, changeHowManyRows] = useState(5)
-  const [howManyPerRow, changeHowManyPerRow] = useState(5)
+  const [howManyRows, changeHowManyRows] = useState(10)
+  const [howManyPerRow, changeHowManyPerRow] = useState(10)
   const history = useHistory()
 
   function navigateToEditor () : void {
@@ -27,7 +27,7 @@ export default function EditorForm (): React.ReactElement {
         <label htmlFor='howManyPerRow'>Ile pól ma posiadać jeden rząd?</label>
         <input name='howManyPerRow' type='number' value={howManyPerRow || ''} onChange={(e) => changeHowManyPerRow(Number(e.target.value))}></input>
       </div>
-      <button onClick={() => navigateToEditor()}>Rozpocznij edycję</button>
+      <button className={!howManyPerRow || !howManyRows ? 'button-disabled' : ''} disabled={!howManyPerRow || !howManyRows} onClick={() => navigateToEditor()}>Rozpocznij edycję</button>
     </div>
   )
 }

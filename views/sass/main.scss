@@ -17,6 +17,7 @@
 @import "category";
 @import "loading";
 @import "gadgetsSelection";
+@import "imageDropdown";
 
 html,
 body {
@@ -87,7 +88,6 @@ input[type=number] {
   padding: 0 20px;
   margin: auto;
 
-
   @media screen and (max-width: $tabletWidth) {
     padding: 0 10px;
   }
@@ -116,14 +116,16 @@ input[type=number] {
   @media screen and (max-width: $desktopWidth) {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     padding-bottom: 150px;
 
     .bottom-tooltip {
       order: -1;
     }
 
-    .board-container {
+    .board-wrapper {
       order: -2;
+      width: 100%;
     }
   }
 

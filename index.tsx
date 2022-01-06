@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 
 import './views/sass/main.scss'
 import './assets/fonts/MouseMemoirs-Regular.woff2'
-import './assets/title.svg'
 import App from './views/App'
 
 const domContainer = document.querySelector('#app-container')

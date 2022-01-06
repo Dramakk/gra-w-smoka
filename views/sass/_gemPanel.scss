@@ -1,7 +1,11 @@
 .gem-panel-header,
 .gem-panel-row {
   display: grid;
-  grid-template-columns: 70px 1fr 0.5fr 1fr;
+  grid-template-columns: 1fr 1fr 0.5fr 1fr;
+  @media screen and (max-width: $tabletWidth) {
+    grid-template-columns: 70px 1fr 0.5fr 1fr;
+  }
+
   text-align: center;
 }
 
@@ -10,12 +14,21 @@
 }
 
 .gem-panel-row {
+  img {
+    margin: auto;
+  }
+
   .value-with-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     .value-with-controls-button {
       color: black;
       min-width: unset;
       background: none;
       @include fontSize(16px);
+      padding: 5px;
     }
   }
 }
