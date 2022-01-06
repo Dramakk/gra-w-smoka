@@ -1,6 +1,6 @@
 import update from 'immutability-helper'
-import { generateGadgetDescription } from '../../levels/fields'
-import { GadgetOptionKeys, LevelPredicates } from '../../levels/level'
+import { Finish, generateGadgetDescription } from '../../levels/fields'
+import { GadgetOptionKeys, LevelGetters, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
 import { manageDeleteField, managePlaceField } from './placementManagers'
@@ -99,4 +99,13 @@ export function manageClearUIState (state: GameState): GameState {
       }
     }
   })
+}
+
+// This method is invoked when dragon can't move, so it's invoked when dragon is on finish field.
+export function manageChangeGameFinished (state: GameState): GameState {
+  if (!state.engineState.level.finishId) return { ...state }
+  const finish: Finish = LevelGetters.getField(state.engineState.level, state.engineState.level.finishId) as Finish
+
+  if (!finish.attributes.opened) return { ...state }
+  return update(state, { uiState: { gameFinished: { $set: !state.uiState.gameFinished } } })
 }
