@@ -7,12 +7,12 @@ interface DragonProps {
 }
 
 export default function Dragon (props: DragonProps): React.ReactElement {
-  const [padding, setPadding] = useState(0)
+  const [padding, setPadding] = useState(64)
   useEffect(() => {
     if (props.displayDragon) {
       const timer = setInterval(() => {
-        setPadding((padding + 64) % 192)
-      }, props.timeout / 3)
+        setPadding((padding + 64) % 193)
+      }, props.timeout / 2)
 
       return () => {
         clearInterval(timer)
