@@ -3,8 +3,6 @@ import { add, Counter, counterDelete, get } from '../helpers/counter'
 import { Dragon } from '../engine/dragon'
 import * as fields from './fields'
 
-// import hole from '../assets/images/hole.png'
-
 // Array matching type defined below. Used to generate form where editor of level, can choose how many and which fields player could use in game.
 export const GadgetTypeArray = [
   'START',
