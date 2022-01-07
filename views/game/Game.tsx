@@ -4,7 +4,7 @@ import { EngineState } from '../../engine/engine'
 import { items } from '../../helpers/counter'
 import { stateReducer } from '../../state_manager/reducer'
 import { getDragonFromState, getLevelFromState } from '../../state_manager/accessors'
-import { Editor } from '../../editor/editor'
+import { Editor, EditorCreation } from '../../editor/editor'
 import BoardComponent from './Board'
 import GemPanel from './GemPanel'
 import Tree from './Tree'
@@ -62,7 +62,7 @@ export default function Game (): React.ReactElement {
 
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
-    history.push('/editor/export', { levelToExport: editorState.level })
+    history.push('/editor/export', { levelToExport: EditorCreation.exportLevel(editorState) })
   }
 
   return (
@@ -74,6 +74,7 @@ export default function Game (): React.ReactElement {
               dragonPosition={dragon.fieldId}
               dragonDirectionHistory={dragon.directionHistory}
               editorMode={canEdit}
+              isMoving={!!state.loop}
               level={state.engineState.level}
             />
           </div>

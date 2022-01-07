@@ -113,6 +113,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
         <FieldOptions
           typeOfField={props.selectedGadget}
           attributes={props.selectedOptions}
+          isField={false}
         />
         </div>
         <div className='gadget-edit-options'>
