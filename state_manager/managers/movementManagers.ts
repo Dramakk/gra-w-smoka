@@ -3,6 +3,7 @@ import { LevelGetters, LevelSpeedControls } from '../../levels/level'
 import { getDragonFromState } from '../accessors'
 import { GameState, StartPayload } from '../reducer'
 import update from 'immutability-helper'
+import { manageChangeGameFinished } from './uiStateManagers'
 
 export function manageStep (state: GameState): GameState {
   const currentField = LevelGetters.getField(state.engineState.level, state.engineState.dragon.fieldId)
@@ -50,8 +51,8 @@ export function manageStart (state: GameState, payload: StartPayload): GameState
 
 export function managePause (state: GameState): GameState {
   clearInterval(state.loop)
-
-  return update(state, { loop: { $set: null } })
+  const nextState = update(state, { loop: { $set: null } })
+  return manageChangeGameFinished(nextState)
 }
 
 export function manageStop (state: GameState): GameState {

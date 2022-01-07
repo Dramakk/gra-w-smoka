@@ -3,7 +3,7 @@ import { EngineState } from '../engine/engine'
 import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageChangeFromHole, managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
-import { manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
+import { manageChangeGameFinished, manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
 import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 import { SelectedOptions } from '../views/game/GadgetEdit'
@@ -25,6 +25,7 @@ export type PossibleActions =
   | 'CHANGE_GEM_QTY' // Invoked in editor mode, when user changes quantity gems held by the dragon or needed by the tree
   | 'CHANGE_FROM_HOLE' // Invoked when dragon enters field with ENTRANCE or EXIT
   | 'CHANGE_REGISTER' // Invoked in editor mode, when user changes register description
+  | 'CHANGE_GAME_FINISHED' // Invoked when user closes "Koniec gry" modal or dragon steps on finish
 
 // Here are types describing possible payloads of actions
 // Naming convention ActionTypePayload
@@ -57,9 +58,10 @@ export interface GadgetEditState {
 }
 
 export interface UIState {
-  fieldToAdd: GadgetType | null,
-  selectedOptions: SelectedOptions,
+  fieldToAdd: GadgetType | null
+  selectedOptions: SelectedOptions
   gadgetEditState: GadgetEditState
+  gameFinished?: boolean
 }
 
 // Holds state of the whole game (engine + editor + UI)
@@ -105,6 +107,8 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageChangeRegister(state, action.payload as ChangeRegisterPayload)
     case 'CHANGE_FROM_HOLE':
       return manageChangeFromHole(state)
+    case 'CHANGE_GAME_FINISHED':
+      return manageChangeGameFinished(state)
     default:
       throw new Error('Impossible action')
   }

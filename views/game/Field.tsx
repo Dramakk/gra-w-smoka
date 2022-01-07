@@ -69,6 +69,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
           <FieldOptions
             typeOfField={props.field.typeOfField}
             attributes={props.field.attributes}
+            isField={true}
           />
         </div>
         <CSSTransition

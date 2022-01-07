@@ -1,24 +1,25 @@
 import React from 'react'
-import { FinishAttributes, ScaleAttributes, ArithmeticOperationAttributes, SwapOperationAttributes, RegisterOperationAttributes, IfAttributes, EntranceAttributes, ExitAttributes } from '../../levels/fields'
-import { GadgetType } from '../../levels/level'
+import { Directions, GadgetType } from '../../levels/level'
 import { SelectedOptions } from '../game/GadgetEdit'
+import { DragonInformation } from '../../engine/dragon'
 
 interface FieldProp {
   typeOfField: GadgetType,
   attributes?: SelectedOptions
+  isField: boolean
 }
 
 export default function FieldOptions (props: FieldProp) : React.ReactElement {
   switch (props.typeOfField) {
-    case 'FINISH': {
-      try {
-        const finishAttr = props.attributes as FinishAttributes
-        if (finishAttr.opened === 1) return <img src="/images/FINISH_OPEN.png" alt="O" />
-        else return <img src="/images/FINISH.png" alt="#" />
-      } catch {
-        return <img src="/images/FINISH.png" alt="#" />
+    case 'START':
+      if (!props.isField) {
+        return <img style={{ backgroundImage: 'url("/images/DRAGON.png")', transform: `rotate(${DragonInformation.mapDirectionToDeg(props.attributes.direction as Directions)[0]}deg)` }} src="/images/EMPTY.png" alt="" />
+      } else {
+        return <img src="/images/EMPTY.png" alt="AR" />
       }
-    }
+    case 'FINISH':
+      if (props.attributes.opened === 1) return <img src="/images/FINISH_OPEN.png" alt="O" />
+      else return <img src="/images/FINISH.png" alt="#" />
     case 'ARROWRIGHT':
       return <img src="/images/ARROW.png" alt="AR" />
     case 'ARROWLEFT':
@@ -29,79 +30,65 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
       return <img style={{ transform: 'rotate(90deg)' }} src="/images/ARROW.png" alt="AD" />
     case 'WALL':
       return <img src="/images/WALL.png" alt="W" />
-    case 'SCALE': {
-      const scaleAttr = props.attributes as ScaleAttributes
+    case 'SCALE':
       return (
       <>
-        <img className="image-detail image-right image-top" src={`/images/${scaleAttr.gemColor}.png`} alt={scaleAttr.gemColor}/>
+        <img className="image-detail image-right image-top" src={`/images/${props.attributes.gemColor}.png`} alt={String(props.attributes.gemColor)}/>
         <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
       </>
       )
-    }
-    case 'ENTRANCE': {
-      const entranceAttr = props.attributes as EntranceAttributes
+    case 'ENTRANCE':
       return (
         <>
-          <img className="image-detail image-right image-top" src={`/images/${entranceAttr.label}.png`} alt={entranceAttr.label}/>
+          <img className="image-detail image-right image-top" src={`/images/${props.attributes.label}.png`} alt={String(props.attributes.label)}/>
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
         </>
       )
-    }
-    case 'EXIT': {
-      const exitAttr = props.attributes as ExitAttributes
+    case 'EXIT':
       return (
         <>
-          <img className="image-detail image-left image-top" src={`/images/${exitAttr.label}.png`} alt={exitAttr.label}/>
+          <img className="image-detail image-left image-top" src={`/images/${props.attributes.label}.png`} alt={String(props.attributes.label)}/>
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
         </>
       )
-    }
     case 'ADD':
     case 'SUBSTRACT':
     case 'MULTIPLY':
     case 'DIVIDE':
-    case 'SET': {
-      const arithmeticOperationAttr = props.attributes as ArithmeticOperationAttributes
+    case 'SET':
       return (
         <>
-          <img className="image-detail image-left image-top" src={`/images/${arithmeticOperationAttr.targetGemColor}.png`} alt={arithmeticOperationAttr.targetGemColor}/>
-          <img className="image-detail image-right image-bottom" src={`/images/${String(arithmeticOperationAttr.numberOfGems)}.png`} alt={String(arithmeticOperationAttr.numberOfGems)}/>
+          <img className="image-detail image-left image-top" src={`/images/${props.attributes.targetGemColor}.png`} alt={String(props.attributes.targetGemColor)}/>
+          <img className="image-detail image-right image-bottom" src={`/images/${String(props.attributes.numberOfGems)}.png`} alt={String(props.attributes.numberOfGems)}/>
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
         </>
       )
-    }
-    case 'SWAP': {
-      const swapOperationAttr = props.attributes as SwapOperationAttributes
+    case 'SWAP':
       return (
         <>
-          <img className="image-detail image-left image-top" src={`/images/${swapOperationAttr.firstGemColor}.png`} alt={swapOperationAttr.firstGemColor}/>
-          <img className="image-detail image-right image-top" src={`/images/${swapOperationAttr.secondGemColor}.png`} alt={swapOperationAttr.secondGemColor}/>
+          <img className="image-detail image-left image-top" src={`/images/${props.attributes.firstGemColor}.png`} alt={String(props.attributes.firstGemColor)}/>
+          <img className="image-detail image-right image-top" src={`/images/${props.attributes.secondGemColor}.png`} alt={String(props.attributes.secondGemColor)}/>
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
         </>
       )
-    }
-    case 'IF': {
-      const ifAttr = props.attributes as IfAttributes
+    case 'IF':
       return (
         <>
-          <img className="image-sign image-sign-left" src={`/images/${ifAttr.leftGemColor}.png`} alt={ifAttr.leftGemColor} />
-          <img className="image-sign image-sign-middle" src={`/images/${ifAttr.sign}.png`} alt={ifAttr.sign} />
-          <img className="image-sign image-sign-right" src={`/images/${String(ifAttr.rightNumberOfGems)}.png`} alt={String(ifAttr.rightNumberOfGems).toLowerCase()} />
+          <img className="image-sign image-sign-left" src={`/images/${props.attributes.leftGemColor}.png`} alt={String(props.attributes.leftGemColor)} />
+          <img className="image-sign image-sign-middle" src={`/images/${props.attributes.sign}.png`} alt={String(props.attributes.sign)} />
+          <img className="image-sign image-sign-right" src={`/images/${String(props.attributes.rightNumberOfGems)}.png`} alt={String(props.attributes.rightNumberOfGems)} />
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
         </>
       )
-    }
     case 'STORE':
-    case 'TAKE': {
-      const RegisterOperationAttr = props.attributes as RegisterOperationAttributes
+    case 'TAKE':
       return (
         <>
-          <img className="image-detail image-left image-top" src={`/images/${RegisterOperationAttr.targetGemColor}.png`} alt={RegisterOperationAttr.targetGemColor} />
-          <img className="image-detail image-right image-bottom" src={`/images/${String(RegisterOperationAttr.registerNumber)}.png`} alt={String(RegisterOperationAttr.registerNumber).toLowerCase()} />
+          <img className="image-detail image-left image-top" src={`/images/${props.attributes.targetGemColor}.png`} alt={String(props.attributes.targetGemColor)} />
+          <img className="image-detail image-right image-bottom" src={`/images/${String(props.attributes.registerNumber)}.png`} alt={String(props.attributes.registerNumber)} />
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField}/>
         </>
       )
-    }
     default:
       return <img src="/images/EMPTY.png" alt="AR" />
   }
