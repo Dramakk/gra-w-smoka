@@ -1,7 +1,5 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
-import { DragonDirectionHistory } from '../../engine/dragon'
-import { Directions } from '../../levels/level'
-import { DragonInformation } from '../../engine/dragon'
+import { DragonDirectionHistory, DragonInformation } from '../../engine/dragon'
 
 interface DragonProps {
   displayDragon: boolean;

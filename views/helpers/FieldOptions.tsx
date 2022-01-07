@@ -15,7 +15,7 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
       if (!props.isField) {
         return <img style={{ backgroundImage: 'url("/images/DRAGON.png")', transform: `rotate(${DragonInformation.mapDirectionToDeg(props.attributes.direction as Directions)[0]}deg)` }} src="/images/EMPTY.png" alt="" />
       } else {
-        return <img src="/images/EMPTY.png" alt="AR" />
+        return <img src="/images/EMPTY.png" />
       }
     case 'FINISH':
       if (props.attributes.opened === 1) return <img src="/images/FINISH_OPEN.png" alt="O" />
@@ -90,6 +90,6 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
         </>
       )
     default:
-      return <img src="/images/EMPTY.png" alt="AR" />
+      return <img src="/images/EMPTY.png" />
   }
 }
