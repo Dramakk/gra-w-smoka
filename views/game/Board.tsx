@@ -18,7 +18,8 @@ export default function BoardComponent (props:BoardProps): ReactElement {
   const fieldsPerRow = LevelGetters.getFieldsPerRow(props.level)
   const calculatedStyles: CSSProperties = {
     gridTemplateColumns: `repeat(${fieldsPerRow}, 64px)`,
-    gridTemplateRows: `repeat(${rowCount}, 64px)`
+    gridTemplateRows: `repeat(${rowCount}, 64px)`,
+    width: `calc(${fieldsPerRow} * 64.5px)`
   }
   const board = [...Array(LevelGetters.getLevelSize(props.level)).keys()]
     .map(index => { return LevelGetters.getField(props.level, index) })
