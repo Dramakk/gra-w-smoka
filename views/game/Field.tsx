@@ -63,7 +63,6 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
     dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
   }
 
-  console.log(animationClass)
   return (
     <>
       <div onClick={onClick} className='board-field'>
