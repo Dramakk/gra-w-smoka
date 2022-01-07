@@ -18,8 +18,11 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
         return <img src="/images/EMPTY.png" alt="AR" />
       }
     case 'FINISH':
-      if (props.attributes.opened === 1) return <img src="/images/FINISH_OPEN.png" alt="O" />
-      else return <img src="/images/FINISH.png" alt="#" />
+      if (props.isField && props.attributes.opened === 1) {
+        return <img src="/images/FINISH_OPEN.png" alt="O" />
+      } else {
+        return <img src="/images/FINISH.png" alt="#" />
+      }
     case 'ARROWRIGHT':
       return <img src="/images/ARROW.png" alt="AR" />
     case 'ARROWLEFT':
