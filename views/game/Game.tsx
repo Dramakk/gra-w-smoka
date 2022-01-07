@@ -13,6 +13,7 @@ import SpeedControls from './SpeedControls'
 import GadgetsSelection from './GadgetsSelection'
 import GadgetEdit, { SelectedOptions } from './GadgetEdit'
 import NavigationError from './NavigationError'
+import Modal, { ButtonDescription } from '../helpers/Modal'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
@@ -51,6 +52,13 @@ export default function Game (): React.ReactElement {
     state.engineState.level.fields
       .filter(field => field.typeOfField === 'FINISH').length !== 0
   const canEdit = state.editor && !state.loop
+  const finishModalButtons: ButtonDescription[] = [
+    {
+      buttonText: 'Zamknij',
+      buttonType: 'primary',
+      onClick: () => dispatch({ type: 'CHANGE_GAME_FINISHED' })
+    }
+  ]
 
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
@@ -70,15 +78,17 @@ export default function Game (): React.ReactElement {
               level={state.engineState.level}
             />
           </div>
-          <GemPanel
-            treeGems={state.engineState.level.treeGems}
-            gemsInPocket={state.engineState.dragon.gemsInPocket}
-            scaleGems={state.engineState.level.scalesGems}
-            canEdit={canEdit}
-          />
+          <div className="right-panel-wrapper">
+            <GemPanel
+              treeGems={state.engineState.level.treeGems}
+              gemsInPocket={state.engineState.dragon.gemsInPocket}
+              scaleGems={state.engineState.level.scalesGems}
+              canEdit={canEdit}
+            />
+            <SpeedControls />
+          </div>
           <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
-          <SpeedControls />
           {state.editor
             ? <div className='gadgets-selection-container'>
               <GadgetsSelection editor={state.editor} />
@@ -92,6 +102,9 @@ export default function Game (): React.ReactElement {
             selectedOptions={state.uiState.selectedOptions as SelectedOptions}
           />
         </div>
+        <Modal buttons={finishModalButtons} title={'Gratulacje!'} show={state.uiState.gameFinished}>
+          <div>Smok dotarł na miejsce!</div>
+        </Modal>
       </DispatchContext.Provider>
   )
 }
