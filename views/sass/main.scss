@@ -113,6 +113,10 @@ input[type=number] {
   display: grid;
   grid-template-columns: 65% 35%;
 
+  .right-panel-wrapper {
+    width: 100%;
+  }
+
   @media screen and (max-width: $desktopWidth) {
     display: flex;
     flex-wrap: wrap;

@@ -10,8 +10,7 @@ export default function Tree (props: { treeRegisters: TreeRegisters, canEdit: bo
         return (
           <div key={parsedKey} className="single-register">
             <div className="single-register-number">
-            <img className="number-top" src={`/images/${key}.png`} alt={key}/>
-              {parsedKey}
+              <img className="number-top" src={`/images/${key}.png`} alt={key}/>
             </div>
             <TreeValue
               canEdit={props.canEdit}
