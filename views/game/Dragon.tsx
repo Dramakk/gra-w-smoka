@@ -1,5 +1,6 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
 import { Directions } from '../../levels/level'
+import { DragonInformation } from '../../engine/dragon'
 
 interface DragonProps {
   displayDragon: boolean;
@@ -15,20 +16,6 @@ interface DragonProps {
 export default function Dragon (props: DragonProps): React.ReactElement {
   const [padding, setPadding] = useState(0)
   const [rotation, setRotation] = useState(0)
-
-  // Map direction to possible degrees
-  function mapDirectionToDeg (direction: Directions): [number, number ] {
-    switch (direction) {
-      case 'D':
-        return [0, -360]
-      case 'U':
-        return [180, -180]
-      case 'L':
-        return [90, -270]
-      case 'R':
-        return [270, -90]
-    }
-  }
 
   // Here we decide how to rotate dragon to match current direction
   useEffect(() => {
@@ -48,7 +35,7 @@ export default function Dragon (props: DragonProps): React.ReactElement {
     }
 
     if (previous !== current) {
-      const currentPossibleValues = mapDirectionToDeg(current)
+      const currentPossibleValues = DragonInformation.mapDirectionToDeg(current)
       const mappedValues = currentPossibleValues.map(degs => Math.abs(degs - rotation))
       return setRotation(currentPossibleValues[mappedValues.indexOf(Math.min(...mappedValues))])
     }

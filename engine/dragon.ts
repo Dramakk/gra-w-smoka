@@ -12,6 +12,22 @@ export interface Dragon {
   }
 }
 
+export const DragonInformation = {
+  // Map direction to possible degrees
+  mapDirectionToDeg: function (direction: Directions): [number, number ] {
+    switch (direction) {
+      case 'D':
+        return [0, -360]
+      case 'U':
+        return [180, -180]
+      case 'L':
+        return [90, -270]
+      case 'R':
+        return [270, -90]
+    }
+  }
+}
+
 export const DragonManipulation = {
   changeDragonDirection: function (dragon: Dragon, direction: Directions): Dragon {
     return update(dragon, {

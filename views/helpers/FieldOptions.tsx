@@ -1,7 +1,7 @@
 import React from 'react'
-import { FinishAttributes } from '../../levels/fields'
 import { Directions, GadgetType } from '../../levels/level'
 import { SelectedOptions } from '../game/GadgetEdit'
+import { DragonInformation } from '../../engine/dragon'
 
 interface FieldProp {
   typeOfField: GadgetType,
@@ -11,23 +11,15 @@ interface FieldProp {
 
 export default function FieldOptions (props: FieldProp) : React.ReactElement {
   switch (props.typeOfField) {
-    case 'START': {
+    case 'START':
       if (!props.isField) {
-        const directionsToDegs: Record<Directions, number> = { D: 0, R: -90, L: 90, U: 180 }
-        return <img style={{ backgroundImage: 'url("/images/DRAGON.png")', transform: `rotate(${directionsToDegs[props.attributes.direction as Directions]}deg)` }} src="/images/EMPTY.png" alt="" />
+        return <img style={{ backgroundImage: 'url("/images/DRAGON.png")', transform: `rotate(${DragonInformation.mapDirectionToDeg(props.attributes.direction as Directions)[0]}deg)` }} src="/images/EMPTY.png" alt="" />
       } else {
         return <img src="/images/EMPTY.png" alt="AR" />
       }
-    }
-    case 'FINISH': {
+    case 'FINISH':
       if (props.attributes.opened === 1) return <img src="/images/FINISH_OPEN.png" alt="O" />
       else return <img src="/images/FINISH.png" alt="#" />
-      // try {
-      //   const finishAttr = props.attributes as FinishAttributes
-      // } catch {
-      //   return <img src="/images/FINISH.png" alt="#" />
-      // }
-    }
     case 'ARROWRIGHT':
       return <img src="/images/ARROW.png" alt="AR" />
     case 'ARROWLEFT':
