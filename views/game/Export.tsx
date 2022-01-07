@@ -34,6 +34,7 @@ export default function Export (): React.ReactElement {
 
   return (
     <div className='level-export-container'>
+      Pamiętaj, żeby skopiować poziom zanim powrócisz do głównego menu
       <div className="level-export-wrapper">
         <textarea name='level-export' value={levelAfterFormat} readOnly={true}></textarea>
       </div>

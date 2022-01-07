@@ -48,7 +48,7 @@ export default function LevelImport (): React.ReactElement {
   return (
     <div className="import-level-container">
       <div className="import-level-wrapper">
-        <label htmlFor="level-input">Wpisz poziom</label>
+        <label htmlFor="level-input">Poniżej wklej poziom z edytora, aby zabrać smoka na nową przygodę</label>
         <textarea name='level-input' onChange={(event) => updateImportedLevel(event.target.value)} onBlur={onBlur} value={importedLevel}>
         </textarea>
       </div>
