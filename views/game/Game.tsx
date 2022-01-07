@@ -33,6 +33,7 @@ export default function Game (): React.ReactElement {
     {
       engineState: locationState.game,
       uiState: {
+        timeout: 1000,
         fieldToAdd: null,
         selectedOptions: null,
         gadgetEditState: {
@@ -76,6 +77,7 @@ export default function Game (): React.ReactElement {
               editorMode={canEdit}
               isMoving={!!state.loop}
               level={state.engineState.level}
+              timeout={state.uiState.timeout}
             />
           </div>
           <div className="right-panel-wrapper">
@@ -85,7 +87,7 @@ export default function Game (): React.ReactElement {
               scaleGems={state.engineState.level.scalesGems}
               canEdit={canEdit}
             />
-            <SpeedControls />
+            <SpeedControls timeout={state.uiState.timeout}/>
           </div>
           <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />

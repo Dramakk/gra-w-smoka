@@ -11,6 +11,7 @@ interface FieldProps {
   displayDragon: boolean;
   isMoving: boolean;
   dragonDirectionHistory: DragonDirectionHistory;
+  timeout: number;
 }
 
 export default function FieldComponent (props: FieldProps): React.ReactElement {
@@ -21,16 +22,16 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
   if (props.displayDragon) {
     switch (props.dragonDirectionHistory.previous) {
       case 'U':
-        animationClass = 'up-1000'
+        animationClass = `up-${props.timeout}`
         break
       case 'D':
-        animationClass = 'down-1000'
+        animationClass = `down-${props.timeout}`
         break
       case 'L':
-        animationClass = 'left-1000'
+        animationClass = `left-${props.timeout}`
         break
       case 'R':
-        animationClass = 'right-1000'
+        animationClass = `right-${props.timeout}`
         break
       default:
         animationClass = ''
@@ -62,6 +63,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
     dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
   }
 
+  console.log(animationClass)
   return (
     <>
       <div onClick={onClick} className='board-field'>
@@ -74,10 +76,10 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
         </div>
         <CSSTransition
           in={props.displayDragon}
-          timeout={1000}
+          timeout={props.timeout}
           classNames={animationClass}
         >
-          <Dragon className={animationClass} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} displayDragon={props.displayDragon} timeout={1000}/>
+          <Dragon className={animationClass} timeout={props.timeout} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} displayDragon={props.displayDragon}/>
         </CSSTransition>
       </div>
     </>

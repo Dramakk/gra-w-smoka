@@ -2,7 +2,8 @@ import update from 'immutability-helper'
 import { Finish, generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionKeys, LevelGetters, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
-import { CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
+import { ChangeTimeoutPayload, CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
+import { managePause, manageStart } from './movementManagers'
 import { manageDeleteField, managePlaceField } from './placementManagers'
 
 export function manageSelectGadget (state: GameState, payload: SelectGadgetPayload): GameState {
@@ -87,7 +88,7 @@ export function manageCloseModal (state: GameState, payload: CloseModalPayload):
 export function manageClearUIState (state: GameState): GameState {
   return update(state, {
     uiState: {
-      $set: {
+      $merge: {
         fieldToAdd: null,
         gadgetEditState: {
           fieldId: null,
@@ -108,4 +109,14 @@ export function manageChangeGameFinished (state: GameState): GameState {
 
   if (!finish.attributes.opened || state.engineState.dragon.fieldId !== finish.id) return { ...state }
   return update(state, { uiState: { gameFinished: { $set: !state.uiState.gameFinished } } })
+}
+
+export function manageChangeTimeout (state: GameState, payload: ChangeTimeoutPayload): GameState {
+  const shouldResume = !!state.loop
+  // Delete loop if exists
+  const nextState = managePause(state)
+  const nextStateWithTimeout = update(nextState, { uiState: { timeout: { $set: payload.timeout } } })
+
+  if (!shouldResume) return { ...nextStateWithTimeout }
+  return manageStart(nextStateWithTimeout, { dispatch: payload.dispatch })
 }

@@ -44,7 +44,7 @@ export function manageStart (state: GameState, payload: StartPayload): GameState
     loop: {
       $set: setInterval(() => {
         payload.dispatch({ type: 'STEP' })
-      }, payload.timeout)
+      }, state.uiState.timeout)
     }
   })
 }
