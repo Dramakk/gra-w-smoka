@@ -1,14 +1,33 @@
 import update from 'immutability-helper'
 import { Directions, GemColors } from '../levels/level'
 
+export interface DragonDirectionHistory {
+  previous?: Directions;
+  current?: Directions;
+  fromHole?: boolean;
+}
+
 export interface Dragon {
   fieldId: number;
   direction: Directions;
-  gemsInPocket: Record<GemColors, number>
+  gemsInPocket: Record<GemColors, number>;
   canMove: boolean;
-  directionHistory: {
-    previous: Directions | null;
-    current: Directions | null;
+  directionHistory: DragonDirectionHistory;
+}
+
+export const DragonInformation = {
+  // Map direction to possible degrees
+  mapDirectionToDeg: function (direction: Directions): [number, number ] {
+    switch (direction) {
+      case 'D':
+        return [0, -360]
+      case 'U':
+        return [180, -180]
+      case 'L':
+        return [90, -270]
+      case 'R':
+        return [270, -90]
+    }
   }
 }
 

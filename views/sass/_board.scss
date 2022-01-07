@@ -26,6 +26,12 @@
       height: 100%;
       top: 0;
       z-index: 1;
+      .dragon-image {
+        position: absolute;
+        background-image: url("../../assets/images/DRAGON.png");
+        width: 64px;
+        height: 64px;
+      }
     }
     .board-content {
       position: relative;

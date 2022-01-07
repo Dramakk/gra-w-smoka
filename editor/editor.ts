@@ -48,7 +48,7 @@ export const EditorCreation = {
     // We don't use these fields in parsing
     delete levelToExport.playerPlacedGadgets
     delete levelToExport.scalesGems
-    return JSON.stringify(levelToExport)
+    return levelToExport
   },
 
   // Creates empty board, surrounded by walls.

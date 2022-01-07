@@ -20,7 +20,7 @@ export function manageStep (state: GameState): GameState {
   }
 
   const directionHistory = update(state.engineState.dragon.directionHistory, {
-    $set: {
+    $merge: {
       previous: state.engineState.dragon.directionHistory.current,
       current: nextState.dragon.direction
     }
@@ -68,4 +68,8 @@ export function manageReset (state: GameState): GameState {
   const newState = state.loop ? managePause(state) : state
 
   return update(newState, { engineState: { $set: resetEngineState(newState.engineState) } })
+}
+
+export function manageChangeFromHole (state: GameState): GameState {
+  return update(state, { engineState: { dragon: { directionHistory: { $merge: { fromHole: !state.engineState.dragon.directionHistory.fromHole } } } } })
 }
