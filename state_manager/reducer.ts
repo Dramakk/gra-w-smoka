@@ -2,7 +2,7 @@ import { Editor } from '../editor/editor'
 import { EngineState } from '../engine/engine'
 import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
-import { managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
+import { manageChangeFromHole, managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
 import { manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
 import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
@@ -23,6 +23,7 @@ export type PossibleActions =
   | 'FIELD_CLICK' // Invoked when user clicks field on the map
   | 'CHANGE_GADGET_QTY' // Invoked in editor mode, when user changes quantity of gadgets available to be placed on the map
   | 'CHANGE_GEM_QTY' // Invoked in editor mode, when user changes quantity gems held by the dragon or needed by the tree
+  | 'CHANGE_FROM_HOLE' // Invoked when dragon enters field with ENTRANCE or EXIT
   | 'CHANGE_REGISTER' // Invoked in editor mode, when user changes register description
 
 // Here are types describing possible payloads of actions
@@ -102,6 +103,8 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageChangeGemQty(state, action.payload as ChangeGemQtyPayload)
     case 'CHANGE_REGISTER':
       return manageChangeRegister(state, action.payload as ChangeRegisterPayload)
+    case 'CHANGE_FROM_HOLE':
+      return manageChangeFromHole(state)
     default:
       throw new Error('Impossible action')
   }

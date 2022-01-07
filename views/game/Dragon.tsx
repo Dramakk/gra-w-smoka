@@ -1,12 +1,10 @@
 import React, { useState, useEffect, CSSProperties } from 'react'
+import { DragonDirectionHistory } from '../../engine/dragon'
 import { Directions } from '../../levels/level'
 
 interface DragonProps {
   displayDragon: boolean;
-  directionHistory: {
-    previous: Directions
-    current: Directions
-  }
+  dragonDirectionHistory: DragonDirectionHistory;
   isMoving: boolean;
   className: string;
   timeout: number;
@@ -32,8 +30,8 @@ export default function Dragon (props: DragonProps): React.ReactElement {
 
   // Here we decide how to rotate dragon to match current direction
   useEffect(() => {
-    const previous = props.directionHistory.previous
-    const current = props.directionHistory.current
+    const previous = props.dragonDirectionHistory.previous
+    const current = props.dragonDirectionHistory.current
     if (!previous && current) {
       switch (current) {
         case 'D':
@@ -52,7 +50,7 @@ export default function Dragon (props: DragonProps): React.ReactElement {
       const mappedValues = currentPossibleValues.map(degs => Math.abs(degs - rotation))
       return setRotation(currentPossibleValues[mappedValues.indexOf(Math.min(...mappedValues))])
     }
-  }, [props.directionHistory.current])
+  }, [props.dragonDirectionHistory.current])
 
   /*
     Here we are moving background image to "animate" dragon movement
