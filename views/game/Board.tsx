@@ -1,6 +1,7 @@
 import React, { CSSProperties, ReactElement } from 'react'
 import FieldComponent from './Field'
-import { Directions, Level, LevelGetters } from '../../levels/level'
+import { Level, LevelGetters } from '../../levels/level'
+import { DragonDirectionHistory } from '../../engine/dragon'
 
 interface BoardProps {
   dragonPosition: number;
@@ -8,10 +9,7 @@ interface BoardProps {
   editorMode: boolean;
   isMoving: boolean;
   isStuck: boolean;
-  dragonDirectionHistory: {
-    previous: Directions;
-    current: Directions;
-  };
+  dragonDirectionHistory: DragonDirectionHistory;
 }
 
 export default function BoardComponent (props:BoardProps): ReactElement {

@@ -1,20 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Field, Finish } from '../../levels/fields'
 import { DispatchContext } from './Game'
 import { CSSTransition } from 'react-transition-group'
-import { Directions } from '../../levels/level'
 import Dragon from './Dragon'
 import FieldOptions from '../helpers/FieldOptions'
+import { DragonDirectionHistory } from '../../engine/dragon'
 
 interface FieldProps {
   field: Field;
   displayDragon: boolean;
   isMoving: boolean;
   isStuck: boolean;
-  dragonDirectionHistory: {
-    previous: Directions;
-    current: Directions;
-  };
+  dragonDirectionHistory: DragonDirectionHistory;
 }
 
 export default function FieldComponent (props: FieldProps): React.ReactElement {
@@ -22,31 +19,45 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
 
   let animationClass: string
 
-  switch (props.dragonDirectionHistory.previous) {
-    case 'U':
-      animationClass = 'up-1000'
-      break
-    case 'D':
-      animationClass = 'down-1000'
-      break
-    case 'L':
-      animationClass = 'left-1000'
-      break
-    case 'R':
-      animationClass = 'right-1000'
-      break
-    default:
+  if (props.displayDragon) {
+    switch (props.dragonDirectionHistory.previous) {
+      case 'U':
+        animationClass = 'up-1000'
+        break
+      case 'D':
+        animationClass = 'down-1000'
+        break
+      case 'L':
+        animationClass = 'left-1000'
+        break
+      case 'R':
+        animationClass = 'right-1000'
+        break
+      default:
+        animationClass = ''
+    }
+
+    // Adding modifier to selected animation class
+    if (props.field.typeOfField === 'ENTRANCE') {
+      animationClass += '-enter'
+    }
+
+    if (props.field.typeOfField === 'EXIT' && props.dragonDirectionHistory.fromHole) {
       animationClass = ''
+    }
   }
 
-  // Adding modifier to selected animation class
-  if (props.field.typeOfField === 'ENTRANCE') {
-    animationClass += '-enter'
-  }
+  useEffect(() => {
+    if (props.displayDragon) {
+      if (props.field.typeOfField === 'ENTRANCE' && !props.dragonDirectionHistory.fromHole) {
+        dispatch({ type: 'CHANGE_FROM_HOLE' })
+      }
 
-  if (props.field.typeOfField === 'EXIT') {
-    animationClass = 'exit-1000'
-  }
+      if (props.field.typeOfField === 'EXIT' && props.dragonDirectionHistory.fromHole) {
+        return dispatch({ type: 'CHANGE_FROM_HOLE' })
+      }
+    }
+  }, [props.displayDragon])
 
   function onClick () {
     dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
@@ -67,7 +78,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
           timeout={1000}
           classNames={animationClass}
         >
-          <Dragon className={animationClass} directionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} isStuck={props.isStuck && !(props.field.typeOfField === 'FINISH' && (props.field as Finish).attributes.opened === 1)} displayDragon={props.displayDragon} timeout={1000}/>
+          <Dragon className={animationClass} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} isStuck={props.isStuck && !(props.field.typeOfField === 'FINISH' && (props.field as Finish).attributes.opened === 1)} displayDragon={props.displayDragon} displayDragon={props.displayDragon} timeout={1000}/>
         </CSSTransition>
       </div>
     </>

@@ -1,15 +1,18 @@
 import update from 'immutability-helper'
 import { Directions, GemColors } from '../levels/level'
 
+export interface DragonDirectionHistory {
+  previous?: Directions;
+  current?: Directions;
+  fromHole?: boolean;
+}
+
 export interface Dragon {
   fieldId: number;
   direction: Directions;
-  gemsInPocket: Record<GemColors, number>
+  gemsInPocket: Record<GemColors, number>;
   canMove: boolean;
-  directionHistory: {
-    previous: Directions | null;
-    current: Directions | null;
-  }
+  directionHistory: DragonDirectionHistory;
 }
 
 export const DragonInformation = {
