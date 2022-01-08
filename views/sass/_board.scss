@@ -9,8 +9,8 @@
     display: grid;
     margin: auto;
     padding: 10px 0;
-    max-width: calc(64px * 10);
-    max-height: calc(64px * 10);
+    max-width: calc(66px * 10);
+    max-height: calc(66px * 10);
   }
 
   .board-field {
@@ -31,6 +31,13 @@
         background-image: url("../../assets/images/DRAGON.png");
         width: 64px;
         height: 64px;
+        .dragon-stars {
+          position: absolute;
+          background-image: url("../../assets/images/STARS.png");
+          z-index: 2;
+          width: 64px;
+          height: 64px;
+        }
       }
     }
     .board-content {
