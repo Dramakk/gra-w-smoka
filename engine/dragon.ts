@@ -5,6 +5,7 @@ export interface DragonDirectionHistory {
   previous?: Directions;
   current?: Directions;
   fromHole?: boolean;
+  fieldId?: number;
 }
 
 export interface Dragon {

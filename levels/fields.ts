@@ -39,6 +39,10 @@ export interface Finish extends Field {
   attributes: FinishAttributes
 }
 
+export interface Pause extends Field {
+  typeOfField: 'PAUSE'
+}
+
 export interface Wall extends Field {
   typeOfField: 'WALL'
 }
@@ -142,43 +146,45 @@ export function generateGadgetDescription (gadgetType: GadgetType): GadgetOption
 export function getGadgetDesription (gadgetType: GadgetType): string {
   switch (gadgetType) {
     case 'ARROWUP':
-      return 'Sprawia, że smok skręca do góry'
+      return 'Strzałka: sprawia, że smok skręca do góry'
     case 'ARROWDOWN':
-      return 'Sprawia, że smok skręca w dół'
+      return 'Strzałka: sprawia, że smok skręca w dół'
     case 'ARROWLEFT':
-      return 'Sprawia, że smok skręca w lewo'
+      return 'Strzałka: sprawia, że smok skręca w lewo'
     case 'ARROWRIGHT':
-      return 'Sprawia, że smok skręca w prawo'
+      return 'Strzałka: sprawia, że smok skręca w prawo'
     case 'SCALE':
-      return 'Sprawia, że smok zostawia kryształy określonego koloru'
+      return 'Waga: smok zostawia na niej wszystkie kryształy określonego koloru'
     case 'WALL':
-      return 'Smok nie może przez nią przejść'
+      return 'Kamień: smok nie może przez niego przejść'
     case 'START':
-      return 'Smok będzie zaczynał podróż z tego miejsca'
+      return 'Start: smok będzie zaczynał podróż z tego miejsca'
     case 'FINISH':
-      return 'Tutaj smok kończy swoją podróż'
+      return 'Wyjście: tutaj smok kończy swoją podróż'
+    case 'PAUSE':
+      return 'Flaga: smok się przy niej zatrzyma'
     case 'ADD':
-      return 'Smok może z niej zabrać pewną liczbę kryształów'
+      return 'Skrzynia: smok zabiera z niej pewną liczbę kryształów'
     case 'SUBSTRACT':
-      return 'Odejmuje smokowi kryształy'
+      return 'Studnia: smok wrzuca tu pewną liczbę krzyształów'
     case 'MULTIPLY':
-      return 'Mnoży kryształy smoka'
+      return 'Krasnal: mnoży kryształy smoka'
     case 'DIVIDE':
-      return 'Dzieli kryształy smoka'
+      return 'Chochlik: dzieli kryształy smoka'
     case 'SET':
-      return 'Pozwala zmienić liczbę kryształów, które smok ma w kieszące'
+      return 'Wróżka: zmienia liczbę kryształów, które smok ma w kieszeni'
     case 'SWAP':
-      return 'Pozwala zmienić kolor kryształów'
+      return 'Tęcza: zmienienia kolory kryształów'
     case 'STORE':
-      return 'Smok może tutaj schować kryształy w drzewie'
+      return 'Pień wejściowy: smok umieszcza tu kryształy u drzewa'
     case 'TAKE':
-      return 'Smok może tutaj wyjąć kryształy z drzewa'
+      return 'Pień wyjściowy: smok wyjmuje tu kryształy z drzewa'
     case 'IF':
-      return 'Pozwala smokowi zadecyować czy skręcić w lewo, czy w prawo'
+      return 'Drogowskaz: pozwala smokowi zadecyować czy skręcić w lewo, czy w prawo'
     case 'ENTRANCE':
-      return 'Wejście do podziemnego tunelu'
+      return 'Tunel wejściowy: wejście do podziemnego tunelu'
     case 'EXIT':
-      return 'Wyjście z podziemnego tunelu'
+      return 'Tunel wyjściowy: wyjście z podziemnego tunelu'
     default:
       return ''
   }

@@ -22,11 +22,12 @@ export function manageStep (state: GameState): GameState {
   const directionHistory = update(state.engineState.dragon.directionHistory, {
     $merge: {
       previous: state.engineState.dragon.directionHistory.current,
-      current: nextState.dragon.direction
+      current: nextState.dragon.direction,
+      fieldId: state.engineState.dragon.fieldId
     }
   })
   const nextStateWithUpdatedHistory = update(nextState, { dragon: { $merge: { directionHistory } } })
-  if (!state.engineState.dragon.canMove) {
+  if (!state.engineState.dragon.canMove || (currentField.typeOfField === 'PAUSE' && state.engineState.dragon.fieldId !== state.engineState.dragon.directionHistory.fieldId)) {
     return managePause(update(state, { engineState: { $set: nextStateWithUpdatedHistory } }))
   }
 

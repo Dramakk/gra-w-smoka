@@ -89,6 +89,8 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
           <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField}/>
         </>
       )
+    case 'PAUSE':
+      return <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
     default:
       return <img src="/images/EMPTY.png" />
   }
