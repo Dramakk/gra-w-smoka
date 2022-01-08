@@ -9,6 +9,12 @@ export function manageStep (state: GameState): GameState {
   const currentField = LevelGetters.getField(state.engineState.level, state.engineState.dragon.fieldId)
   let nextState = { ...state.engineState }
 
+  // First we have to check if dragon should interact with PAUSE field
+  // When we encounter PAUSE we don't update anything, just stop the loop and mark interaction as performed
+  if (currentField.typeOfField === 'PAUSE' && nextState.shouldInteract) {
+    return managePause(update(state, { engineState: { shouldInteract: { $set: false } } }))
+  }
+
   // This if makes dragon to interfact with field, which means dragon will wait for loop timeout
   // after entering field with gadget.
   if (currentField.typeOfField === 'EMPTY' || currentField.typeOfField === 'START' || !nextState.shouldInteract) {
@@ -22,12 +28,12 @@ export function manageStep (state: GameState): GameState {
   const directionHistory = update(state.engineState.dragon.directionHistory, {
     $merge: {
       previous: state.engineState.dragon.directionHistory.current,
-      current: nextState.dragon.direction,
-      fieldId: state.engineState.dragon.fieldId
+      current: nextState.dragon.direction
     }
   })
+
   const nextStateWithUpdatedHistory = update(nextState, { dragon: { $merge: { directionHistory } } })
-  if (!state.engineState.dragon.canMove || (currentField.typeOfField === 'PAUSE' && state.engineState.dragon.fieldId !== state.engineState.dragon.directionHistory.fieldId)) {
+  if (!state.engineState.dragon.canMove) {
     return managePause(update(state, { engineState: { $set: nextStateWithUpdatedHistory } }))
   }
 
