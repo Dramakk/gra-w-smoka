@@ -83,8 +83,6 @@ export default function Dragon (props: DragonProps): React.ReactElement {
     backgroundPosition: `${starsPadding}px`
   }
 
-  console.log(props.isStuck)
-
   return (
     <>
       { props.displayDragon &&
