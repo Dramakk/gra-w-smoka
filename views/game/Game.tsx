@@ -75,6 +75,7 @@ export default function Game (): React.ReactElement {
               dragonDirectionHistory={dragon.directionHistory}
               editorMode={canEdit}
               isMoving={!!state.loop}
+              isStuck={!state.engineState.dragon.canMove}
               level={state.engineState.level}
             />
           </div>

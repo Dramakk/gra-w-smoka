@@ -5,12 +5,14 @@ interface DragonProps {
   displayDragon: boolean;
   dragonDirectionHistory: DragonDirectionHistory;
   isMoving: boolean;
+  isStuck: boolean;
   className: string;
   timeout: number;
 }
 
 export default function Dragon (props: DragonProps): React.ReactElement {
-  const [padding, setPadding] = useState(0)
+  const [dragonPadding, setDragonPadding] = useState(0)
+  const [starsPadding, setStarsPadding] = useState(0)
   const [rotation, setRotation] = useState(0)
 
   // Here we decide how to rotate dragon to match current direction
@@ -44,30 +46,54 @@ export default function Dragon (props: DragonProps): React.ReactElement {
   */
   useEffect(() => {
     if (props.displayDragon && props.isMoving) {
-      let padding = 0
+      let dragonPadding = 0
       const timer = setInterval(() => {
-        padding = (padding + 64) % 192
-        setPadding(padding)
+        dragonPadding = (dragonPadding + 64) % 192
+        setDragonPadding(dragonPadding)
       }, props.timeout / 3)
 
       return () => {
         clearInterval(timer)
-        setPadding(0)
+        setDragonPadding(0)
       }
     }
   }, [props.displayDragon, props.timeout, props.isMoving])
 
-  const computedStyles: CSSProperties = {
-    backgroundPosition: `${padding}px`,
+  useEffect(() => {
+    if (props.displayDragon && props.isStuck) {
+      let starsPadding = 0
+      const timer = setInterval(() => {
+        starsPadding = (starsPadding + 64) % 128
+        setStarsPadding(starsPadding)
+      }, props.timeout / 4)
+      return () => {
+        clearInterval(timer)
+        setStarsPadding(0)
+      }
+    }
+  }, [props.displayDragon, props.timeout, props.isMoving])
+
+  const dragonComputedStyles: CSSProperties = {
+    backgroundPosition: `${dragonPadding}px`,
     transform: `rotate(${rotation}deg)`,
     transition: `transform ${props.timeout}ms linear`
   }
+
+  const starsComputedStyles: CSSProperties = {
+    backgroundPosition: `${starsPadding}px`
+  }
+
+  console.log(props.isStuck)
 
   return (
     <>
       { props.displayDragon &&
         <div className={`dragon-field ${props.className}`}>
-          <div className='dragon-image' style={computedStyles}></div>
+          <div className='dragon-image' style={dragonComputedStyles}>
+            { props.isStuck &&
+              <div className='dragon-stars' style={starsComputedStyles}></div>
+            }
+          </div>
         </div>
       }
     </>
