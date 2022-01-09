@@ -27,7 +27,7 @@ export const GadgetTypeArray = [
   'EXIT'
 ]
 
-export const GemColorsArray = ['GREEN', 'BLUE', 'BLACK', 'RED', 'YELLOW']
+export const GemColorsArray = ['GREEN', 'YELLOW', 'BLACK', 'RED', 'BLUE']
 // Gadget is the type for fields that users are allowed to put on board.
 export type GadgetType = typeof GadgetTypeArray[number]
 // Used to handle gadgets in views
@@ -395,12 +395,16 @@ export const LevelManipulation = {
     let entrances = { ...level.entrances }
 
     if (newUserPlacedField === null) return { ...level }
+    // If user places Entrence we must check if Exit with this label exists
+    // We also increase number of entrances with this label in entrances list
     if (newUserPlacedField.typeOfField === 'ENTRANCE' && 'label' in newUserPlacedField.attributes) {
       const label = newUserPlacedField.attributes.label
       if (LevelPredicates.canPlaceEntrance(level, label)) {
         entrances = update(entrances, { $merge: { [label]: label in level.entrances ? level.entrances[label] + 1 : 1 } })
       } else return { ...level }
     }
+    // If user places Exits we must check if Exit with this label exists (only one exit per label)
+    // We also add exit with index to exists list
     if (newUserPlacedField.typeOfField === 'EXIT' && 'label' in newUserPlacedField.attributes) {
       const label = newUserPlacedField.attributes.label
       if (LevelPredicates.canPlaceExit(level, label)) {
@@ -425,9 +429,12 @@ export const LevelManipulation = {
     // userPlacedField === 'EMPTY' cannot happen, but we have to tell this to TS.
     if (!userPlacedField || userPlacedField.typeOfField === 'EMPTY') return { ...level }
 
+    // If user removes Entrence we must reduce number of entrances with this label (or remove if only one exists) from entrances list
     if (userPlacedField.typeOfField === 'ENTRANCE' && 'label' in userPlacedField.attributes) {
       newLevel = LevelSpeedControls.removeEntrance(level, index, userPlacedField.attributes.label)
     }
+    // If user removes Exit we must check if entrance with this label exists, if so, we can't remove that exit
+    // We also remove the exit from exits list
     if (userPlacedField.typeOfField === 'EXIT' && 'label' in userPlacedField.attributes) {
       if (LevelPredicates.canRemoveExit(level, userPlacedField.attributes.label)) {
         newLevel = update(level, { exits: { $unset: [userPlacedField.attributes.label] } })
