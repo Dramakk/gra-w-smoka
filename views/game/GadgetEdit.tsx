@@ -109,15 +109,15 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
         <div className='gadget-edit-description'>
           { getGadgetDesription(props.selectedGadget) }
         </div>
+        <div className='gadget-edit-options'>
+          {dropdown || <div className='gadget-edit-options-empty'>Brak opcji dla tego gadżetu</div>}
+        </div>
         <div className='gadget-edit-picture'>
         <FieldOptions
           typeOfField={props.selectedGadget}
           attributes={props.selectedOptions}
           isField={false}
         />
-        </div>
-        <div className='gadget-edit-options'>
-          {dropdown || <div className='gadget-edit-options-empty'>Brak opcji dla tego gadżetu</div>}
         </div>
       </div>
     </Modal>
