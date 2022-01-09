@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { EngineState } from '../../engine/engine'
 import { items } from '../../helpers/counter'
@@ -24,6 +24,7 @@ export default function Game (): React.ReactElement {
   const location = useLocation()
   const history = useHistory()
   const locationState: { game: EngineState, editor: Editor} = location.state as { game: EngineState, editor: Editor}
+  const [padding, setPadding] = useState(0)
 
   if (!locationState) {
     return <NavigationError />
@@ -69,7 +70,7 @@ export default function Game (): React.ReactElement {
   return (
       // Here we provide desired value of dispatch to every component down in the tree.
       <DispatchContext.Provider value={dispatch}>
-        <div className='game-container'>
+        <div className='game-container' style={{ paddingBottom: `${padding}px` }}>
           <div className="board-wrapper">
             <BoardComponent
               dragonPosition={dragon.fieldId}
@@ -88,7 +89,7 @@ export default function Game (): React.ReactElement {
               scaleGems={state.engineState.level.scalesGems}
               canEdit={canEdit}
             />
-            <SpeedControls timeout={state.uiState.timeout}/>
+            <SpeedControls setPadding={setPadding} timeout={state.uiState.timeout}/>
           </div>
           <Tree canEdit={canEdit} treeRegisters={state.engineState.level.treeRegisters}/>
           <BottomTooltip selectedField={state.uiState.fieldToAdd} fieldsToPlace={[...items(currentLevelState.gadgets).entries()]} />
