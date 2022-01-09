@@ -12,6 +12,7 @@ interface FieldProps {
   isMoving: boolean;
   isStuck: boolean;
   dragonDirectionHistory: DragonDirectionHistory;
+  timeout: number;
 }
 
 export default function FieldComponent (props: FieldProps): React.ReactElement {
@@ -22,16 +23,16 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
   if (props.displayDragon) {
     switch (props.dragonDirectionHistory.previous) {
       case 'U':
-        animationClass = 'up-1000'
+        animationClass = `up-${props.timeout}`
         break
       case 'D':
-        animationClass = 'down-1000'
+        animationClass = `down-${props.timeout}`
         break
       case 'L':
-        animationClass = 'left-1000'
+        animationClass = `left-${props.timeout}`
         break
       case 'R':
-        animationClass = 'right-1000'
+        animationClass = `right-${props.timeout}`
         break
       default:
         animationClass = ''
@@ -75,10 +76,10 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
         </div>
         <CSSTransition
           in={props.displayDragon}
-          timeout={1000}
+          timeout={props.timeout}
           classNames={animationClass}
         >
-          <Dragon className={animationClass} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} isStuck={props.isStuck && !(props.field.typeOfField === 'FINISH' && (props.field as Finish).attributes.opened === 1)} displayDragon={props.displayDragon} timeout={1000}/>
+          <Dragon className={animationClass} timeout={props.timeout} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} isStuck={props.isStuck && !(props.field.typeOfField === 'FINISH' && (props.field as Finish).attributes.opened === 1)} displayDragon={props.displayDragon}/>
         </CSSTransition>
       </div>
     </>

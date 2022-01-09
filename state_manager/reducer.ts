@@ -3,7 +3,7 @@ import { EngineState } from '../engine/engine'
 import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageChangeFromHole, managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
-import { manageChangeGameFinished, manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
+import { manageChangeGameFinished, manageChangeTimeout, manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
 import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 import { SelectedOptions } from '../views/game/GadgetEdit'
@@ -26,10 +26,11 @@ export type PossibleActions =
   | 'CHANGE_FROM_HOLE' // Invoked when dragon enters field with ENTRANCE or EXIT
   | 'CHANGE_REGISTER' // Invoked in editor mode, when user changes register description
   | 'CHANGE_GAME_FINISHED' // Invoked when user closes "Koniec gry" modal or dragon steps on finish
+  | 'CHANGE_TIMEOUT' // Invoked when user changes timeout using UI
 
 // Here are types describing possible payloads of actions
 // Naming convention ActionTypePayload
-export interface StartPayload {timeout: number, dispatch: React.Dispatch<Action>}
+export interface StartPayload { dispatch: React.Dispatch<Action>}
 export interface SelectGadgetPayload {fieldType: GadgetType }
 export interface FieldClickPayload { index: number }
 export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: number}
@@ -37,6 +38,7 @@ export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors,
 export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
 export interface SelectOptionsPayload { selectedOptions: SelectedOptions }
 export interface CloseModalPayload { nextAction: Action, dispatch: React.Dispatch<Action> }
+export interface ChangeTimeoutPayload { timeout: number, dispatch: React.Dispatch<Action> }
 
 export type PossiblePayloads =
   | StartPayload
@@ -47,6 +49,7 @@ export type PossiblePayloads =
   | ChangeRegisterPayload
   | SelectOptionsPayload
   | CloseModalPayload
+  | ChangeTimeoutPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
@@ -59,6 +62,7 @@ export interface GadgetEditState {
 
 export interface UIState {
   fieldToAdd: GadgetType | null
+  timeout: number
   selectedOptions: SelectedOptions
   gadgetEditState: GadgetEditState
   gameFinished?: boolean
@@ -109,6 +113,8 @@ export function stateReducer (state: GameState, action: Action): GameState {
       return manageChangeFromHole(state)
     case 'CHANGE_GAME_FINISHED':
       return manageChangeGameFinished(state)
+    case 'CHANGE_TIMEOUT':
+      return manageChangeTimeout(state, action.payload as ChangeTimeoutPayload)
     default:
       throw new Error('Impossible action')
   }
