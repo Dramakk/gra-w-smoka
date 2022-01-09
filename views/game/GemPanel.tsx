@@ -6,7 +6,7 @@ type GemInfo = Record<GemColors, number>
 export type GemOwner = 'SCALE' | 'TREE' | 'DRAGON'
 
 export default function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemInfo, treeGems: GemInfo, canEdit: boolean}): ReactElement {
-  const gemColors: GemColors[] = ['RED', 'GREEN', 'BLUE', 'YELLOW', 'BLACK']
+  const gemColors: GemColors[] = ['GREEN', 'YELLOW', 'BLACK', 'RED', 'BLUE']
 
   return (
     <div className="gem-panel">
