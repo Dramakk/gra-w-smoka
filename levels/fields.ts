@@ -176,11 +176,11 @@ export function getGadgetDesription (gadgetType: GadgetType): string {
     case 'SWAP':
       return 'Tęcza: zmienienia kolory kryształów'
     case 'STORE':
-      return 'Pień wejściowy: smok umieszcza tu kryształy u drzewa'
+      return 'Pień wejściowy: smok umieszcza tu kryształy u drzewca'
     case 'TAKE':
-      return 'Pień wyjściowy: smok wyjmuje tu kryształy z drzewa'
+      return 'Pień wyjściowy: smok wyjmuje tu kryształy z drzewca'
     case 'IF':
-      return 'Drogowskaz: pozwala smokowi zadecyować czy skręcić w lewo, czy w prawo'
+      return 'Rozdroże: pozwala smokowi zadecyować czy skręcić w lewo, czy w prawo'
     case 'ENTRANCE':
       return 'Tunel wejściowy: wejście do podziemnego tunelu'
     case 'EXIT':
