@@ -100,17 +100,14 @@ export const LevelPredicates = {
   },
 
   canPlaceEntrance: function (level: Level, label: Labels) : boolean {
-    console.log(level)
     return label in level.exits
   },
 
   canPlaceExit: function (level: Level, label: Labels) : boolean {
-    console.log(level)
     return !(label in level.exits)
   },
 
   canRemoveExit: function (level: Level, label: Labels) : boolean {
-    console.log(level)
     return !(label in level.entrances)
   }
 }

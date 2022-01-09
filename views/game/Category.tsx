@@ -29,14 +29,16 @@ export default function Category (props: CategoryProps): React.ReactElement {
     }
   ]
 
-  function onModalPlay (): void {
-    if (!selectedLevel) {
+  function onModalPlay (level?: CategoryLevelDescription): void {
+    if (!selectedLevel && !level) {
       return
     }
 
+    const levelToLoad = selectedLevel || level
+
     changeIsLoading(true)
 
-    fetch(`/${selectedLevel.levelFileName}`)
+    fetch(`/${levelToLoad.levelFileName}`)
       .then(async res => {
         const parsedResponse = await res.json()
         try {
@@ -63,8 +65,12 @@ export default function Category (props: CategoryProps): React.ReactElement {
   }
 
   function selectLevel (level: CategoryLevelDescription): void {
-    changeSelectedLevel(level)
-    changeModalOpen(true)
+    if (!level.levelDescription) {
+      onModalPlay(level)
+    } else {
+      changeSelectedLevel(level)
+      changeModalOpen(true)
+    }
   }
 
   return (
