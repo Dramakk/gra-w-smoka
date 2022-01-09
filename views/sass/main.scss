@@ -18,6 +18,7 @@
 @import "loading";
 @import "gadgetsSelection";
 @import "imageDropdown";
+@import "scrollbar";
 
 html,
 body {
@@ -49,6 +50,7 @@ button {
   min-width: 64px;
   border: 0;
   background-color: $primaryColor;
+  cursor: pointer;
 
   &.button-danger {
     background-color: $dangerColor;
@@ -106,6 +108,7 @@ input[type=number] {
     margin-bottom: 10px;
     color: black;
     background: none;
+    cursor: pointer;
   }
 }
 
@@ -134,7 +137,7 @@ input[type=number] {
   }
 
   @media screen and (max-width: $tabletWidth) {
-    padding-bottom: 90px;
+    padding-bottom: 110px;
   }
 }
 
