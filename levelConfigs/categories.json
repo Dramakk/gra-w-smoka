@@ -4,47 +4,47 @@
     "categoryLevels": [
       {
         "displayName": "1. Cel gry",
-        "levelFileName": "easy1.json",
+        "levelFileName": "easy01.json",
         "levelDescription": "Celem Bejtazara jest dojście do wyjścia. Na początek smok poradzi sobie sam, ale potem będziesz musiał mu w tym pomóc (naciśnij 'Zagraj', a póżniej 'Start' by zobaczyć jak Bajtazar przechodzi etap)."
       },
       {
         "displayName": "2. Strzałki",
-        "levelFileName": "easy2.json",
+        "levelFileName": "easy02.json",
         "levelDescription": "Teraz sam porozstawiaj strzałki. Po prostu kilknij na element który chcesz wstawić z menu na dole, a potem kliknij na planszy w miejscu gdzie chcesz go wstawić. Jeżeli chcesz usunąć element, po prostu na niego kliknij i wybierz 'Usuń'. "
       },
       {
         "displayName": "3. O wadze",
-        "levelFileName": "easy3.json",
+        "levelFileName": "easy03.json",
         "levelDescription": "Zazwyczaj wyjście jest zamknięte. Żeby je otworzyć smok musi dać drzewcowi kryształy, które zebrał. Służą do tego specjalne wagi. W widoku poziomu spójrz na tabelę z kryształami. Pierwsza kolumna mówi ile smok ma przy sobie kamienie konkretnego koloru. Druga kolumna mówi, ile kamienie jest na wagach, a trzeci ile musi być na wadze, by drzewiec otworzył wyjście."
       },
       {
         "displayName": "4. Kolory 1",
-        "levelFileName": "easy4.json",
+        "levelFileName": "easy04.json",
         "levelDescription": "Kamienie, które zbiera smok mogą być różnych kolorów. Tak samo inne lelementy mogą mieć swój kolor. Zaznaczany jest on w lewym górnym rogu elementu."
       },
       {
         "displayName": "5. Kolory 2",
-        "levelFileName": "easy5.json",
+        "levelFileName": "easy05.json",
         "levelDescription": "Jeżeli element na plaszy ma kolor, to wszystko co zrobi przy nim smok, będzie dotyczyło tylko kamieni tego koloru. Na przykład na wadze zielonej Bajtazar położy wszystki swoje zielone kamienie. Uzupełnij planszę wagami, kolor wagi można wybrać po kliknięciu na wagę."
       },
       {
         "displayName": "6. Dodawanie 1",
-        "levelFileName": "easy6.json",
+        "levelFileName": "easy06.json",
         "levelDescription": "Bajtazar może zmieniać ilość swoich kamienie wchodząc na specjalne pola. Zielona skrzynia z liczbą '3' w prawym dolnym rogu zwiększy liczbę kamieni o 3. Jeżeli zielona skrzynia ma w prawym dolnym rogu czarny kryształ to zwiększa liczbę zielonych kryształów o liczbę czarnych kryształów."
       },
       {
         "displayName": "7. Dodawanie 2",
-        "levelFileName": "easy7.json",
+        "levelFileName": "easy07.json",
         "levelDescription": "Aby zmienić właściwości skrzyni użyj rozwijanych list w wyskakującym okienku. Parametry zmieniasz tak samo jak kolor elementu. Postaw na planszy dwie skrzynie, by uzyskać odpowiednią liczbę kryształów."
       },
       {
         "displayName": "8. Arytmetyka 1",
-        "levelFileName": "easy8.json",
+        "levelFileName": "easy08.json",
         "levelDescription": "Oprócz dodawania są jeszcze inne pola: studnia - służy do odejmowania, krasnal - on pomnoży smokowi kryształy, chochlik - ten nicpoń podlili liczbę kamieni. Uważaj, gdy chochlik będzie miał podzielić przez zero, to zakręci smokowi w głowie!"
       },
       {
         "displayName": "9. Arytmetyka 2",
-        "levelFileName": "easy9.json",
+        "levelFileName": "easy09.json",
         "levelDescription": "Oprócz krasnala i chochlika jest jeszcze dobra wróżka. Wróżka dodaje lub zabiera smokowi kryształy, tak by miał ich ustaloną ilość. Zresztą sprawdź sam!"
       },
       {
@@ -92,6 +92,66 @@
   {
     "categoryName": "Poziomy dla zaawansowanych",
     "categoryLevels": [
+      {
+        "displayName": "1. Na początek",
+        "levelFileName": "hard01.json"
+      },
+      {
+        "displayName": "2. 4 strzałki",
+        "levelFileName": "hard02.json"
+      },
+      {
+        "displayName": "3. Pętla",
+        "levelFileName": "hard03.json"
+      },
+      {
+        "displayName": "4. Parzystość",
+        "levelFileName": "hard04.json"
+      },
+      {
+        "displayName": "5. Mnożenie",
+        "levelFileName": "hard05.json"
+      },
+      {
+        "displayName": "6. Dzielenie",
+        "levelFileName": "hard06.json"
+      },
+      {
+        "displayName": "7. Potęgowanie",
+        "levelFileName": "hard07.json"
+      },
+      {
+        "displayName": "8. Pierwiastkowanie",
+        "levelFileName": "hard08.json"
+      },
+      {
+        "displayName": "9. Silnia",
+        "levelFileName": "hard09.json"
+      },
+      {
+        "displayName": "10. Fibbonacci",
+        "levelFileName": "hard10.json"
+      },
+      {
+        "displayName": "11. Zapełnianie",
+        "levelFileName": "hard11.json"
+      },
+      {
+        "displayName": "12. Suma ciągu",
+        "levelFileName": "hard12.json"
+      },
+      {
+        "displayName": "13. Maksimum",
+        "levelFileName": "hard13.json"
+      },
+      {
+        "displayName": "14. Fibbonacci 2",
+        "levelFileName": "hard14.json"
+      },
+      {
+        "displayName": "15. Sortowanie",
+        "levelFileName": "hard15.json"
+      }
     ]
   }
 ]

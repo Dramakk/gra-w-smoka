@@ -1,0 +1,520 @@
+{
+  "fields": [
+      {
+          "typeOfField": "WALL",
+          "id": 0
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 1
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 2
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 3
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 4
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 5
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 6
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 7
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 8
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 9
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 10
+      },
+      {
+          "typeOfField": "START",
+          "id": 11
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 12
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 13
+      },
+      {
+          "typeOfField": "ARROWRIGHT",
+          "id": 14,
+          "attributes": {
+              "direction": "R"
+          }
+      },
+      {
+          "typeOfField": "SCALE",
+          "id": 15,
+          "attributes": {
+              "gemColor": "RED"
+          }
+      },
+      {
+          "typeOfField": "SCALE",
+          "id": 16,
+          "attributes": {
+              "gemColor": "BLUE"
+          }
+      },
+      {
+          "typeOfField": "FINISH",
+          "id": 17,
+          "attributes": {
+              "opened": 0
+          }
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 18
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 19
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 20
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 21
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 22
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 23
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 24
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 25
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 26
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 27
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 28
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 29
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 30
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 31
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 32
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 33
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 34
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 35
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 36
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 37
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 38
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 39
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 40
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 41
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 42
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 43
+      },
+      {
+          "typeOfField": "ARROWUP",
+          "id": 44,
+          "attributes": {
+              "direction": "U"
+          }
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 45
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 46
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 47
+      },
+      {
+          "typeOfField": "ARROWDOWN",
+          "id": 48,
+          "attributes": {
+              "direction": "D"
+          }
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 49
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 50
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 51
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 52
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 53
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 54
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 55
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 56
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 57
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 58
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 59
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 60
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 61
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 62
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 63
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 64
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 65
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 66
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 67
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 68
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 69
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 70
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 71
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 72
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 73
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 74
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 75
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 76
+      },
+      {
+          "typeOfField": "EMPTY",
+          "id": 77
+      },
+      {
+          "typeOfField": "ARROWLEFT",
+          "id": 78,
+          "attributes": {
+              "direction": "L"
+          }
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 79
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 80
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 81
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 82
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 83
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 84
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 85
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 86
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 87
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 88
+      },
+      {
+          "typeOfField": "WALL",
+          "id": 89
+      }
+  ],
+  "fieldsPerRow": 10,
+  "gadgets": [
+      [
+          "ARROWRIGHT",
+          1
+      ],
+      [
+          "ARROWUP",
+          1
+      ],
+      [
+          "ADD",
+          1
+      ],
+      [
+          "SUBSTRACT",
+          1
+      ],
+      [
+          "SWAP",
+          1
+      ],
+      [
+          "IF",
+          1
+      ]
+  ],
+  "baseDragon": {
+      "fieldId": 11,
+      "direction": "D",
+      "gemsInPocket": {
+          "BLACK": 0,
+          "BLUE": 1,
+          "YELLOW": 0,
+          "RED": 1,
+          "GREEN": 5
+      },
+      "canMove": true,
+      "directionHistory": {
+          "previous": null,
+          "current": "D"
+      }
+  },
+  "treeGems": {
+      "BLACK": 0,
+      "BLUE": 13,
+      "YELLOW": 0,
+      "RED": 8,
+      "GREEN": 0
+  },
+  "treeRegisters": {
+      "0": {
+          "stored": 0,
+          "needed": 0
+      },
+      "1": {
+          "stored": 0,
+          "needed": 0
+      },
+      "2": {
+          "stored": 0,
+          "needed": 0
+      },
+      "3": {
+          "stored": 0,
+          "needed": 0
+      },
+      "4": {
+          "stored": 0,
+          "needed": 0
+      },
+      "5": {
+          "stored": 0,
+          "needed": 0
+      },
+      "6": {
+          "stored": 0,
+          "needed": 0
+      },
+      "7": {
+          "stored": 0,
+          "needed": 0
+      },
+      "8": {
+          "stored": 0,
+          "needed": 0
+      },
+      "9": {
+          "stored": 0,
+          "needed": 0
+      },
+      "10": {
+          "stored": 0,
+          "needed": 0
+      },
+      "11": {
+          "stored": 0,
+          "needed": 0
+      },
+      "12": {
+          "stored": 0,
+          "needed": 0
+      },
+      "13": {
+          "stored": 0,
+          "needed": 0
+      },
+      "14": {
+          "stored": 0,
+          "needed": 0
+      },
+      "15": {
+          "stored": 0,
+          "needed": 0
+      },
+      "16": {
+          "stored": 0,
+          "needed": 0
+      },
+      "17": {
+          "stored": 0,
+          "needed": 0
+      },
+      "18": {
+          "stored": 0,
+          "needed": 0
+      },
+      "19": {
+          "stored": 0,
+          "needed": 0
+      }
+  },
+  "finishId": 17,
+  "entrances": {},
+  "exits": {}
+}
