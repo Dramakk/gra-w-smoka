@@ -18,6 +18,7 @@
 @import "loading";
 @import "gadgetsSelection";
 @import "imageDropdown";
+@import "scrollbar";
 
 html,
 body {
@@ -49,6 +50,7 @@ button {
   min-width: 64px;
   border: 0;
   background-color: $primaryColor;
+  cursor: pointer;
 
   &.button-danger {
     background-color: $dangerColor;
@@ -106,6 +108,8 @@ input[type=number] {
     margin-bottom: 10px;
     color: black;
     background: none;
+    cursor: pointer;
+
     .menu-dragon-picture {
       position: absolute;
       top: -60px;
@@ -117,7 +121,7 @@ input[type=number] {
 
 .game-container {
   display: grid;
-  grid-template-columns: 65% 35%;
+  grid-template-columns: 68% 32%;
 
   .right-panel-wrapper {
     width: 100%;
@@ -127,7 +131,6 @@ input[type=number] {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding-bottom: 150px;
 
     .bottom-tooltip {
       order: -1;
@@ -137,10 +140,6 @@ input[type=number] {
       order: -2;
       width: 100%;
     }
-  }
-
-  @media screen and (max-width: $tabletWidth) {
-    padding-bottom: 90px;
   }
 }
 

@@ -6,7 +6,7 @@ interface ValueWithControlsProps {
   actionType: PossibleActions;
   actionPayloadAdd: PossiblePayloads;
   actionPayloadSubstract: PossiblePayloads;
-  current: number;
+  current: number | string;
   canEdit: boolean;
 }
 
@@ -21,7 +21,7 @@ export default function ValueWithControls (props: ValueWithControlsProps): React
               payload: props.actionPayloadSubstract
             })}
           >remove</button>
-          {props.current}
+          <span className="value-with-controls-current">{props.current}</span>
           <button className="value-with-controls-button material-icons"
             onClick={() => dispatch({
               type: props.actionType,

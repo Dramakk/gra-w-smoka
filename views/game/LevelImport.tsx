@@ -53,7 +53,7 @@ export default function LevelImport (): React.ReactElement {
         </textarea>
       </div>
       <div className="import-level-buttons">
-        <button onClick={onSubmit}>Graj</button>
+        <button className={`${!importedLevel ? 'button-disabled' : ''}`} disabled={!importedLevel} onClick={onSubmit}>Graj</button>
       </div>
       <Modal show={showModal} buttons={modalButtons}>
         <div>Definicja poziomu zawiera błędy. Popraw je i spróbuj ponownie.</div>
