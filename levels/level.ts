@@ -97,6 +97,21 @@ export const LevelPredicates = {
 
   checkRegisters: function (level : Level) : boolean {
     return Object.values(level.treeRegisters).every(register => register.stored === register.needed)
+  },
+
+  canPlaceEntrance: function (level: Level, label: Labels) : boolean {
+    console.log(level)
+    return label in level.exits
+  },
+
+  canPlaceExit: function (level: Level, label: Labels) : boolean {
+    console.log(level)
+    return !(label in level.exits)
+  },
+
+  canRemoveExit: function (level: Level, label: Labels) : boolean {
+    console.log(level)
+    return !(label in level.entrances)
   }
 }
 
@@ -211,30 +226,32 @@ export const LevelSpeedControls = {
   },
 
   setEntrance: function (level: Level, index: number, label: Labels): Level {
-    // checks if entrance with that lebel is already placed
-    if (label in level.entrances || !(label in level.exits)) {
-      return { ...level }
-    } else {
+    if (LevelPredicates.canPlaceEntrance(level, label)) {
       return update(level, {
         fields: {
           $set: level.fields.map((field, idx) =>
             index === idx ? fields.createField('ENTRANCE', index, { label: label, exit: level.exits[label] }) : field)
         },
-        entrances: { $merge: { [label]: index } }
+        entrances: { $merge: { [label]: label in level.entrances ? level.entrances[label] + 1 : 1 } }
+      })
+    }
+    return { ...level }
+  },
+
+  removeEntrance: function (level: Level, index: number, label: Labels): Level {
+    if (level.entrances[label] > 1) {
+      return update(level, {
+        entrances: { $merge: { [label]: level.entrances[label] - 1 } }
+      })
+    } else {
+      return update(level, {
+        entrances: { $unset: [label] }
       })
     }
   },
 
-  removeEntrance: function (level: Level, index: number, label: Labels): Level {
-    return update(level, {
-      entrances: { $unset: [label] }
-    })
-  },
-
   removeExit: function (level: Level, index: number, label: Labels): Level {
-    if (label in level.entrances) {
-      return { ...level }
-    } else {
+    if (LevelPredicates.canRemoveExit(level, label)) {
       return update(level, {
         fields: {
           $set: level.fields.map((item, itemIndex) =>
@@ -243,12 +260,11 @@ export const LevelSpeedControls = {
         exits: { $unset: [label] }
       })
     }
+    return { ...level }
   },
 
   setExit: function (level: Level, index: number, label: Labels): Level {
-    if (label in level.exits) {
-      return { ...level }
-    } else {
+    if (LevelPredicates.canPlaceExit(level, label)) {
       return update(level, {
         fields: {
           $set: level.fields.map((field, idx) =>
@@ -257,6 +273,7 @@ export const LevelSpeedControls = {
         exits: { $merge: { [label]: index } }
       })
     }
+    return { ...level }
   }
 }
 
@@ -377,29 +394,53 @@ export const LevelManipulation = {
   fillSquare: function (level: Level, index : number, fieldType : GadgetType, options: GadgetOptionType) : Level {
     const newUserPlacedField : fields.Field = LevelCreation.newFieldFromType(index, fieldType, options)
     let playerPlacedGadgets: FieldMap = { ...level.playerPlacedGadgets }
+    let exits = { ...level.exits }
+    let entrances = { ...level.entrances }
 
-    if (newUserPlacedField !== null) {
-      playerPlacedGadgets = update(playerPlacedGadgets, { $merge: { [index]: newUserPlacedField } })
+    if (newUserPlacedField === null) return { ...level }
+    if (newUserPlacedField.typeOfField === 'ENTRANCE' && 'label' in newUserPlacedField.attributes) {
+      const label = newUserPlacedField.attributes.label
+      if (LevelPredicates.canPlaceEntrance(level, label)) {
+        entrances = update(entrances, { $merge: { [label]: label in level.entrances ? level.entrances[label] + 1 : 1 } })
+      } else return { ...level }
     }
+    if (newUserPlacedField.typeOfField === 'EXIT' && 'label' in newUserPlacedField.attributes) {
+      const label = newUserPlacedField.attributes.label
+      if (LevelPredicates.canPlaceExit(level, label)) {
+        exits = update(exits, { $merge: { [label]: index } })
+      } else return { ...level }
+    }
+
+    playerPlacedGadgets = update(playerPlacedGadgets, { $merge: { [index]: newUserPlacedField } })
 
     return update(level, {
       gadgets: { $set: counterDelete(level.gadgets, fieldType) },
-      playerPlacedGadgets: { $set: playerPlacedGadgets }
+      playerPlacedGadgets: { $set: playerPlacedGadgets },
+      entrances: { $set: entrances },
+      exits: { $set: exits }
     })
   },
 
   clearSquare: function (level: Level, index : number) : Level {
     const userPlacedField = LevelGetters.getField(level, index)
+    let newLevel = { ...level }
 
     // userPlacedField === 'EMPTY' cannot happen, but we have to tell this to TS.
-    if (userPlacedField && userPlacedField.typeOfField !== 'EMPTY') {
-      return update(level, {
-        playerPlacedGadgets: { $unset: [index] },
-        gadgets: { $set: add(level.gadgets, userPlacedField.typeOfField) }
-      })
+    if (!userPlacedField || userPlacedField.typeOfField === 'EMPTY') return { ...level }
+
+    if (userPlacedField.typeOfField === 'ENTRANCE' && 'label' in userPlacedField.attributes) {
+      newLevel = LevelSpeedControls.removeEntrance(level, index, userPlacedField.attributes.label)
+    }
+    if (userPlacedField.typeOfField === 'EXIT' && 'label' in userPlacedField.attributes) {
+      if (LevelPredicates.canRemoveExit(level, userPlacedField.attributes.label)) {
+        newLevel = update(level, { exits: { $unset: [userPlacedField.attributes.label] } })
+      } else return { ...level }
     }
 
-    return { ...level }
+    return update(newLevel, {
+      playerPlacedGadgets: { $unset: [index] },
+      gadgets: { $set: add(level.gadgets, userPlacedField.typeOfField) }
+    })
   },
 
   changeLevelGemQty: function (level: Level, who: 'DRAGON' | 'TREE' | 'SCALE', color: GemColors, changeInQty: number): Level {
