@@ -109,6 +109,13 @@ input[type=number] {
     color: black;
     background: none;
     cursor: pointer;
+
+    .menu-dragon-picture {
+      position: absolute;
+      top: -60px;
+      margin-left: -32px;
+      left: 50%;
+    }
   }
 }
 

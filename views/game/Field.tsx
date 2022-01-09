@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { Field } from '../../levels/fields'
+import { Field, Finish } from '../../levels/fields'
 import { DispatchContext } from './Game'
 import { CSSTransition } from 'react-transition-group'
 import Dragon from './Dragon'
@@ -10,6 +10,7 @@ interface FieldProps {
   field: Field;
   displayDragon: boolean;
   isMoving: boolean;
+  isStuck: boolean;
   dragonDirectionHistory: DragonDirectionHistory;
   timeout: number;
 }
@@ -78,7 +79,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
           timeout={props.timeout}
           classNames={animationClass}
         >
-          <Dragon className={animationClass} timeout={props.timeout} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} displayDragon={props.displayDragon}/>
+          <Dragon className={animationClass} timeout={props.timeout} dragonDirectionHistory={props.dragonDirectionHistory} isMoving={props.isMoving} isStuck={props.isStuck && !(props.field.typeOfField === 'FINISH' && (props.field as Finish).attributes.opened === 1)} displayDragon={props.displayDragon}/>
         </CSSTransition>
       </div>
     </>
