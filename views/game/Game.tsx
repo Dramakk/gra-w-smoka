@@ -58,7 +58,10 @@ export default function Game (): React.ReactElement {
     {
       buttonText: 'Wybór poziomu',
       buttonType: 'primary',
-      onClick: () => history.push('/levels')
+      onClick: () => {
+        dispatch({ type: 'CHANGE_GAME_FINISHED' })
+        history.push('/levels')
+      }
     },
     {
       buttonText: 'Zamknij',
