@@ -8,6 +8,7 @@ interface BoardProps {
   level: Level;
   editorMode: boolean;
   isMoving: boolean;
+  isStuck: boolean;
   dragonDirectionHistory: DragonDirectionHistory;
 }
 
@@ -26,7 +27,7 @@ export default function BoardComponent (props:BoardProps): ReactElement {
     <div className='board-container' style={calculatedStyles}>
         {[...Array(fieldsPerRow * rowCount).keys()].map((fieldIndex: number) => {
           const field = board[fieldIndex]
-          return <FieldComponent isMoving={props.isMoving} displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
+          return <FieldComponent isMoving={props.isMoving} isStuck={props.isStuck} displayDragon={field.id === props.dragonPosition} dragonDirectionHistory={props.dragonDirectionHistory} key={field.id} field={field} />
         })}
       </div>
   )
