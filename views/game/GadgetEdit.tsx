@@ -58,6 +58,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       }
     })
   }
+
   // Update state to currently selected options.
   function updateSelectedOption (optionKey: string): (option: string) => void {
     return (option: string) => {
@@ -97,7 +98,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       return (
         <>
           { previousDropdown }
-          <ImageDropdown disabled={readOnly} options={mappedOptions} selectCallback={updateSelectedOption(optionKey).bind(this)}/>
+          <ImageDropdown initialOption={props.selectedOptions[optionKey].toString()} disabled={readOnly} options={mappedOptions} selectCallback={updateSelectedOption(optionKey).bind(this)}/>
         </>
       )
     }, null)
