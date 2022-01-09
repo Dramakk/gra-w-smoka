@@ -7,6 +7,7 @@ import * as fields from './fields'
 export const GadgetTypeArray = [
   'START',
   'FINISH',
+  'PAUSE',
   'WALL',
   'ARROWLEFT',
   'ARROWRIGHT',
@@ -328,6 +329,8 @@ export const LevelCreation = {
         return fields.createField<fields.Wall>('WALL', index)
       case 'START':
         return fields.createField<fields.Start>('START', index)
+      case 'PAUSE':
+        return fields.createField<fields.Pause>('PAUSE', index)
       case 'FINISH':
         if ('opened' in options) return fields.createField<fields.Finish>('FINISH', index, { opened: options.opened })
         else throw Error('Wrong options')
