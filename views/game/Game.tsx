@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { EngineState } from '../../engine/engine'
 import { items } from '../../helpers/counter'
@@ -14,6 +14,8 @@ import GadgetsSelection from './GadgetsSelection'
 import GadgetEdit, { SelectedOptions } from './GadgetEdit'
 import NavigationError from './NavigationError'
 import Modal, { ButtonDescription } from '../helpers/Modal'
+import { LevelGetters } from '../../levels/level'
+import { Finish } from '../../levels/fields'
 // This variable provides dispatch method to the whole component tree
 // To access this value we use useContext hook in child components
 export const DispatchContext = React.createContext(null)
@@ -25,6 +27,18 @@ export default function Game (): React.ReactElement {
   const history = useHistory()
   const locationState: { game: EngineState, editor: Editor} = location.state as { game: EngineState, editor: Editor}
   const [padding, setPadding] = useState(0)
+  const steps: Record<string, HTMLAudioElement> = {
+    0: new Audio('/music/step4.mp3'),
+    250: new Audio('/music/step3.mp3'),
+    500: new Audio('/music/step2.mp3'),
+    750: new Audio('/music/step1.mp3')
+  }
+  const gameFinishedSound = new Audio('/music/cheers.mp3')
+  const starsSound = new Audio('/music/aww.mp3')
+  Object.keys(steps).forEach(timeout => {
+    steps[timeout].loop = true
+  })
+  const [playingAudio, setPlayingAudio] = useState(steps[500])
 
   if (!locationState) {
     return <NavigationError />
@@ -34,7 +48,7 @@ export default function Game (): React.ReactElement {
     {
       engineState: locationState.game,
       uiState: {
-        timeout: 750,
+        timeout: 500,
         fieldToAdd: null,
         selectedOptions: null,
         gadgetEditState: {
@@ -54,6 +68,7 @@ export default function Game (): React.ReactElement {
     state.engineState.level.fields
       .filter(field => field.typeOfField === 'FINISH').length !== 0
   const canEdit = state.editor && !state.loop
+  const isStuck = !state.engineState.dragon.canMove
   const finishModalButtons: ButtonDescription[] = [
     {
       buttonText: 'Zamknij',
@@ -61,6 +76,25 @@ export default function Game (): React.ReactElement {
       onClick: () => dispatch({ type: 'CHANGE_GAME_FINISHED' })
     }
   ]
+
+  useEffect(() => {
+    playingAudio.pause()
+    setPlayingAudio(steps[state.uiState.timeout])
+  }, [state.uiState.timeout, state.loop])
+
+  useEffect(() => {
+    if (state.loop) playingAudio.play()
+    else playingAudio.pause()
+  }, [playingAudio])
+
+  useEffect(() => {
+    if (state.uiState.gameFinished) gameFinishedSound.play()
+  }, [state.uiState.gameFinished])
+
+  useEffect(() => {
+    const finish: Finish = LevelGetters.getField(currentLevelState, currentLevelState.finishId) as Finish
+    if (isStuck && !(dragon.fieldId === currentLevelState.finishId && finish.attributes.opened === 1)) starsSound.play()
+  }, [state.engineState.dragon.canMove])
 
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
@@ -77,7 +111,7 @@ export default function Game (): React.ReactElement {
               dragonDirectionHistory={dragon.directionHistory}
               editorMode={canEdit}
               isMoving={!!state.loop}
-              isStuck={!state.engineState.dragon.canMove}
+              isStuck={isStuck}
               level={state.engineState.level}
               timeout={state.uiState.timeout}
             />

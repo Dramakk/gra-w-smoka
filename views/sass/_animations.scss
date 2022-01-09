@@ -120,7 +120,7 @@
   }
   .#{$className}-enter-active {
     transform: translateY(0);
-    opacity: 1;
+    opacity: 0;
   }
   .#{$className}-exit {
     opacity: 0;
@@ -175,30 +175,30 @@
 @include moveRight(right-750, 750);
 @include moveUp(up-750, 750);
 @include moveDown(down-750, 750);
-@include enterLeft(left-750-enter, 750);
-@include enterRight(right-750-enter, 750);
-@include enterUp(up-750-enter, 750);
-@include enterDown(down-750-enter, 750);
+@include enterLeft(left-750-entrance, 750);
+@include enterRight(right-750-entrance, 750);
+@include enterUp(up-750-entrance, 750);
+@include enterDown(down-750-entrance, 750);
 @include leaveHole(exit-750, 750);
 // 500ms
 @include moveLeft(left-500, 500);
 @include moveRight(right-500, 500);
 @include moveUp(up-500, 500);
 @include moveDown(down-500, 500);
-@include enterLeft(left-500-enter, 500);
-@include enterRight(right-500-enter, 500);
-@include enterUp(up-500-enter, 500);
-@include enterDown(down-500-enter, 500);
+@include enterLeft(left-500-entrance, 500);
+@include enterRight(right-500-entrance, 500);
+@include enterUp(up-500-entrance, 500);
+@include enterDown(down-500-entrance, 500);
 @include leaveHole(exit-500, 500);
 // 250ms
 @include moveLeft(left-250, 250);
 @include moveRight(right-250, 250);
 @include moveUp(up-250, 250);
 @include moveDown(down-250, 250);
-@include enterLeft(left-250-enter, 250);
-@include enterRight(right-250-enter, 250);
-@include enterUp(up-250-enter, 250);
-@include enterDown(down-250-enter, 250);
+@include enterLeft(left-250-entrance, 250);
+@include enterRight(right-250-entrance, 250);
+@include enterUp(up-250-entrance, 250);
+@include enterDown(down-250-entrance, 250);
 @include leaveHole(exit-250, 250);
 
 
