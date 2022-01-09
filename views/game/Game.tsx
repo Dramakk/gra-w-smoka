@@ -34,7 +34,7 @@ export default function Game (): React.ReactElement {
     {
       engineState: locationState.game,
       uiState: {
-        timeout: 750,
+        timeout: 500,
         fieldToAdd: null,
         selectedOptions: null,
         gadgetEditState: {

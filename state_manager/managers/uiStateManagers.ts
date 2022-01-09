@@ -112,7 +112,7 @@ export function manageChangeGameFinished (state: GameState): GameState {
 }
 
 export function manageChangeTimeout (state: GameState, payload: ChangeTimeoutPayload): GameState {
-  if (payload.timeout > 750 || payload.timeout < 250) return { ...state }
+  if (payload.timeout > 750 || payload.timeout < 0) return { ...state }
   const shouldResume = !!state.loop
   // Delete loop if exists
   const nextState = managePause(state)
