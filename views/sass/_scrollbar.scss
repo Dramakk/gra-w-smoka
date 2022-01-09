@@ -1,4 +1,9 @@
 @mixin scrollBar($className) {
+  .#{$className} {
+    scrollbar-color: rgba(0, 0, 0, .5);
+    scrollbar-width: thin;
+  }
+
   .#{$className}::-webkit-scrollbar {
     -webkit-appearance: none;
   }

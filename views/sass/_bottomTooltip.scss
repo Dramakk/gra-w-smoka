@@ -10,6 +10,14 @@
     transition: box-shadow 0.5s ease;
     background-image: url("../../assets/images/GRASS.png");
     background-size: 64px 64px;
+    position: relative;
+
+    span {
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+    }
+
     &.item-selected {
       box-shadow:  0px 0px 5px 5px rgb(78, 167, 90);
     }

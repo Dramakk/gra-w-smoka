@@ -121,7 +121,8 @@ input[type=number] {
 
 .game-container {
   display: grid;
-  grid-template-columns: 65% 35%;
+  grid-template-columns: 68% 32%;
+  padding-bottom: 40px;
 
   .right-panel-wrapper {
     width: 100%;

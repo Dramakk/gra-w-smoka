@@ -22,6 +22,10 @@
       color: black;
       margin: 0;
     }  
+
+    @media screen and (min-width: $desktopWidth) {
+      margin-bottom: 20px;
+    }
   }
 
   @media screen and (max-width: $desktopWidth) {
