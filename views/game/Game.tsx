@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { EngineState } from '../../engine/engine'
 import { items } from '../../helpers/counter'
@@ -27,14 +27,16 @@ export default function Game (): React.ReactElement {
   const history = useHistory()
   const locationState: { game: EngineState, editor: Editor} = location.state as { game: EngineState, editor: Editor}
   const [padding, setPadding] = useState(0)
-  const steps: Record<string, HTMLAudioElement> = {
-    0: new Audio('/music/step4.mp3'),
-    250: new Audio('/music/step3.mp3'),
-    500: new Audio('/music/step2.mp3'),
-    750: new Audio('/music/step1.mp3')
-  }
-  const gameFinishedSound = new Audio('/music/cheers.mp3')
-  const starsSound = new Audio('/music/aww.mp3')
+  const steps: Record<string, HTMLAudioElement> = useMemo(() => {
+    return {
+      0: new Audio('/music/step4.mp3'),
+      250: new Audio('/music/step3.mp3'),
+      500: new Audio('/music/step2.mp3'),
+      750: new Audio('/music/step1.mp3')
+    }
+  }, [])
+  const gameFinishedSound = useMemo(() => new Audio('/music/cheers.mp3'), [])
+  const starsSound = useMemo(() => new Audio('/music/aww.mp3'), [])
   Object.keys(steps).forEach(timeout => {
     steps[timeout].loop = true
   })
@@ -85,7 +87,7 @@ export default function Game (): React.ReactElement {
   useEffect(() => {
     if (state.loop) playingAudio.play()
     else playingAudio.pause()
-  }, [playingAudio])
+  }, [playingAudio, state.loop])
 
   useEffect(() => {
     if (state.uiState.gameFinished) gameFinishedSound.play()
