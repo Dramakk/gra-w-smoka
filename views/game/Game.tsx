@@ -56,6 +56,14 @@ export default function Game (): React.ReactElement {
   const canEdit = state.editor && !state.loop
   const finishModalButtons: ButtonDescription[] = [
     {
+      buttonText: 'Wybór poziomu',
+      buttonType: 'primary',
+      onClick: () => {
+        dispatch({ type: 'CHANGE_GAME_FINISHED' })
+        history.push('/levels')
+      }
+    },
+    {
       buttonText: 'Zamknij',
       buttonType: 'primary',
       onClick: () => dispatch({ type: 'CHANGE_GAME_FINISHED' })
