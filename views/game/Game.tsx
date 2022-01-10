@@ -73,6 +73,14 @@ export default function Game (): React.ReactElement {
   const isStuck = !state.engineState.dragon.canMove
   const finishModalButtons: ButtonDescription[] = [
     {
+      buttonText: 'Wybór poziomu',
+      buttonType: 'primary',
+      onClick: () => {
+        dispatch({ type: 'CHANGE_GAME_FINISHED' })
+        history.push('/levels')
+      }
+    },
+    {
       buttonText: 'Zamknij',
       buttonType: 'primary',
       onClick: () => dispatch({ type: 'CHANGE_GAME_FINISHED' })

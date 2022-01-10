@@ -36,7 +36,7 @@ export default function FieldOptions (props: FieldProp) : React.ReactElement {
     case 'SCALE':
       return (
       <>
-        <img className="image-detail image-right image-top" src={`/images/${props.attributes.gemColor}.png`} alt={String(props.attributes.gemColor)}/>
+        <img className="image-detail image-left image-top" src={`/images/${props.attributes.gemColor}.png`} alt={String(props.attributes.gemColor)}/>
         <img src={`/images/${props.typeOfField}.png`} alt={props.typeOfField} />
       </>
       )
