@@ -107,12 +107,12 @@ export function manageChangeGameFinished (state: GameState): GameState {
   if (!state.engineState.level.finishId) return { ...state }
   const finish: Finish = LevelGetters.getField(state.engineState.level, state.engineState.level.finishId) as Finish
 
-  if (!finish.attributes.opened || state.engineState.dragon.fieldId !== finish.id) return { ...state }
+  if (!finish.attributes.opened || state.engineState.dragon.fieldId !== finish.id) return update(state, { uiState: { $merge: { gameFinished: false } } })
   return update(state, { uiState: { gameFinished: { $set: !state.uiState.gameFinished } } })
 }
 
 export function manageChangeTimeout (state: GameState, payload: ChangeTimeoutPayload): GameState {
-  if (payload.timeout > 750 || payload.timeout < 250) return { ...state }
+  if (payload.timeout > 750 || payload.timeout < 0) return { ...state }
   const shouldResume = !!state.loop
   // Delete loop if exists
   const nextState = managePause(state)

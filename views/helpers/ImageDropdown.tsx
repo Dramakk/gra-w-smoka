@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 
 export interface ImageDropdownOption {
   // Used to identify options
-  text: string;
+  text: string
   // Optional image to be displayed
-  image?: string;
+  image?: string
 }
 
 export interface ImageDropdownProps {
   options: ImageDropdownOption[]
   selectCallback: (selectedOption: string) => void
   // Determine wheter user can only read selected value
-  disabled?: boolean;
+  disabled?: boolean
+  initialOption?: string
 }
 
 export default function ImageDropdown (props: ImageDropdownProps): React.ReactElement {
@@ -49,7 +50,7 @@ export default function ImageDropdown (props: ImageDropdownProps): React.ReactEl
     return () => {
       document.removeEventListener('click', handleOutsideClick, true)
     }
-  })
+  }, [])
 
   useEffect(() => {
     if (ref.current) {
@@ -57,6 +58,10 @@ export default function ImageDropdown (props: ImageDropdownProps): React.ReactEl
       changeOptionsWidth(`${element.offsetWidth}px`)
     }
   })
+
+  useEffect(() => {
+    if (props.initialOption) changeSelectedOption(props.initialOption)
+  }, [props.initialOption])
 
   return (
     <div ref={ref} className="dropdown-container">

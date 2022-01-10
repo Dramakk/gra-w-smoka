@@ -39,10 +39,12 @@ export default function SpeedControls (props: SpeedControlsProps): React.ReactEl
   function mapTimeoutToText (timeout: number): string {
     switch (timeout) {
       case 750:
-        return 'Standardowo'
+        return 'Wolno'
       case 500:
-        return 'Szybko'
+        return 'Standardowo'
       case 250:
+        return 'Szybko'
+      case 0:
         return 'Bardzo szybko'
     }
   }

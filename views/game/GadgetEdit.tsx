@@ -58,6 +58,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       }
     })
   }
+
   // Update state to currently selected options.
   function updateSelectedOption (optionKey: string): (option: string) => void {
     return (option: string) => {
@@ -97,7 +98,7 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
       return (
         <>
           { previousDropdown }
-          <ImageDropdown disabled={readOnly} options={mappedOptions} selectCallback={updateSelectedOption(optionKey).bind(this)}/>
+          <ImageDropdown initialOption={props.selectedOptions[optionKey].toString()} disabled={readOnly} options={mappedOptions} selectCallback={updateSelectedOption(optionKey).bind(this)}/>
         </>
       )
     }, null)
@@ -109,15 +110,15 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
         <div className='gadget-edit-description'>
           { getGadgetDesription(props.selectedGadget) }
         </div>
+        <div className='gadget-edit-options'>
+          {dropdown || <div className='gadget-edit-options-empty'>Brak opcji dla tego gadżetu</div>}
+        </div>
         <div className='gadget-edit-picture'>
         <FieldOptions
           typeOfField={props.selectedGadget}
           attributes={props.selectedOptions}
           isField={false}
         />
-        </div>
-        <div className='gadget-edit-options'>
-          {dropdown || <div className='gadget-edit-options-empty'>Brak opcji dla tego gadżetu</div>}
         </div>
       </div>
     </Modal>

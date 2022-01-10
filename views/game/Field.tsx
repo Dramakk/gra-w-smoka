@@ -40,7 +40,7 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
 
     // Adding modifier to selected animation class
     if (props.field.typeOfField === 'ENTRANCE') {
-      animationClass += '-enter'
+      animationClass += '-entrance'
     }
 
     if (props.field.typeOfField === 'EXIT' && props.dragonDirectionHistory.fromHole) {
