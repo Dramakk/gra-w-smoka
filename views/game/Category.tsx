@@ -99,7 +99,7 @@ export default function Category (props: CategoryProps): React.ReactElement {
       <Modal show={modalOpen} buttons={modalButtons} title={selectedLevel?.displayName}>
         {
           selectedLevel?.levelDescription
-            ? <div>{selectedLevel?.levelDescription}</div>
+            ? <div style={{ whiteSpace: 'pre-line' }}>{selectedLevel?.levelDescription}</div>
             : <div>Ten poziom nie posiada dodatkowego opisu.</div>
         }
       </Modal>
