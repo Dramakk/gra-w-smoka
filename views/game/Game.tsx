@@ -40,7 +40,6 @@ export default function Game (): React.ReactElement {
   Object.keys(steps).forEach(timeout => {
     steps[timeout].loop = true
   })
-  const [playingAudio, setPlayingAudio] = useState(steps[500])
 
   if (!locationState) {
     return <NavigationError />
@@ -88,14 +87,12 @@ export default function Game (): React.ReactElement {
   ]
 
   useEffect(() => {
-    playingAudio.pause()
-    setPlayingAudio(steps[state.uiState.timeout])
-  }, [state.uiState.timeout, state.loop])
+    Object.keys(steps).forEach(key => {
+      steps[key].pause()
+    })
 
-  useEffect(() => {
-    if (state.loop) playingAudio.play()
-    else playingAudio.pause()
-  }, [playingAudio, state.loop])
+    if (state.loop) steps[state.uiState.timeout].play()
+  }, [state.uiState.timeout, state.loop])
 
   useEffect(() => {
     if (state.uiState.gameFinished) gameFinishedSound.play()

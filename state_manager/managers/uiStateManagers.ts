@@ -107,7 +107,7 @@ export function manageChangeGameFinished (state: GameState): GameState {
   if (!state.engineState.level.finishId) return { ...state }
   const finish: Finish = LevelGetters.getField(state.engineState.level, state.engineState.level.finishId) as Finish
 
-  if (!finish.attributes.opened || state.engineState.dragon.fieldId !== finish.id) return { ...state }
+  if (!finish.attributes.opened || state.engineState.dragon.fieldId !== finish.id) return update(state, { uiState: { $merge: { gameFinished: false } } })
   return update(state, { uiState: { gameFinished: { $set: !state.uiState.gameFinished } } })
 }
 
