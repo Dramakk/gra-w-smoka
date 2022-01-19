@@ -103,6 +103,10 @@ export default function Game (): React.ReactElement {
     if (isStuck && !(dragon.fieldId === currentLevelState.finishId && finish.attributes.opened === 1)) starsSound.play()
   }, [state.engineState.dragon.canMove])
 
+  useEffect(() => {
+    return () => Object.keys(steps).forEach(step => steps[step].pause())
+  }, [])
+
   // Renders exported level in JSON format.
   function exportLevel (editorState: Editor) : void {
     history.push('/editor/export', { levelToExport: EditorCreation.exportLevel(editorState) })
