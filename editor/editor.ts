@@ -48,6 +48,7 @@ export const EditorCreation = {
     // We don't use these fields in parsing
     delete levelToExport.playerPlacedGadgets
     delete levelToExport.scalesGems
+    delete levelToExport.baseTreeRegisters
     return levelToExport
   },
 
@@ -121,6 +122,7 @@ export const EditorCreation = {
       scalesGems,
       treeGems,
       treeRegisters,
+      baseTreeRegisters: { ...treeRegisters },
       finishId,
       entrances,
       exits

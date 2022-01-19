@@ -65,7 +65,7 @@ export function managePause (state: GameState): GameState {
 export function manageStop (state: GameState): GameState {
   const newState = state.loop ? managePause(state) : state
   const afterDragonReset = resetDragon(newState.engineState)
-  const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(afterDragonReset.level))
+  const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetRegisters(LevelSpeedControls.resetGems(afterDragonReset.level)))
   const engineStateAfterReset = update(afterDragonReset, { level: { $set: levelAfterReset } })
 
   return update(newState, { engineState: { $set: engineStateAfterReset } })
