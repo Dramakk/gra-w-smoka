@@ -25,11 +25,13 @@ export function manageChangeGemQty (state: GameState, payload: ChangeGemQtyPaylo
 
 export function manageChangeRegister (state: GameState, payload: ChangeRegisterPayload): GameState {
   const { registerNumber, register } = payload
+  const engineLevelAfterChange = LevelManipulation.changeLevelRegisters(state.engineState.level, registerNumber, register)
+  const editorLevelAfterChange = LevelManipulation.changeLevelRegisters(state.editor.level, registerNumber, register)
 
   return update(state, {
     engineState: {
-      $set: resetDragon(update(state.engineState, { level: { $set: LevelManipulation.changeLevelRegisters(state.engineState.level, registerNumber, register) } }))
+      $set: resetDragon(update(state.engineState, { level: { $set: update(engineLevelAfterChange, { baseTreeRegisters: { $set: engineLevelAfterChange.treeRegisters } }) } }))
     },
-    editor: { $set: state.editor && update(state.editor, { level: { $set: LevelManipulation.changeLevelRegisters(state.editor.level, registerNumber, register) } }) }
+    editor: { $set: state.editor && update(state.editor, { level: { $set: update(editorLevelAfterChange, { baseTreeRegisters: { $set: editorLevelAfterChange.treeRegisters } }) } }) }
   })
 }

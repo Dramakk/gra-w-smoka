@@ -77,6 +77,7 @@ export interface Level {
   scalesGems: Record<GemColors, number>
   treeGems: Record<GemColors, number>
   treeRegisters: TreeRegisters
+  baseTreeRegisters: TreeRegisters
   finishId: number
   entrances: Record<Labels, number>
   exits: Record<Labels, number>
@@ -164,8 +165,15 @@ export const LevelSpeedControls = {
   resetLevel: function (level: Level): Level {
     const afterFinishReset = LevelSpeedControls.resetFinish(level)
     const afterGemsReset = LevelSpeedControls.resetGems(afterFinishReset)
+    const afterRegisterReset = LevelSpeedControls.resetRegisters(afterGemsReset)
 
-    return LevelSpeedControls.resetPlacedGadgets(afterGemsReset)
+    return LevelSpeedControls.resetPlacedGadgets(afterRegisterReset)
+  },
+
+  resetRegisters: function (level: Level): Level {
+    return update(level, {
+      treeRegisters: { $set: level.baseTreeRegisters }
+    })
   },
 
   removeStart: function (level: Level) : Level {
@@ -319,6 +327,7 @@ export const LevelCreation = {
       scalesGems,
       treeGems,
       treeRegisters,
+      baseTreeRegisters: { ...treeRegisters },
       finishId,
       entrances,
       exits
