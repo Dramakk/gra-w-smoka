@@ -175,7 +175,7 @@ function handleRegisterOperation (currentState: EngineState, targetGemColor: Gem
     } else {
       const numberOfGems = currentState.level.treeRegisters[registerIndex].stored
       return update(currentState,
-        { dragon: { $set: DragonManipulation.addPocketGems(currentState.dragon, targetGemColor, numberOfGems) } })
+        { dragon: { $set: DragonManipulation.setPocketGems(currentState.dragon, targetGemColor, numberOfGems) } })
     }
   } else {
     return update(currentState, { dragon: { $merge: { canMove: false } } })
