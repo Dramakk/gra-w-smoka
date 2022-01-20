@@ -19,9 +19,13 @@ function BottomTooltipItem (props: BottomTooltipItemProps): ReactElement {
     dispatch({ type: 'SELECT_GADGET', payload: { fieldType: props.gadgetToPlace[0] } })
   }
 
+  function onDragStart () {
+    dispatch({ type: 'SELECT_GADGET', payload: { fieldType: props.gadgetToPlace[0], drag: 'start' } })
+  }
+
   return (
       <div>
-        <button className={`bottom-tooltip-item ${props.isSelected ? 'item-selected' : ''}`} onClick={onClick}>
+        <button className={`bottom-tooltip-item ${props.isSelected ? 'item-selected' : ''}`} onClick={onClick} onDragStart={onDragStart}>
           <img src={`/images/${props.gadgetToPlace[0]}.png`} alt={props.gadgetToPlace[0]}/>
           <span>{props.gadgetToPlace[1] !== Infinity && props.gadgetToPlace[1]}</span>
         </button>

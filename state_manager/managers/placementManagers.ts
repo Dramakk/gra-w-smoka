@@ -6,7 +6,7 @@ import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates, Lev
 import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { getLevelFromState } from '../accessors'
 import { FieldClickPayload, GameState } from '../reducer'
-import { manageClearUIState } from './uiStateManagers'
+import { manageClearUIState, manageCommitEdit } from './uiStateManagers'
 
 export function manageFieldClick (state: GameState, payload: FieldClickPayload): GameState {
   const fieldId = payload.index
@@ -18,6 +18,9 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
       (state.editor &&
           !EditorPredicates.isBorder(fieldId, LevelGetters.getFieldsPerRow(level), LevelGetters.getRowCount(level)))
 
+  // If user draggs field it's the same as commiting edit in modal
+  // When user drags gadget from bottom tooltip, fieldId is null. Otherwise user dragged gadget from one board cell to other
+  if (payload.drag === 'end' && state.uiState.gadgetEditState.fieldId) return manageCommitEdit(state, { index: payload.index })
   // If field is not empty and we can edit the gadget then open edit modal and populate options.
   if (field.typeOfField !== 'EMPTY' && canEdit) {
     const attributes = field.typeOfField === 'START'
@@ -30,7 +33,7 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
           fieldToAdd: field.typeOfField,
           selectedOptions: attributes as SelectedOptions,
           gadgetEditState: {
-            showModal: true,
+            showModal: payload.drag !== 'start',
             canEdit: true,
             fieldId,
             availableOptions: generateGadgetDescription(field.typeOfField)
@@ -40,7 +43,7 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
     })
   }
 
-  // If there field is empty, try to place gadget on board
+  // If field is empty, try to place gadget on board
   return managePlaceField(state, payload)
 }
 

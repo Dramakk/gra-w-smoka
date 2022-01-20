@@ -2,9 +2,13 @@ import update from 'immutability-helper'
 import { Finish, generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionKeys, LevelGetters, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
-import { ChangeTimeoutPayload, CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
+import { ChangeTimeoutPayload, CloseModalPayload, CommitEdditPayload, GameState, SelectGadgetPayload, SelectOptionsPayload, SetPayload } from '../reducer'
 import { managePause, manageStart } from './movementManagers'
 import { manageDeleteField, managePlaceField } from './placementManagers'
+
+export function manageSet (_state: GameState, payload: SetPayload): GameState {
+  return { ...payload.initialState }
+}
 
 export function manageSelectGadget (state: GameState, payload: SelectGadgetPayload): GameState {
   const availableOptions = generateGadgetDescription(payload.fieldType)
@@ -39,7 +43,7 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
         selectedOptions,
         gadgetEditState: {
           fieldId: null,
-          showModal: true,
+          showModal: payload.drag !== 'start',
           availableOptions,
           canEdit: false
         }
@@ -48,13 +52,13 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
   })
 }
 
-export function manageCommitEdit (state: GameState): GameState {
+export function manageCommitEdit (state: GameState, payload?: CommitEdditPayload): GameState {
   if (state.uiState.gadgetEditState.canEdit) {
     // We go in here when user clicks 'Zatwierdź' after editing existing field on the board
     // We have to delete currently placed field and replace it with one that has updated options
     const uiStateCopy = { ...state.uiState }
     const newState = update(manageDeleteField(state, { index: uiStateCopy.gadgetEditState.fieldId }), { uiState: { $set: uiStateCopy } })
-    return managePlaceField(newState, { index: state.uiState.gadgetEditState.fieldId })
+    return managePlaceField(newState, { index: payload?.index || state.uiState.gadgetEditState.fieldId })
   }
 
   // Otherwise just close modal and clean up
@@ -117,6 +121,7 @@ export function manageChangeTimeout (state: GameState, payload: ChangeTimeoutPay
   // Delete loop if exists
   const nextState = managePause(state)
   const nextStateWithTimeout = update(nextState, { uiState: { timeout: { $set: payload.timeout } } })
+  localStorage.setItem('gameSpeed', payload.timeout.toString())
 
   if (!shouldResume) return { ...nextStateWithTimeout }
   return manageStart(nextStateWithTimeout, { dispatch: payload.dispatch })

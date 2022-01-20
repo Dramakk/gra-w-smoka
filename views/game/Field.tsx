@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { DragEvent, useContext, useEffect } from 'react'
 import { Field, Finish } from '../../levels/fields'
 import { DispatchContext } from './Game'
 import { CSSTransition } from 'react-transition-group'
@@ -64,10 +64,25 @@ export default function FieldComponent (props: FieldProps): React.ReactElement {
     dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id } })
   }
 
+  function onDragStart () {
+    dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id, drag: 'start' } })
+  }
+
+  function onDragOver (event: DragEvent<HTMLDivElement>) {
+    event.stopPropagation()
+    event.preventDefault()
+  }
+
+  function onDrop (event: DragEvent<HTMLDivElement>) {
+    event.stopPropagation()
+    event.preventDefault()
+    dispatch({ type: 'FIELD_CLICK', payload: { index: props.field.id, drag: 'end' } })
+  }
+
   return (
     <>
-      <div onClick={onClick} className='board-field'>
-        <div className="board-content">
+      <div onClick={onClick} className='board-field' >
+        <div className="board-content" draggable={true} onDragStart={onDragStart} onDrop={onDrop} onDragOver={onDragOver} >
           <FieldOptions
             typeOfField={props.field.typeOfField}
             attributes={props.field.attributes}

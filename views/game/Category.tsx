@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { resetDragon } from '../../engine/engine'
-import { parseLevel } from '../../levels/levelParser'
 import Modal, { ButtonDescription } from '../helpers/Modal'
 import SlideDown from '../helpers/SlideDown'
 import { CategoryDescription, CategoryLevelDescription } from './LevelSelect'
 
 interface CategoryProps {
   category: CategoryDescription
+  modalToOpen: string
 }
 
 export default function Category (props: CategoryProps): React.ReactElement {
@@ -15,19 +14,19 @@ export default function Category (props: CategoryProps): React.ReactElement {
   const [opened, changeOpened] = useState(false)
   const [selectedLevel, changeSelectedLevel] = useState(null as CategoryLevelDescription)
   const [modalOpen, changeModalOpen] = useState(false)
-  const [isLoading, changeIsLoading] = useState(false)
   const modalButtons: ButtonDescription[] = [
     {
       buttonText: 'Zamknij',
-      buttonType: isLoading ? 'disabled' : 'primary',
+      buttonType: 'primary',
       onClick: () => onModalClose()
     },
     {
       buttonText: 'Zagraj',
-      buttonType: isLoading ? 'disabled' : 'success',
+      buttonType: 'success',
       onClick: () => onModalPlay()
     }
   ]
+  const categoryLevels = props.category.categoryLevels
 
   function onModalPlay (level?: CategoryLevelDescription): void {
     if (!selectedLevel && !level) {
@@ -35,28 +34,11 @@ export default function Category (props: CategoryProps): React.ReactElement {
     }
 
     const levelToLoad = selectedLevel || level
-
-    changeIsLoading(true)
-
-    fetch(`/${levelToLoad.levelFileName}`)
-      .then(async res => {
-        const parsedResponse = await res.json()
-        try {
-          const level = parseLevel(parsedResponse)
-          const game = resetDragon({ level, dragon: null, shouldInteract: true })
-          history.push('/game', {
-            editor: null,
-            game
-          })
-        } catch (e) {
-          console.log(e)
-          changeIsLoading(false)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        changeIsLoading(false)
-      })
+    const levelToLoadIndex = categoryLevels.findIndex(level => level.levelFileName === levelToLoad.levelFileName)
+    const nextLevel = levelToLoadIndex !== -1 && levelToLoadIndex !== categoryLevels.length - 1
+      ? `?next=${categoryLevels[levelToLoadIndex + 1].levelFileName.split('.json')[0]}`
+      : ''
+    history.push(`/game/${levelToLoad.levelFileName.split('.json')[0]}${nextLevel}`)
   }
 
   function onModalClose (): void {
@@ -72,6 +54,13 @@ export default function Category (props: CategoryProps): React.ReactElement {
       changeModalOpen(true)
     }
   }
+
+  useEffect(() => {
+    if (props.modalToOpen) {
+      const levelToOpen = categoryLevels.find(level => level.levelFileName.indexOf(props.modalToOpen) !== -1)
+      if (levelToOpen) selectLevel(levelToOpen)
+    }
+  }, [])
 
   return (
     <>

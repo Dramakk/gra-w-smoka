@@ -253,7 +253,7 @@
           "id": 56
       },
       {
-          "typeOfField": "STORE",
+          "typeOfField": "TAKE",
           "id": 57,
           "attributes": {
               "targetGemColor": "YELLOW",
@@ -443,7 +443,7 @@
           "needed": 0
       },
       "2": {
-          "stored": 0,
+          "stored": 5,
           "needed": 0
       },
       "3": {
