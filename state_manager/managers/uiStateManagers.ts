@@ -2,9 +2,13 @@ import update from 'immutability-helper'
 import { Finish, generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionKeys, LevelGetters, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
-import { ChangeTimeoutPayload, CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload } from '../reducer'
+import { ChangeTimeoutPayload, CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload, SetPayload } from '../reducer'
 import { managePause, manageStart } from './movementManagers'
 import { manageDeleteField, managePlaceField } from './placementManagers'
+
+export function manageSet (_state: GameState, payload: SetPayload): GameState {
+  return { ...payload.initialState }
+}
 
 export function manageSelectGadget (state: GameState, payload: SelectGadgetPayload): GameState {
   const availableOptions = generateGadgetDescription(payload.fieldType)

@@ -29,6 +29,9 @@ export default function App (): React.ReactElement {
           <Route exact path="/game">
             <Game />
           </Route>
+          <Route exact path="/game/:id">
+            <Game />
+          </Route>
           <Route exact path="/levels">
             <LevelSelect />
           </Route>
