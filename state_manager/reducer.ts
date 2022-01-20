@@ -8,6 +8,7 @@ import { manageDeleteField, manageFieldClick } from './managers/placementManager
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 import { SelectedOptions } from '../views/game/GadgetEdit'
 
+export type DragState = 'start' | 'end'
 export type PossibleActions =
   | 'SET' // Invoked at the start of the game
   | 'START' // Start the game action
@@ -33,14 +34,15 @@ export type PossibleActions =
 // Naming convention ActionTypePayload
 export interface SetPayload { initialState: GameState }
 export interface StartPayload { dispatch: React.Dispatch<Action>}
-export interface SelectGadgetPayload {fieldType: GadgetType }
-export interface FieldClickPayload { index: number }
+export interface SelectGadgetPayload {fieldType: GadgetType, drag?: DragState }
+export interface FieldClickPayload { index: number, drag?: DragState }
 export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: number}
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
 export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
 export interface SelectOptionsPayload { selectedOptions: SelectedOptions }
 export interface CloseModalPayload { nextAction: Action, dispatch: React.Dispatch<Action> }
 export interface ChangeTimeoutPayload { timeout: number, dispatch: React.Dispatch<Action> }
+export interface CommitEdditPayload { index: number }
 
 export type PossiblePayloads =
   | SetPayload
@@ -53,6 +55,7 @@ export type PossiblePayloads =
   | SelectOptionsPayload
   | CloseModalPayload
   | ChangeTimeoutPayload
+  | CommitEdditPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 

@@ -2,7 +2,7 @@ import update from 'immutability-helper'
 import { Finish, generateGadgetDescription } from '../../levels/fields'
 import { GadgetOptionKeys, LevelGetters, LevelPredicates } from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
-import { ChangeTimeoutPayload, CloseModalPayload, GameState, SelectGadgetPayload, SelectOptionsPayload, SetPayload } from '../reducer'
+import { ChangeTimeoutPayload, CloseModalPayload, CommitEdditPayload, GameState, SelectGadgetPayload, SelectOptionsPayload, SetPayload } from '../reducer'
 import { managePause, manageStart } from './movementManagers'
 import { manageDeleteField, managePlaceField } from './placementManagers'
 
@@ -43,7 +43,7 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
         selectedOptions,
         gadgetEditState: {
           fieldId: null,
-          showModal: true,
+          showModal: payload.drag !== 'start',
           availableOptions,
           canEdit: false
         }
@@ -52,13 +52,13 @@ export function manageSelectGadget (state: GameState, payload: SelectGadgetPaylo
   })
 }
 
-export function manageCommitEdit (state: GameState): GameState {
+export function manageCommitEdit (state: GameState, payload?: CommitEdditPayload): GameState {
   if (state.uiState.gadgetEditState.canEdit) {
     // We go in here when user clicks 'Zatwierdź' after editing existing field on the board
     // We have to delete currently placed field and replace it with one that has updated options
     const uiStateCopy = { ...state.uiState }
     const newState = update(manageDeleteField(state, { index: uiStateCopy.gadgetEditState.fieldId }), { uiState: { $set: uiStateCopy } })
-    return managePlaceField(newState, { index: state.uiState.gadgetEditState.fieldId })
+    return managePlaceField(newState, { index: payload?.index || state.uiState.gadgetEditState.fieldId })
   }
 
   // Otherwise just close modal and clean up
