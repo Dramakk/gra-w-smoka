@@ -93,10 +93,11 @@ export default function Game (): React.ReactElement {
   }
 
   useEffect(() => {
+    const savedGameSpeed = parseInt(localStorage.getItem('gameSpeed'))
     const initialState: GameState = {
       engineState: null,
       uiState: {
-        timeout: 500,
+        timeout: isNaN(savedGameSpeed) ? 500 : savedGameSpeed,
         fieldToAdd: null,
         selectedOptions: null,
         gadgetEditState: {
@@ -140,19 +141,19 @@ export default function Game (): React.ReactElement {
   useEffect(() => {
     const finishModalButtons: ButtonDescription[] = [
       {
-        buttonText: 'Wybór poziomu',
-        buttonType: 'primary',
-        onClick: () => {
-          dispatch({ type: 'CHANGE_GAME_FINISHED' })
-          history.push('/levels')
-        }
-      },
-      {
         buttonText: 'Następny poziom',
         buttonType: nextLevel ? 'success' : 'disabled',
         onClick: () => {
           const queryString = nextLevel ? `?open=${nextLevel}` : undefined
           history.push(`/levels${queryString}`)
+        }
+      },
+      {
+        buttonText: 'Wybór poziomu',
+        buttonType: 'primary',
+        onClick: () => {
+          dispatch({ type: 'CHANGE_GAME_FINISHED' })
+          history.push('/levels')
         }
       },
       {

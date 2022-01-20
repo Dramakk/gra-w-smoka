@@ -121,6 +121,7 @@ export function manageChangeTimeout (state: GameState, payload: ChangeTimeoutPay
   // Delete loop if exists
   const nextState = managePause(state)
   const nextStateWithTimeout = update(nextState, { uiState: { timeout: { $set: payload.timeout } } })
+  localStorage.setItem('gameSpeed', payload.timeout.toString())
 
   if (!shouldResume) return { ...nextStateWithTimeout }
   return manageStart(nextStateWithTimeout, { dispatch: payload.dispatch })
