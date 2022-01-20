@@ -5,7 +5,7 @@
       {
         "displayName": "1. Cel gry",
         "levelFileName": "easy01.json",
-        "levelDescription": "Celem Bajtazara jest dojście do wyjścia. Na początek smok poradzi sobie sam, ale potem musisz mu w tym pomóc (naciśnij \"Zagraj\", a póżniej \"Start\" by zobaczyć jak Bajtazar przechodzi etap)."
+        "levelDescription": "Celem Bajtazara jest dojście do wyjścia. Na początek smok poradzi sobie sam, ale potem musisz mu w tym pomóc.\n\nNaciśnij \"Zagraj\", a póżniej \"Start\" by zobaczyć jak Bajtazar przechodzi etap."
       },
       {
         "displayName": "2. Strzałki",
@@ -15,22 +15,22 @@
       {
         "displayName": "3. O wadze",
         "levelFileName": "easy03.json",
-        "levelDescription": "Zazwyczaj wyjście jest zamknięte. Żeby je otworzyć smok musi dać drzewcowi kryształy, które zebrał. Służą do tego specjalne wagi. \n\nW widoku poziomu spójrz na tabelę z kryształami. Pierwsza kolumna mówi ile smok ma przy sobie kamieni konkretnego koloru. Druga kolumna mówi, ile kamieni jest na wagach, a trzeci ile musi być na wadze, by drzewiec otworzył wyjście."
+        "levelDescription": "Zazwyczaj wyjście jest zamknięte. Żeby je otworzyć smok musi dać drzewcowi kryształy, które zebrał. Służą do tego specjalne wagi.\n\nW widoku poziomu spójrz na tabelę z kryształami. Pierwsza kolumna mówi ile smok ma przy sobie kamieni konkretnego koloru. Druga kolumna mówi, ile kamieni jest na wagach, a trzeci ile musi być na wadze, by drzewiec otworzył wyjście."
       },
       {
         "displayName": "4. Kolory 1",
         "levelFileName": "easy04.json",
-        "levelDescription": "Kamienie, które zbiera smok mogą być różnych kolorów. Tak samo inne elementy mogą mieć swój kolor. Zaznaczany jest on w lewym górnym rogu elementu."
+        "levelDescription": "Kryształy, które zbiera smok mogą być różnych kolorów. Tak samo inne elementy mogą mieć swój kolor. Zaznaczany jest on w lewym górnym rogu elementu."
       },
       {
         "displayName": "5. Kolory 2",
         "levelFileName": "easy05.json",
-        "levelDescription": "Jeżeli element na plaszy ma kolor, to wszystko co zrobi przy nim smok, będzie dotyczyło tylko kamieni tego koloru. Na przykład na wadze zielonej Bajtazar położy wszystkie swoje zielone kamienie. \n\nUzupełnij planszę wagami, kolor wagi można wybrać po kliknięciu na wagę."
+        "levelDescription": "Jeżeli element na plaszy ma kolor, to wszystko co zrobi przy nim smok, będzie dotyczyło tylko kryształów tego koloru. Na przykład na wadze zielonej Bajtazar położy wszystkie swoje zielone kryształy. \n\nUzupełnij planszę wagami, kolor wagi można wybrać po kliknięciu na wagę."
       },
       {
         "displayName": "6. Dodawanie 1",
         "levelFileName": "easy06.json",
-        "levelDescription": "Bajtazar może zmieniać liczbę swoich kamieni wchodząc na specjalne pola. Zielona skrzynia z liczbą '3' w prawym dolnym rogu zwiększy liczbę kryształów o 3. Jeżeli zielona skrzynia ma w prawym dolnym rogu czarny kryształ, to zwiększa liczbę zielonych kryształów o liczbę czarnych kryształów."
+        "levelDescription": "Bajtazar może zmieniać liczbę swoich kryształów wchodząc na specjalne pola. Zielona skrzynia z liczbą \"3\" w prawym dolnym rogu zwiększy liczbę zielonych kryształów smoka o 3. Jeżeli zielona skrzynia ma w prawym dolnym rogu czarny kryształ, to zwiększa liczbę zielonych kryształów o liczbę czarnych kryształów."
       },
       {
         "displayName": "7. Dodawanie 2",
@@ -40,7 +40,7 @@
       {
         "displayName": "8. Arytmetyka 1",
         "levelFileName": "easy08.json",
-        "levelDescription": "Oprócz dodawania są jeszcze inne pola: studnia - służy do odejmowania, krasnal - on pomnoży smokowi kryształy, chochlik - ten nicpoń podzieli liczbę kamieni. \n\nUważaj, gdy chochlik będzie miał podzielić przez zero, to zakręci smokowi w głowie!"
+        "levelDescription": "Oprócz dodawania są jeszcze inne pola: studnia - służy do odejmowania, krasnal - on pomnoży smokowi kryształy, chochlik - ten nicpoń podzieli liczbę kryształów. \n\nUważaj, gdy chochlik będzie miał podzielić przez zero, to zakręci smokowi w głowie!"
       },
       {
         "displayName": "9. Arytmetyka 2",
@@ -50,7 +50,7 @@
       {
         "displayName": "10. Tęcza",
         "levelFileName": "easy10.json",
-        "levelDescription": "Gdy Bajtazar wejdzie na tęcze, zamienia mu się liczba kryształów odpwoiednich kolorów."
+        "levelDescription": "Gdy Bajtazar wejdzie na tęcze, zamienia mu się liczba kryształów odpowiednich kolorów."
       },
       {
         "displayName": "11. Rozdroże 1",
@@ -60,32 +60,32 @@
       {
         "displayName": "12. Rozdroże 2",
         "levelFileName": "easy12.json",
-        "levelDescription": "Rozdroża mogą być też wykorzystane, gdy Bajtazarowi brakuje strzałek. W tej planszy nie możesz dodać strzałek, użyj rozdróż i uchroń Bajtazara od zderzenia ze ścianą. Wszystkie parametry rozdroża możesz ustawić w wyskakującym okienku."
+        "levelDescription": "Rozdroża mogą być też wykorzystane, gdy Bajtazarowi brakuje odpowiednich strzałek. W tej planszy nie możesz dodać strzałek, użyj rozdróż i uchroń Bajtazara od zderzenia ze ścianą.\n\nWszystkie parametry rozdroża możesz ustawić w wyskakującym okienku."
       },
       {
         "displayName": "13. Tunele",
         "levelFileName": "easy13.json",
-        "levelDescription": "Tunele pomagają smokowi przebywać duże odległości. Gdy smok wejdzie do tunelu z etykieta po prawej stronie, wyjdzie z dziury z taką samą etykietą po stronie lewej. Smok zawsze wychodzi z tunelu \"do góry\". Skieruj smoka do tunelu i sprawdź jak to działa."
+        "levelDescription": "Tunele pomagają smokowi przebywać duże odległości. Gdy smok wejdzie do tunelu z etykietą po prawej stronie, wyjdzie z dziury z taką samą etykietą po stronie lewej. Smok zawsze wychodzi z tunelu \"do góry\".\n\nSkieruj smoka do tunelu i sprawdź jak to działa."
       },
       {
         "displayName": "14. Drzewiec 1",
         "levelFileName": "easy14.json",
-        "levelDescription": "Oprócz otwierania wyjścia drzewiec ma jeszcze 20 dziupli, ponumerowanych od 0 do 19, w których Bajtazar może umieszczać swoje kryształy. Umieszczając kryształy w dziupli smok wyrzuca z niej wcześniejszą zawartość. \n\nPodgląd zawartości dziupli znajduje się pod planszą."
+        "levelDescription": "Oprócz otwierania wyjścia, drzewiec ma jeszcze 20 dziupli, ponumerowanych od 0 do 19, w których Bajtazar może umieszczać swoje kryształy. Umieszczając kryształy w dziupli smok wyrzuca z niej wcześniejszą zawartość. \n\nPodgląd zawartości dziupli znajduje się pod planszą."
       },
       {
         "displayName": "15. Drzewiec 2",
         "levelFileName": "easy15.json",
-        "levelDescription": "Oczywiście Bajtazar może również pobrać kryształy z dziupli. Pamiętaj że pobierając kryształy z dziupli, jej zawartość się nie zmienia, a smok będzie miał dokładnie tyle kryształów ile było w dziupli - taka jest magia drzewca!"
+        "levelDescription": "Oczywiście Bajtazar może również pobrać kryształy z dziupli. Pamiętaj, że pobierając kryształy z dziupli, jej zawartość się nie zmienia, a smok będzie miał dokładnie tyle kryształów ile było w dziupli - taka jest magia drzewca!"
       },
       {
         "displayName": "16. Drzewiec 3",
         "levelFileName": "easy16.json",
-        "levelDescription": "Oprócz sprawdzania wag, drzewiec sprawdza jeszcze liczbę kryształów w swoich dziuplach. Liczba wyżej mówi ile kryształów drzewiec oczekuje, a niżej ile aktuanie znajduje się w dziupli."
+        "levelDescription": "Oprócz sprawdzania wag, drzewiec sprawdza jeszcze liczbę kryształów w swoich dziuplach. Liczba wyżej mówi ile kryształów drzewiec oczekuje, a niżej ile aktuanie znajduje się w dziupli.\n\nDopiero gdy wszystkie dziuple i wagi będą miały odpowiednią liczbę kryształów drzewiec otworzy wyjście."
       },
       {
         "displayName": "17. Flaga",
         "levelFileName": "easy17.json",
-        "levelDescription": "Gdy smok wejdzie na pole, na który znajduje sie flaga, zatrzyma się, dopóki nie naciśniesz \"START\". Jest to szczególnie przydatne przy wyższych prędkościach. Postaw flagę na drodze Bajtazara i poznaj jej działanie."
+        "levelDescription": "Gdy smok wejdzie na pole, na który znajduje sie flaga, zatrzyma się, dopóki nie naciśniesz \"START\". Jest to szczególnie przydatne przy wyższych prędkościach.\n\nPostaw flagę na drodze Bajtazara i poznaj jej działanie."
       }
     ]
   },

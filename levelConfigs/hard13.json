@@ -320,7 +320,7 @@
           "id": 72
       },
       {
-          "typeOfField": "STORE",
+          "typeOfField": "TAKE",
           "id": 73,
           "attributes": {
               "targetGemColor": "YELLOW",
