@@ -21,11 +21,11 @@ export default function EditorForm (): React.ReactElement {
     <div className='editor-form'>
       <div className='editor-form-row'>
         <label htmlFor='howManyRows'>Ile rzędów ma posiadać poziom?</label>
-        <input name='howManyRows' type='number' value={howManyRows || ''} onChange={(e) => changeHowManyRows(Number(e.target.value))}></input>
+        <input name='howManyRows' type='number' max={25} value={howManyRows || ''} onChange={(e) => changeHowManyRows(Number(e.target.value))}></input>
       </div>
       <div className='editor-form-row'>
         <label htmlFor='howManyPerRow'>Ile pól ma posiadać jeden rząd?</label>
-        <input name='howManyPerRow' type='number' value={howManyPerRow || ''} onChange={(e) => changeHowManyPerRow(Number(e.target.value))}></input>
+        <input name='howManyPerRow' type='number' max={25} value={howManyPerRow || ''} onChange={(e) => changeHowManyPerRow(Number(e.target.value))}></input>
       </div>
       <button className={!howManyPerRow || !howManyRows ? 'button-disabled' : ''} disabled={!howManyPerRow || !howManyRows} onClick={() => navigateToEditor()}>Rozpocznij edycję</button>
     </div>

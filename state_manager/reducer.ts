@@ -3,12 +3,14 @@ import { EngineState } from '../engine/engine'
 import { GadgetOptionDescription, GadgetType, GemColors, RegisterData } from '../levels/level'
 import React from 'react'
 import { manageChangeFromHole, managePause, manageReset, manageStart, manageStep, manageStop } from './managers/movementManagers'
-import { manageChangeGameFinished, manageChangeTimeout, manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions } from './managers/uiStateManagers'
+import { manageChangeGameFinished, manageChangeTimeout, manageClearUIState, manageCloseModal, manageCommitEdit, manageSelectGadget, manageSelectOptions, manageSet } from './managers/uiStateManagers'
 import { manageDeleteField, manageFieldClick } from './managers/placementManagers'
 import { manageChangeGadgetQty, manageChangeGemQty, manageChangeRegister } from './managers/editorManagers'
 import { SelectedOptions } from '../views/game/GadgetEdit'
 
+export type DragState = 'start' | 'end'
 export type PossibleActions =
+  | 'SET' // Invoked at the start of the game
   | 'START' // Start the game action
   | 'PAUSE' // Pause the game action
   | 'STOP' // Stop the game action like reset but don't clear placed gadgets
@@ -30,17 +32,20 @@ export type PossibleActions =
 
 // Here are types describing possible payloads of actions
 // Naming convention ActionTypePayload
+export interface SetPayload { initialState: GameState }
 export interface StartPayload { dispatch: React.Dispatch<Action>}
-export interface SelectGadgetPayload {fieldType: GadgetType }
-export interface FieldClickPayload { index: number }
+export interface SelectGadgetPayload {fieldType: GadgetType, drag?: DragState }
+export interface FieldClickPayload { index: number, drag?: DragState }
 export interface ChangeGadgetQtyPayload { gadgetType: GadgetType, changeInQty: number}
 export interface ChangeGemQtyPayload { who: 'DRAGON' | 'TREE', color: GemColors, changeInQty: number }
 export interface ChangeRegisterPayload { registerNumber: number, register: RegisterData }
 export interface SelectOptionsPayload { selectedOptions: SelectedOptions }
 export interface CloseModalPayload { nextAction: Action, dispatch: React.Dispatch<Action> }
 export interface ChangeTimeoutPayload { timeout: number, dispatch: React.Dispatch<Action> }
+export interface CommitEdditPayload { index: number }
 
 export type PossiblePayloads =
+  | SetPayload
   | StartPayload
   | SelectGadgetPayload
   | FieldClickPayload
@@ -50,6 +55,7 @@ export type PossiblePayloads =
   | SelectOptionsPayload
   | CloseModalPayload
   | ChangeTimeoutPayload
+  | CommitEdditPayload
 
 export type Action = { type: PossibleActions, payload?: PossiblePayloads }
 
@@ -79,6 +85,8 @@ export interface GameState { engineState: EngineState, uiState: UIState, editor?
 */
 export function stateReducer (state: GameState, action: Action): GameState {
   switch (action.type) {
+    case 'SET':
+      return manageSet(state, action.payload as SetPayload)
     case 'STEP':
       return manageStep(state)
     case 'START':

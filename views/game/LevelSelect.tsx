@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import Loading from '../helpers/Loading'
 import Category from './Category'
 
@@ -16,6 +16,8 @@ export interface CategoryDescription {
 
 export default function LevelSelect (): React.ReactElement {
   const history = useHistory()
+  const location = useLocation()
+  const searchParams = location.search ? new URLSearchParams(location.search) : null
   const [categories, setCategories] = useState([] as CategoryDescription[])
   const [isLoading, updateIsLoading] = useState(false)
 
@@ -51,7 +53,7 @@ export default function LevelSelect (): React.ReactElement {
               {
                 categories.filter(category => category.categoryLevels.length > 0).map((category, index) => {
                   return (
-                    <Category key={index} category={category}/>
+                    <Category key={index} category={category} modalToOpen={searchParams?.get('open')}/>
                   )
                 })
               }
