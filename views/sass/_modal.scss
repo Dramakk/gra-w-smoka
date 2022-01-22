@@ -27,10 +27,15 @@
     .modal-buttons {
       display: flex;
       justify-content: space-evenly;
+      flex-wrap: wrap;
       margin-top: 20px;
 
       button {
         margin: 0 5px;
+
+        @media screen and (max-width: $tabletWidth) {
+          margin: 5px;
+        }
       }
     }
   }
