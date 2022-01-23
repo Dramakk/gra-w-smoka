@@ -424,11 +424,11 @@
   },
   "treeRegisters": {
       "0": {
-          "stored": 0,
+          "stored": 1,
           "needed": 1
       },
       "1": {
-          "stored": 0,
+          "stored": 1,
           "needed": 1
       },
       "2": {
