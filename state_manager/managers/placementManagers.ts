@@ -1,31 +1,45 @@
 import update from 'immutability-helper'
 import { EditorManipulation, EditorPredicates } from '../../editor/editor'
-import { resetDragon, resetEngineState } from '../../engine/engine'
+import { resetDragon } from '../../engine/engine'
 import { generateGadgetDescription } from '../../levels/fields'
-import { GadgetOptionType, LevelGetters, LevelManipulation, LevelPredicates, LevelSpeedControls } from '../../levels/level'
+import {
+  GadgetOptionType,
+  LevelGetters,
+  LevelManipulation,
+  LevelPredicates,
+  LevelSpeedControls
+} from '../../levels/level'
 import { SelectedOptions } from '../../views/game/GadgetEdit'
 import { getLevelFromState } from '../accessors'
 import { FieldClickPayload, GameState } from '../reducer'
 import { manageClearUIState, manageCommitEdit } from './uiStateManagers'
 
-export function manageFieldClick (state: GameState, payload: FieldClickPayload): GameState {
+export function manageFieldClick (
+  state: GameState,
+  payload: FieldClickPayload
+): GameState {
   const fieldId = payload.index
   const level = getLevelFromState(state)
   const field = LevelGetters.getField(level, fieldId)
   // Exclude rocks on board edges and fields that are not placed by player from editing
   const canEdit =
     LevelPredicates.isPlacedByUser(level, fieldId) ||
-      (state.editor &&
-          !EditorPredicates.isBorder(fieldId, LevelGetters.getFieldsPerRow(level), LevelGetters.getRowCount(level)))
+    (state.editor &&
+      !EditorPredicates.isBorder(
+        fieldId,
+        LevelGetters.getFieldsPerRow(level),
+        LevelGetters.getRowCount(level)
+      ))
 
   // If user draggs field it's the same as commiting edit in modal
   // When user drags gadget from bottom tooltip, fieldId is null. Otherwise user dragged gadget from one board cell to other
-  if (payload.drag === 'end' && state.uiState.gadgetEditState.fieldId) return manageCommitEdit(state, { index: payload.index })
+  if (payload.drag === 'end' && state.uiState.gadgetEditState.fieldId) { return manageCommitEdit(state, { index: payload.index }) }
   // If field is not empty and we can edit the gadget then open edit modal and populate options.
   if (field.typeOfField !== 'EMPTY' && canEdit) {
-    const attributes = field.typeOfField === 'START'
-      ? { direction: state.engineState.dragon.direction }
-      : field.attributes
+    const attributes =
+      field.typeOfField === 'START'
+        ? { direction: state.engineState.dragon.direction }
+        : field.attributes
 
     return update(state, {
       uiState: {
@@ -47,22 +61,38 @@ export function manageFieldClick (state: GameState, payload: FieldClickPayload):
   return managePlaceField(state, payload)
 }
 
-export function manageDeleteField (state: GameState, payload: FieldClickPayload): GameState {
+export function manageDeleteField (
+  state: GameState,
+  payload: FieldClickPayload
+): GameState {
   const level = getLevelFromState(state)
 
   if (LevelPredicates.isPlacedByUser(level, payload.index) || state.editor) {
     // When in editor mode we have to perform clearSquare on editor object and reassing acquired value to level in engine object
     // Otherwise just clearSquare using level utilities.
     const newEditor = state.editor
-      ? update(state.editor, { level: { $set: EditorManipulation.clearSquare(state.editor.level, payload.index) } })
+      ? update(state.editor, {
+        level: {
+          $set: EditorManipulation.clearSquare(
+            state.editor.level,
+            payload.index
+          )
+        }
+      })
       : null
-    const levelAfterDelete = state.editor ? { ...newEditor.level } : LevelManipulation.clearSquare(level, payload.index)
-    const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(levelAfterDelete))
+    const levelAfterDelete = state.editor
+      ? { ...newEditor.level }
+      : LevelManipulation.clearSquare(level, payload.index)
+    const levelAfterReset = LevelSpeedControls.resetFinish(
+      LevelSpeedControls.resetGems(levelAfterDelete)
+    )
     return update(state, {
       engineState: {
-        $set: resetDragon(update(state.engineState, {
-          level: { $set: levelAfterReset }
-        }))
+        $set: resetDragon(
+          update(state.engineState, {
+            level: { $set: levelAfterReset }
+          })
+        )
       },
       uiState: { $merge: manageClearUIState(state).uiState },
       editor: { $set: newEditor }
@@ -74,28 +104,57 @@ export function manageDeleteField (state: GameState, payload: FieldClickPayload)
   })
 }
 
-export function managePlaceField (state: GameState, payload: FieldClickPayload): GameState {
+export function managePlaceField (
+  state: GameState,
+  payload: FieldClickPayload
+): GameState {
   const level = getLevelFromState(state)
   const uiState = state.uiState
 
-  if (uiState.fieldToAdd && LevelGetters.getField(level, payload.index).typeOfField === 'EMPTY') {
+  if (
+    uiState.fieldToAdd &&
+    LevelGetters.getField(level, payload.index).typeOfField === 'EMPTY'
+  ) {
     // Same as above.
     const newEditor = state.editor
-      ? update(state.editor, { level: { $set: EditorManipulation.fillSquare(state.editor.level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType) } })
+      ? update(state.editor, {
+        level: {
+          $set: EditorManipulation.fillSquare(
+            state.editor.level,
+            payload.index,
+            uiState.fieldToAdd,
+              uiState.selectedOptions as GadgetOptionType
+          )
+        }
+      })
       : null
 
-    const levelWithGadget = state.editor ? { ...newEditor.level } : LevelManipulation.fillSquare(level, payload.index, uiState.fieldToAdd, uiState.selectedOptions as GadgetOptionType)
-    const levelAfterReset = LevelSpeedControls.resetFinish(LevelSpeedControls.resetGems(levelWithGadget))
+    const levelWithGadget = state.editor
+      ? { ...newEditor.level }
+      : LevelManipulation.fillSquare(
+        level,
+        payload.index,
+        uiState.fieldToAdd,
+          uiState.selectedOptions as GadgetOptionType
+      )
+    const levelAfterReset = LevelSpeedControls.resetFinish(
+      LevelSpeedControls.resetGems(levelWithGadget)
+    )
     return update(state, {
       engineState: {
-        $set: resetDragon(update(state.engineState, {
-          level: { $set: levelAfterReset }
-        }))
+        $set: resetDragon(
+          update(state.engineState, {
+            level: { $set: levelAfterReset }
+          })
+        )
       },
       uiState:
         state.uiState.fieldToAdd === 'START' ||
         state.uiState.fieldToAdd === 'FINISH' ||
-        !LevelPredicates.canPlaceField(levelWithGadget, state.uiState.fieldToAdd)
+        !LevelPredicates.canPlaceField(
+          levelWithGadget,
+          state.uiState.fieldToAdd
+        )
           ? { $merge: manageClearUIState(state).uiState }
           : { $merge: {} },
       editor: { $set: newEditor }
