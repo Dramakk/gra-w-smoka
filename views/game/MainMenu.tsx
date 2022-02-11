@@ -40,6 +40,13 @@ export default function MainMenu (): React.ReactElement {
         </div>
         <br />
         <div>
+          Celem gry jest otwarcie wyjścia oraz doprowadzenie do niego smoka. Po
+          ukończeniu poziomów dla początkujących, jedyną podpowiedzią dla gracza
+          jest nazwa poziomu oraz dostępne gadżety, co dodatkowo podnosi
+          trudność łamigłówek.
+        </div>
+        <br />
+        <div>
           Ta wersja aplikacji napisana została przez studentów Wydziału
           Matematyki i Informatyki Uniwersytetu Wrocławskiego, Karolinę
           Jeziorską i Dawida Żywczaka w ramach pracy dylomowej.
