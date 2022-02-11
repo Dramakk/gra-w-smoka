@@ -7,22 +7,14 @@ Pliki tworzymy w odpowiadających im folderach, wszystkie pliki poza tymi do wid
 ## Uruchomienie
 ### Potrzebne programy
 1. Node.js oraz npm
-2. Prosty serwer http (np. serve lub live-server) do lokalnego hostowania strony
 
 ### Jak uruchomić
-0. Przed uruchomieniem skopiować plik serve.json do katalogu dist
-1. npm install
-2. npm run compile
-3. npm run start
-4. Uruchomienie wybranego przez nas serwera w utworzonym katalogu dist
+```console
+npm install
+npm compile
+cp serve.json dist/
 
-Można też zastąpić kroki 2-4 komendą `npm run dev`, która uruchomi liveserver — automatycznie kompilujący kod po każdej zmianie.
+npm run start # wersja live
+npm run dev # wersja deweloperska z live watch
+```
 
-
-### Język poziomów
-Poziomy są definiowane za pomocą ciągu tokenów oddzielonych znakiem ";". Na razie rozpatrujemy pola typu:
-- Puste pole - znak E
-- Ściana - znak W
-- Strzałka z kierunkiem - znak A oraz jeden znak spośród UDLR
-
-Każde pole posiada atrybut oznaczający czy smok się na nim znajduje.
