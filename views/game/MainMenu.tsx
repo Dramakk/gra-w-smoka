@@ -49,7 +49,7 @@ export default function MainMenu (): React.ReactElement {
         <div>
           Ta wersja aplikacji napisana została przez studentów Wydziału
           Matematyki i Informatyki Uniwersytetu Wrocławskiego, Karolinę
-          Jeziorską i Dawida Żywczaka w ramach pracy dylomowej.
+          Jeziorską i Dawida Żywczaka, w ramach pracy dyplomowej.
         </div>
       </SlideDown>
     </div>
