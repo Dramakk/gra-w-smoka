@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Editor } from '../../editor/editor'
 import { items } from '../../helpers/counter'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import { GadgetInfo } from '../../levels/level'
 import ValueWithControls from '../helpers/ValueWithControls'
 
@@ -18,7 +19,7 @@ export default function GadgetsSelection (props: {editor: Editor}): ReactElement
 
     return (
       <div className='gadget-picture' key={index}>
-        <img src={`/images/${gadgetInfo[0]}.png`} alt={gadgetInfo[0]}/>
+        <img src={`${BASE_URL}/images/${gadgetInfo[0]}.png`} alt={gadgetInfo[0]}/>
         <ValueWithControls
           actionType={'CHANGE_GADGET_QTY'}
           actionPayloadSubstract={actionPayloadSubstract}

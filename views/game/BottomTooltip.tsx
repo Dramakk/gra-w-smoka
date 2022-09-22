@@ -1,4 +1,5 @@
 import React, { ReactElement, useContext } from 'react'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import { GadgetInfo } from '../../levels/level'
 import { DispatchContext } from './Game'
 
@@ -26,7 +27,7 @@ function BottomTooltipItem (props: BottomTooltipItemProps): ReactElement {
   return (
       <div>
         <button className={`bottom-tooltip-item ${props.isSelected ? 'item-selected' : ''}`} onClick={onClick} onDragStart={onDragStart}>
-          <img src={`/images/${props.gadgetToPlace[0]}.png`} alt={props.gadgetToPlace[0]}/>
+          <img src={`${BASE_URL}/images/${props.gadgetToPlace[0]}.png`} alt={props.gadgetToPlace[0]}/>
           <span>{props.gadgetToPlace[1] !== Infinity && props.gadgetToPlace[1]}</span>
         </button>
       </div>

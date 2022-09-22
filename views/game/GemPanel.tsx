@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import { GemColors, GemColorsArray } from '../../levels/level'
 import GemControls from './GemControls'
 
@@ -9,9 +10,9 @@ export default function GemPanel (props: {scaleGems: GemInfo, gemsInPocket: GemI
   return (
     <div className="gem-panel">
       <div className="gem-panel-header">
-        <div><img src='/images/GEM_PANEL_DRAGON.png' alt='DRAGON'/></div>
-        <div><img src='/images/GEM_PANEL_SCALE.png' alt='SCALE'/></div>
-        <div><img src='/images/GEM_PANEL_TREE.png' alt='TREE'/></div>
+        <div><img src={`${BASE_URL}/images/GEM_PANEL_DRAGON.png`} alt='DRAGON'/></div>
+        <div><img src={`${BASE_URL}/images/GEM_PANEL_SCALE.png`} alt='SCALE'/></div>
+        <div><img src={`${BASE_URL}/images/GEM_PANEL_TREE.png`} alt='TREE'/></div>
       </div>
       {GemColorsArray.map((gemColor, index) => {
         const howMany: Record<GemOwner, number> = { DRAGON: props.gemsInPocket[gemColor], SCALE: props.scaleGems[gemColor], TREE: props.treeGems[gemColor] }

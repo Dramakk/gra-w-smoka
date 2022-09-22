@@ -1,4 +1,5 @@
 import React from 'react'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import { TreeRegisters } from '../../levels/level'
 import TreeValue from './TreeValue'
 
@@ -10,7 +11,7 @@ export default function Tree (props: { treeRegisters: TreeRegisters, canEdit: bo
         return (
           <div key={parsedKey} className="single-register">
             <div className="single-register-number">
-              <img className="number-top" src={`/images/${key}.png`} alt={key}/>
+              <img className="number-top" src={`${BASE_URL}/images/${key}.png`} alt={key}/>
             </div>
             <TreeValue
               canEdit={props.canEdit}

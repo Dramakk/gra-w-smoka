@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import { GemColors } from '../../levels/level'
 import ValueWithControls from '../helpers/ValueWithControls'
 import { GemOwner } from './GemPanel'
@@ -19,7 +20,7 @@ export default function GemControls (props: {gemColor: GemColors, howMany: Recor
 
   return (
     <div className="gem-panel-row">
-      <img src={`/images/${props.gemColor}.png`} alt={props.gemColor}/>
+      <img src={`${BASE_URL}/images/${props.gemColor}.png`} alt={props.gemColor}/>
       {Object.keys(props.howMany).map((key: GemOwner) => buildItem(key))}
     </div>
   )

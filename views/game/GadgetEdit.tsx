@@ -6,6 +6,7 @@ import { DispatchContext } from './Game'
 import FieldOptions from '../helpers/FieldOptions'
 import ImageDropdown from '../helpers/ImageDropdown'
 import { getGadgetDesription } from '../../levels/fields'
+import { BASE_URL } from '../../helpers/fetchProxy'
 
 export type SelectedOptions = Partial<Record<GadgetOptionKeys, string | number >>
 
@@ -73,21 +74,21 @@ export default function GadgetEdit (props: GadgetEditProps): React.ReactElement 
     dropdown = availableOptions.reduce((previousDropdown: React.ReactElement, optionKey: GadgetOptionKeys) => {
       const options = props.state.availableOptions[optionKey]
       const mappedOptions = options.map(option => {
-        const mappedOption = { text: option.toString(), image: `/images/${option}.png` }
+        const mappedOption = { text: option.toString(), image: `${BASE_URL}/images/${option}.png` }
 
         if (props.selectedGadget === 'START') {
           switch (option) {
             case 'U':
-              mappedOption.image = '/images/ARROWUP.png'
+              mappedOption.image = `${BASE_URL}/images/ARROWUP.png`
               break
             case 'D':
-              mappedOption.image = '/images/ARROWDOWN.png'
+              mappedOption.image = `${BASE_URL}/images/ARROWDOWN.png`
               break
             case 'R':
-              mappedOption.image = '/images/ARROWRIGHT.png'
+              mappedOption.image = `${BASE_URL}/images/ARROWRIGHT.png`
               break
             case 'L':
-              mappedOption.image = '/images/ARROWLEFT.png'
+              mappedOption.image = `${BASE_URL}/images/ARROWLEFT.png`
               break
           }
         }

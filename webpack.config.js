@@ -55,12 +55,9 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "./",
+    publicPath: `${process.env.BASENAME}/`,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "index.html"),
-    }),
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, "levelConfigs") },
@@ -69,6 +66,10 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(process.env.BASENAME),
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.join(__dirname, "index.html"),
     }),
   ],
 };

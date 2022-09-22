@@ -18,7 +18,7 @@ import { LevelGetters } from '../../levels/level'
 import { Finish } from '../../levels/fields'
 import Loading from '../helpers/Loading'
 import { parseLevel } from '../../levels/levelParser'
-import { proxiedFetch } from '../../helpers/fetchProxy';
+import { BASE_URL, proxiedFetch } from '../../helpers/fetchProxy'
 
 interface LocationState {
   game: EngineState,
@@ -42,14 +42,14 @@ export default function Game (): React.ReactElement {
   const [finishModalButtons, setFinishModalButtons] = useState<ButtonDescription[]>([])
   const steps: Record<string, HTMLAudioElement> = useMemo(() => {
     return {
-      0: new Audio('/music/step4.mp3'),
-      250: new Audio('/music/step3.mp3'),
-      500: new Audio('/music/step2.mp3'),
-      750: new Audio('/music/step1.mp3')
+      0: new Audio(`${BASE_URL}/music/step4.mp3`),
+      250: new Audio(`${BASE_URL}/music/step3.mp3`),
+      500: new Audio(`${BASE_URL}/music/step2.mp3`),
+      750: new Audio(`${BASE_URL}/music/step1.mp3`)
     }
   }, [])
-  const gameFinishedSound = useMemo(() => new Audio('/music/cheers.mp3'), [])
-  const starsSound = useMemo(() => new Audio('/music/aww.mp3'), [])
+  const gameFinishedSound = useMemo(() => new Audio(`${BASE_URL}/music/cheers.mp3`), [])
+  const starsSound = useMemo(() => new Audio(`${BASE_URL}/music/aww.mp3`), [])
   const dragon = state && getDragonFromState(state)
   const currentLevelState = state && getLevelFromState(state)
   const canExport = !!(dragon?.fieldId && dragon?.direction) &&

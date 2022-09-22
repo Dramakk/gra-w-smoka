@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { BASE_URL } from '../../helpers/fetchProxy'
 import SlideDown from '../helpers/SlideDown'
 import EditorForm from './EditorForm'
 
@@ -11,7 +12,7 @@ export default function MainMenu (): React.ReactElement {
   return (
     <div className="menu">
       <button className="menu-item" onClick={() => history.push('/levels')}>
-        <img className="menu-dragon-picture" src="/images/START.png" />
+        <img className="menu-dragon-picture" src={`${BASE_URL}/images/START.png`} />
         Wybierz poziom
       </button>
       <button
