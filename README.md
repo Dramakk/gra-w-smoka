@@ -1,7 +1,7 @@
 # gra-w-smoka
 Nowa implementacja Gry w Smoka, realizowana w ramach pracy dymplomowej będącej zwieńczeniem studiów inżynierskich na Wydziale Matematyki i Informatyki, Uniwersytetu Wrocławskiego.
 
-Obecnie dostępna pod adresem: https://gra-w-smoka.herokuapp.com
+Obecnie dostępna pod adresem: https://dramakk.github.io/gra-w-smoka/ 
 
 Gra jest zrealizowana całkowicie po stronie klienckiej przy użyciu biblioteki React.
 Zarządzanie stanem realizowane jest na podstawie architektury Flux, jednak bez użycia Redux.
@@ -20,4 +20,5 @@ cp serve.json dist/
 npm run start # wersja live
 npm run dev # wersja deweloperska z live watch
 ```
-
+### Plik .env
+Aby wykonać deploy aplikacji, można posłużyć się plikiem `.env` w celu ustalenia `basename` dla react-router.
