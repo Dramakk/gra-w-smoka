@@ -18,6 +18,7 @@ import { LevelGetters } from '../../levels/level'
 import { Finish } from '../../levels/fields'
 import Loading from '../helpers/Loading'
 import { parseLevel } from '../../levels/levelParser'
+import { proxiedFetch } from '../../helpers/fetchProxy';
 
 interface LocationState {
   game: EngineState,
@@ -112,7 +113,7 @@ export default function Game (): React.ReactElement {
     }
 
     if (id) {
-      fetch(`/${id}.json`)
+      proxiedFetch(`/${id}.json`)
         .then(res => handleResponse(initialState, res))
         .catch(err => {
           console.log(err)

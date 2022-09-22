@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import { proxiedFetch } from '../../helpers/fetchProxy';
 import Loading from '../helpers/Loading'
 import Category from './Category'
 
@@ -26,7 +27,7 @@ export default function LevelSelect (): React.ReactElement {
     updateIsLoading(true)
 
     async function getCategories () {
-      const fetchResult = await fetch('/categories.json', { signal: abortController.signal })
+      const fetchResult = await proxiedFetch('/categories.json', { signal: abortController.signal })
         .then(res => res.json())
         .catch(err => {
           console.log(err)
